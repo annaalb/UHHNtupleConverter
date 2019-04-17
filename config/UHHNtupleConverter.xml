@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd">
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+    <Library Name="libSUHH2UHHNtupleConverter"/>
+    <Package Name="SUHH2UHHNtupleConverter.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./" PostFix="" TargetLumi="1" >
+   <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
+        
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="2016v2" Cacheable="False">
+            <!--In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8/crab_QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8_ext1/190305_174908/0000/Ntuple_98.root" Lumi="1.0" /-->
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_1.root" Lumi="1.0" />
+            <!--In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_2.root" Lumi="1.0" />
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_3.root" Lumi="1.0" />
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_4.root" Lumi="1.0" />
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_5.root" Lumi="1.0" />
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_6.root" Lumi="1.0" />
+            <In FileName="root://dcache-cms-xrootd.desy.de:1094/pnfs/desy.de/cms/tier2//store/user/abenecke/RunII_102X_v1/VH_Zprime/ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/crab_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph/190409_063535/0000/Ntuple_7.root" Lumi="1.0" /-->
+            <InputTree Name="AnalysisTree" /> 
+            <OutputTree Name="AnalysisTree" />
+	    
+        </InputData>
+            
+        <UserConfig>
+            <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+            <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" /> 
+            <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+            <Item Name="MuonCollection" Value="slimmedMuonsUSER" /> 
+            <!--Item Name="TauCollection" Value="slimmedTaus" /-->
+            <Item Name="JetCollection" Value="jetsAk8CHS" />
+	    <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi"/>
+            <Item Name="GenJetCollection" Value="slimmedGenJetsAK8" />
+            <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+            <Item Name="METName" Value="slimmedMETsPuppi" />
+            <Item Name="GenParticleCollection" Value="GenParticles" />
+	     
+            <!-- The list of available collections to read in corresponds to the pointer members in event. The 'Name's to use here in the configuration are:
+            
+                 PrimaryVertexCollection
+                 ElectronCollection
+                 MuonCollection
+                 TauCollection
+                 PhotonCollection
+                 JetCollection
+                 TopJetCollection
+                 METName
+                 PFParticleCollection
+                 
+                 GenInfoName
+                 GenJetCollection
+                 GenTopJetCollection
+                 GenParticleCollection
+                 
+                 Note that the last four are only read in for MC (InputData Type="MC"), so it is save to specify
+                 them for real data, although those branches do not exist.
+                 
+                 As 'Value', always use the branch name (if in doubt, open the input file in ROOT).
+                 
+                 By default, triggers are read. To explicitly disable reading triggers, use:
+                 <Item Name="readTrigger" Value="false" />
+            -->
+            
+            <!-- the class name of the AnalysisModule subclasses to run: -->
+            <Item Name="AnalysisModule" Value="UHHNtupleConverterModule" /> 
+            
+            <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+                 MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+                 event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+            <Item Name="use_sframe_weight" Value="false" />
+            
+            <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+            <Item Name="pileup_directory" Value="../common/data/2016/MyMCPileupHistogram.root" />
+            <Item Name="pileup_directory_data" Value="../common/data/2016/MyDataPileupHistogram.root" />
+	    
+            <!-- Some useful variables -->
+            <!--Item Name="sample_name" Value="QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8_ext1" /-->
+	    <Item Name="sample_name" Value="ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph" />
+	    	    
+            <!-- Some test configuration; see UHHNtupleConverterModule.cxx for how to access it: -->
+            <Item Name="TestKey" Value="TestKeyValue" />
+        </UserConfig>
+    </Cycle>
+</JobConfiguration>
