@@ -36,6 +36,49 @@ private:
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
    
+  std::unique_ptr<JetCorrector> jet_corrector;
+
+  std::unique_ptr<JetCorrector> jet_corrector_2016_B;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_C;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_D;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_E;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_F;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_G;
+  std::unique_ptr<JetCorrector> jet_corrector_2016_H;
+
+  std::unique_ptr<JetCorrector> jet_corrector_2017_B;
+  std::unique_ptr<JetCorrector> jet_corrector_2017_C;
+  std::unique_ptr<JetCorrector> jet_corrector_2017_D;
+  std::unique_ptr<JetCorrector> jet_corrector_2017_E;
+  std::unique_ptr<JetCorrector> jet_corrector_2017_F;
+
+  std::unique_ptr<JetCorrector> jet_corrector_2018_A;
+  std::unique_ptr<JetCorrector> jet_corrector_2018_B;
+  std::unique_ptr<JetCorrector> jet_corrector_2018_C;
+  std::unique_ptr<JetCorrector> jet_corrector_2018_D;
+
+  std::unique_ptr<TopJetCorrector> topjet_corrector;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_B;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_C;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_D;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_E;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_F;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_G;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_H;
+
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_B;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_C;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_D;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_E;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_F;
+
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_A;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_B;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_C;
+  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_D;
+
+
+
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
     std::unique_ptr<Selection> njet_sel, dijet_sel;
@@ -235,6 +278,46 @@ private:
     uhh2::Event::Handle<float> m_o_met_mass;
     uhh2::Event::Handle<float> m_o_met_sumEt;
     
+    //run numbers to apply vorrect JEC
+    const int runnr_2016_Ab = 271036;
+    const int runnr_2016_Ae = 271658;
+    const int runnr_2016_Bb = 272007;
+    const int runnr_2016_Be = 275376;
+    const int runnr_2016_Cb = 275657;
+    const int runnr_2016_Ce = 276283;
+    const int runnr_2016_Db = 276315;
+    const int runnr_2016_De = 276811;
+    const int runnr_2016_Eb = 276831;
+    const int runnr_2016_Ee = 277420;
+    const int runnr_2016_Fb = 277772;
+    const int runnr_2016_Fe = 278808;
+    const int runnr_2016_Gb = 278820;
+    const int runnr_2016_Ge = 280385;
+    const int runnr_2016_Hb = 280919;
+    const int runnr_2016_He = 284044;
+
+    const int runnr_2017_Ab = 294927;
+    const int runnr_2017_Ae = 297019;
+    const int runnr_2017_Bb = 297046;
+    const int runnr_2017_Be = 299329;
+    const int runnr_2017_Cb = 299368;
+    const int runnr_2017_Ce = 302029;
+    const int runnr_2017_Db = 302030;
+    const int runnr_2017_De = 303434;
+    const int runnr_2017_Eb = 303824;
+    const int runnr_2017_Ee = 304797;
+    const int runnr_2017_Fb = 305040;
+    const int runnr_2017_Fe = 306462;
+
+    const int runnr_2018_Ab = 315252;
+    const int runnr_2018_Ae = 316995;
+    const int runnr_2018_Bb = 317080;
+    const int runnr_2018_Be = 319310;
+    const int runnr_2018_Cb = 319337;
+    const int runnr_2018_Ce = 320065;
+    const int runnr_2018_Db = 320673;
+    const int runnr_2018_De = 325175;
+
 };
 
 
@@ -272,6 +355,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     // the cleaning can also be achieved with less code via CommonModules with:
     // common->set_jet_id(PtEtaCut(30.0, 2.4));
     // before the 'common->init(ctx)' line.
+    common->disable_jec(); //JEC are done manually
     common->switch_jetPtSorter(true);
     common->init(ctx);
     jetcleaner.reset(new JetCleaner(ctx, 200.0, 2.4)); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
@@ -319,6 +403,131 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       HLT_all.push_back( ctx.declare_event_output<bool>(trigNames[i].replace(trigNames[i].end()-3,trigNames[i].end(),"")) );
      }
     }
+
+    //jec 
+    std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_A,JEC_AK4_B,JEC_AK4_C,JEC_AK4_D,JEC_AK4_E,JEC_AK4_F,JEC_AK4_G,JEC_AK4_H,JEC_AK8_A,JEC_AK8_B,JEC_AK8_C,JEC_AK8_D,JEC_AK8_E,JEC_AK8_F,JEC_AK8_G,JEC_AK8_H;
+
+    if(isMC)
+      {
+	if(year == Year::is2016v2 || year == Year::is2016v3)
+	  {
+	    JEC_AK4     = JERFiles::Summer16_07Aug2017_V11_L123_AK4PFchs_MC;
+	    JEC_AK8     = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFchs_MC;
+	  }
+	else if(year == Year::is2017v1 || year == Year::is2017v2)
+	  {
+	    JEC_AK4     = JERFiles::Fall17_17Nov2017_V32_L123_AK4PFchs_MC;
+	    JEC_AK8     = JERFiles::Fall17_17Nov2017_V32_L123_AK8PFchs_MC;
+	  }
+	else if(year == Year::is2018 )
+	  {
+	    JEC_AK4     = JERFiles::Autumn18_V8_L123_AK4PFchs_MC;
+	    JEC_AK8     = JERFiles::Autumn18_V8_L123_AK8PFchs_MC;
+	  }
+      }
+    else
+      {
+	if(year == Year::is2016v2 || year == Year::is2016v3)
+	  {
+	    JEC_AK4_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK4PFchs_DATA;
+	    JEC_AK4_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK4PFchs_DATA;
+	    JEC_AK4_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK4PFchs_DATA;
+	    JEC_AK4_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK4PFchs_DATA;
+	    JEC_AK4_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK4PFchs_DATA;
+	    JEC_AK4_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK4PFchs_DATA;
+	    JEC_AK4_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK4PFchs_DATA;
+
+	    JEC_AK8_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFchs_DATA;
+	    JEC_AK8_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK8PFchs_DATA;
+	    JEC_AK8_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK8PFchs_DATA;
+	    JEC_AK8_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK8PFchs_DATA;
+	    JEC_AK8_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK8PFchs_DATA;
+	    JEC_AK8_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK8PFchs_DATA;
+	    JEC_AK8_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFchs_DATA;
+	  }
+	else if(year == Year::is2017v1 || year == Year::is2017v2)
+	  {
+	    JEC_AK4_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK4PFchs_DATA;
+	    JEC_AK4_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK4PFchs_DATA;
+	    JEC_AK4_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK4PFchs_DATA;
+	    JEC_AK4_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK4PFchs_DATA;
+	    JEC_AK4_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK4PFchs_DATA;
+
+	    JEC_AK8_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFchs_DATA;
+	    JEC_AK8_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFchs_DATA;
+	    JEC_AK8_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFchs_DATA;
+	    JEC_AK8_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFchs_DATA;
+	    JEC_AK8_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFchs_DATA;
+	  }
+	else if(year == Year::is2018 )
+	  {
+	    JEC_AK4_A = JERFiles::Autumn18_V8_A_L123_AK4PFchs_DATA;
+	    JEC_AK4_B = JERFiles::Autumn18_V8_B_L123_AK4PFchs_DATA;
+	    JEC_AK4_C = JERFiles::Autumn18_V8_C_L123_AK4PFchs_DATA;
+	    JEC_AK4_D = JERFiles::Autumn18_V8_D_L123_AK4PFchs_DATA;
+
+	    JEC_AK8_A = JERFiles::Autumn18_V8_A_L123_AK8PFchs_DATA;
+	    JEC_AK8_B = JERFiles::Autumn18_V8_B_L123_AK8PFchs_DATA;
+	    JEC_AK8_C = JERFiles::Autumn18_V8_C_L123_AK8PFchs_DATA;
+	    JEC_AK8_D = JERFiles::Autumn18_V8_D_L123_AK8PFchs_DATA;
+	  }
+      }
+
+    if(isMC)
+      {
+	jet_corrector.reset(new JetCorrector(ctx, JEC_AK4));
+	topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8));
+      }
+    else
+      {
+	if(year == Year::is2016v2 || year == Year::is2016v3)
+	  {
+
+	    jet_corrector_2016_B.reset(new JetCorrector(ctx, JEC_AK4_B));
+	    jet_corrector_2016_C.reset(new JetCorrector(ctx, JEC_AK4_C));
+	    jet_corrector_2016_D.reset(new JetCorrector(ctx, JEC_AK4_D));
+	    jet_corrector_2016_E.reset(new JetCorrector(ctx, JEC_AK4_E));
+	    jet_corrector_2016_F.reset(new JetCorrector(ctx, JEC_AK4_F));
+	    jet_corrector_2016_G.reset(new JetCorrector(ctx,JEC_AK4_G ));
+	    jet_corrector_2016_H.reset(new JetCorrector(ctx,JEC_AK4_H ));
+
+	    topjet_corrector_2016_B.reset(new TopJetCorrector(ctx, JEC_AK8_B));
+	    topjet_corrector_2016_C.reset(new TopJetCorrector(ctx, JEC_AK8_C));
+	    topjet_corrector_2016_D.reset(new TopJetCorrector(ctx, JEC_AK8_D));
+	    topjet_corrector_2016_E.reset(new TopJetCorrector(ctx, JEC_AK8_F));
+	    topjet_corrector_2016_F.reset(new TopJetCorrector(ctx, JEC_AK8_F));
+	    topjet_corrector_2016_G.reset(new TopJetCorrector(ctx,JEC_AK8_G ));
+	    topjet_corrector_2016_H.reset(new TopJetCorrector(ctx,JEC_AK8_H ));
+	  }
+	else if(year == Year::is2017v1 || year == Year::is2017v2)
+	  {
+	    jet_corrector_2017_B.reset(new JetCorrector(ctx, JEC_AK4_B));
+	    jet_corrector_2017_C.reset(new JetCorrector(ctx, JEC_AK4_C));
+	    jet_corrector_2017_D.reset(new JetCorrector(ctx, JEC_AK4_D));
+	    jet_corrector_2017_E.reset(new JetCorrector(ctx, JEC_AK4_E));
+	    jet_corrector_2017_F.reset(new JetCorrector(ctx, JEC_AK4_F));
+
+	    topjet_corrector_2017_B.reset(new TopJetCorrector(ctx, JEC_AK8_B));
+	    topjet_corrector_2017_C.reset(new TopJetCorrector(ctx, JEC_AK8_C));
+	    topjet_corrector_2017_D.reset(new TopJetCorrector(ctx, JEC_AK8_D));
+	    topjet_corrector_2017_E.reset(new TopJetCorrector(ctx, JEC_AK8_F));
+	    topjet_corrector_2017_F.reset(new TopJetCorrector(ctx, JEC_AK8_F));
+
+	  }
+	else if(year == Year::is2018 )
+	  {
+	    jet_corrector_2018_A.reset(new JetCorrector(ctx, JEC_AK4_A));
+	    jet_corrector_2018_B.reset(new JetCorrector(ctx, JEC_AK4_B));
+	    jet_corrector_2018_C.reset(new JetCorrector(ctx, JEC_AK4_C));
+	    jet_corrector_2018_D.reset(new JetCorrector(ctx, JEC_AK4_D));
+
+	    topjet_corrector_2018_A.reset(new TopJetCorrector(ctx, JEC_AK8_A));
+	    topjet_corrector_2018_B.reset(new TopJetCorrector(ctx, JEC_AK8_B));
+	    topjet_corrector_2018_C.reset(new TopJetCorrector(ctx, JEC_AK8_C));
+	    topjet_corrector_2018_D.reset(new TopJetCorrector(ctx, JEC_AK8_D));
+
+	  }
+      }
 
     
     //reco CHS jet variables
@@ -541,6 +750,115 @@ bool UHHNtupleConverterModule::process(Event & event) {
      event.set(HLT_all[i], isfired);
     }
     event.set(HLT_JJ, passedTriggers);
+
+
+    //JEC
+    if(isMC)
+      {
+	jet_corrector->process(event);
+	topjet_corrector->process(event);
+	jet_corrector->correct_met(event);
+      }else{
+      //2016                                                                                                                                                                                                                                                                   
+      if(event.run >= runnr_2016_Bb && event.run <= runnr_2016_Be)
+	{
+	  jet_corrector_2016_B->process(event);
+	  topjet_corrector_2016_B->process(event);
+	  jet_corrector_2016_B->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Cb && event.run <= runnr_2016_Ce)
+	{
+	  jet_corrector_2016_C->process(event);
+	  topjet_corrector_2016_C->process(event);
+	  jet_corrector_2016_C->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Db && event.run <= runnr_2016_De)
+	{
+	  jet_corrector_2016_D->process(event);
+	  topjet_corrector_2016_D->process(event);
+	  jet_corrector_2016_D->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Eb && event.run <= runnr_2016_Ee)
+	{
+	  jet_corrector_2016_E->process(event);
+	  topjet_corrector_2016_E->process(event);
+	  jet_corrector_2016_E->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Fb && event.run <= runnr_2016_Fe)
+	{
+	  jet_corrector_2016_F->process(event);
+	  topjet_corrector_2016_F->process(event);
+	  jet_corrector_2016_F->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Gb && event.run <= runnr_2016_Ge)
+	{
+	  jet_corrector_2016_G->process(event);
+	  topjet_corrector_2016_G->process(event);
+	  jet_corrector_2016_G->correct_met(event);
+	}
+      else if(event.run >= runnr_2016_Hb && event.run <= runnr_2016_He)
+	{
+	  jet_corrector_2016_H->process(event);
+	  topjet_corrector_2016_H->process(event);
+	  jet_corrector_2016_H->correct_met(event);
+	}
+      //2017                                                                                                                                                                                                                                                                 
+      if(event.run >= runnr_2017_Bb && event.run <= runnr_2017_Be)
+	{
+	  jet_corrector_2017_B->process(event);
+	  topjet_corrector_2017_B->process(event);
+	  jet_corrector_2017_B->correct_met(event);
+	}
+      else if(event.run >= runnr_2017_Cb && event.run <= runnr_2017_Ce)
+	{
+	  jet_corrector_2017_C->process(event);
+	  topjet_corrector_2017_C->process(event);
+	  jet_corrector_2017_C->correct_met(event);
+	}
+      else if(event.run >= runnr_2017_Db && event.run <= runnr_2017_De)
+	{
+	  jet_corrector_2017_D->process(event);
+	  topjet_corrector_2017_D->process(event);
+	  jet_corrector_2017_D->correct_met(event);
+	}
+      else if(event.run >= runnr_2017_Eb && event.run <= runnr_2017_Ee)
+	{
+	  jet_corrector_2017_E->process(event);
+	  topjet_corrector_2017_E->process(event);
+	  jet_corrector_2017_E->correct_met(event);
+	}
+      else if(event.run >= runnr_2017_Fb && event.run <= runnr_2017_Fe)
+	{
+	  jet_corrector_2017_F->process(event);
+	  topjet_corrector_2017_F->process(event);
+	  jet_corrector_2017_F->correct_met(event);
+	}
+      //2018                                                                                                                                                                                                                                                                   
+      if(event.run >= runnr_2018_Ab && event.run <= runnr_2018_Ae)
+	{
+	  jet_corrector_2018_A->process(event);
+	  topjet_corrector_2018_A->process(event);
+	  jet_corrector_2018_A->correct_met(event);
+	}
+      else if(event.run >= runnr_2018_Bb && event.run <= runnr_2018_Be)
+	{
+	  jet_corrector_2018_B->process(event);
+	  topjet_corrector_2018_B->process(event);
+	  jet_corrector_2018_B->correct_met(event);
+	}
+      else if(event.run >= runnr_2018_Cb && event.run <= runnr_2018_Ce)
+	{
+	  jet_corrector_2018_C->process(event);
+	  topjet_corrector_2018_C->process(event);
+	  jet_corrector_2018_C->correct_met(event);
+	}
+      else if(event.run >= runnr_2018_Db && event.run <= runnr_2018_De)
+	{
+	  jet_corrector_2018_D->process(event);
+	  topjet_corrector_2018_D->process(event);
+	  jet_corrector_2018_D->correct_met(event);
+	}
+    }//else on MC or data
 
     // 2. test selections and fill histograms
     h_nocuts->fill(event);
