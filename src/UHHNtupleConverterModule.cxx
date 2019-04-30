@@ -36,47 +36,46 @@ private:
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
    
-  std::unique_ptr<JetCorrector> jet_corrector;
+    std::unique_ptr<JetCorrector> jet_corrector;
 
-  std::unique_ptr<JetCorrector> jet_corrector_2016_B;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_C;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_D;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_E;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_F;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_G;
-  std::unique_ptr<JetCorrector> jet_corrector_2016_H;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_B;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_C;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_D;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_E;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_F;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_G;
+    std::unique_ptr<JetCorrector> jet_corrector_2016_H;
 
-  std::unique_ptr<JetCorrector> jet_corrector_2017_B;
-  std::unique_ptr<JetCorrector> jet_corrector_2017_C;
-  std::unique_ptr<JetCorrector> jet_corrector_2017_D;
-  std::unique_ptr<JetCorrector> jet_corrector_2017_E;
-  std::unique_ptr<JetCorrector> jet_corrector_2017_F;
+    std::unique_ptr<JetCorrector> jet_corrector_2017_B;
+    std::unique_ptr<JetCorrector> jet_corrector_2017_C;
+    std::unique_ptr<JetCorrector> jet_corrector_2017_D;
+    std::unique_ptr<JetCorrector> jet_corrector_2017_E;
+    std::unique_ptr<JetCorrector> jet_corrector_2017_F;
 
-  std::unique_ptr<JetCorrector> jet_corrector_2018_A;
-  std::unique_ptr<JetCorrector> jet_corrector_2018_B;
-  std::unique_ptr<JetCorrector> jet_corrector_2018_C;
-  std::unique_ptr<JetCorrector> jet_corrector_2018_D;
+    std::unique_ptr<JetCorrector> jet_corrector_2018_A;
+    std::unique_ptr<JetCorrector> jet_corrector_2018_B;
+    std::unique_ptr<JetCorrector> jet_corrector_2018_C;
+    std::unique_ptr<JetCorrector> jet_corrector_2018_D;
 
-  std::unique_ptr<TopJetCorrector> topjet_corrector;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_B;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_C;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_D;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_E;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_F;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_G;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2016_H;
+    std::unique_ptr<TopJetCorrector> topjet_corrector;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_B;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_C;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_D;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_E;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_F;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_G;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2016_H;
 
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_B;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_C;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_D;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_E;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2017_F;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2017_B;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2017_C;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2017_D;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2017_E;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2017_F;
 
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_A;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_B;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_C;
-  std::unique_ptr<TopJetCorrector> topjet_corrector_2018_D;
-
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2018_A;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2018_B;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2018_C;
+    std::unique_ptr<TopJetCorrector> topjet_corrector_2018_D;
 
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
