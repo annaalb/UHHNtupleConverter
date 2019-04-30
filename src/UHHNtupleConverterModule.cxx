@@ -438,11 +438,12 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 
 
     /* jec year dependent initialization */ 
+    std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     std::vector<std::string> JEC_AK4, JEC_AK8,JEC_AK4_A,JEC_AK4_B,JEC_AK4_C,JEC_AK4_D,JEC_AK4_E,JEC_AK4_F,JEC_AK4_G,JEC_AK4_H,JEC_AK8_A,JEC_AK8_B,JEC_AK8_C,JEC_AK8_D,JEC_AK8_E,JEC_AK8_F,JEC_AK8_G,JEC_AK8_H;
 
     if(isMC){
       if(year == Year::is2016v2 || year == Year::is2016v3){
-	std::cout << "USING 2016 MC JEC:" << std::endl;
+	std::cout << "USING 2016 MC JEC" << std::endl;
 	JEC_AK4     = JERFiles::Summer16_07Aug2017_V11_L123_AK4PFchs_MC;
 	JEC_AK8     = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFchs_MC;
       }
@@ -456,9 +457,12 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK4     = JERFiles::Autumn18_V8_L123_AK4PFchs_MC;
 	JEC_AK8     = JERFiles::Autumn18_V8_L123_AK8PFchs_MC;
       }
+      for(int i=0; i<JEC_AK4.size(); ++i){ std::cout <<"AK4 JEC: " << JEC_AK4[i] << std::endl;}
+      for(int i=0; i<JEC_AK8.size(); ++i){ std::cout <<"AK8 JEC: " << JEC_AK8[i] << std::endl;}
     }
     else{
       if(year == Year::is2016v2 || year == Year::is2016v3){
+	std::cout << "USING 2016 data JEC" << std::endl;
 	JEC_AK4_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK4PFchs_DATA;
 	JEC_AK4_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK4PFchs_DATA;
 	JEC_AK4_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK4PFchs_DATA;
@@ -476,6 +480,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK8_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFchs_DATA;
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
+	std::cout << "USING 2017 MC JEC" << std::endl;
         JEC_AK4_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK4PFchs_DATA;
         JEC_AK4_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK4PFchs_DATA;
         JEC_AK4_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK4PFchs_DATA;
@@ -489,6 +494,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK8_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFchs_DATA;
       }
       else if(year == Year::is2018 ){
+	std::cout << "USING 2016 MC JEC" << std::endl;
         JEC_AK4_A = JERFiles::Autumn18_V8_A_L123_AK4PFchs_DATA;
 	JEC_AK4_B = JERFiles::Autumn18_V8_B_L123_AK4PFchs_DATA;
 	JEC_AK4_C = JERFiles::Autumn18_V8_C_L123_AK4PFchs_DATA;
@@ -499,6 +505,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK8_C = JERFiles::Autumn18_V8_C_L123_AK8PFchs_DATA;
 	JEC_AK8_D = JERFiles::Autumn18_V8_D_L123_AK8PFchs_DATA;
       }
+      for(int i=0; i<JEC_AK4_B.size(); ++i){ std::cout <<"AK4 B JEC: " << JEC_AK4_B[i] << std::endl;}
     }
 
     if(isMC){
@@ -548,6 +555,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	topjet_corrector_2018_D.reset(new TopJetCorrector(ctx, JEC_AK8_D));
       }
     }
+    std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     /*end of year dependent initialization*/
 
 	     
