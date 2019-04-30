@@ -445,17 +445,17 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       if(year == Year::is2016v2 || year == Year::is2016v3){
 	std::cout << "USING 2016 MC JEC" << std::endl;
 	JEC_AK4     = JERFiles::Summer16_07Aug2017_V11_L123_AK4PFchs_MC;
-	JEC_AK8     = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFchs_MC;
+	JEC_AK8     = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFPuppi_MC;
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
 	std::cout << "USING 2017 MC JEC:" << std::endl;
 	JEC_AK4     = JERFiles::Fall17_17Nov2017_V32_L123_AK4PFchs_MC;
-	JEC_AK8     = JERFiles::Fall17_17Nov2017_V32_L123_AK8PFchs_MC;
+	JEC_AK8     = JERFiles::Fall17_17Nov2017_V32_L123_AK8PFPuppi_MC;
       }
       else if(year == Year::is2018 ){
 	std::cout << "USING 2018 MC JEC:" << std::endl;
 	JEC_AK4     = JERFiles::Autumn18_V8_L123_AK4PFchs_MC;
-	JEC_AK8     = JERFiles::Autumn18_V8_L123_AK8PFchs_MC;
+	JEC_AK8     = JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC;
       }
       for(int i=0; i<JEC_AK4.size(); ++i){ std::cout <<"AK4 JEC: " << JEC_AK4[i] << std::endl;}
       for(int i=0; i<JEC_AK8.size(); ++i){ std::cout <<"AK8 JEC: " << JEC_AK8[i] << std::endl;}
@@ -471,13 +471,13 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK4_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK4PFchs_DATA;
 	JEC_AK4_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK4PFchs_DATA;
 
-	JEC_AK8_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFchs_DATA;
-	JEC_AK8_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK8PFchs_DATA;
-	JEC_AK8_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK8PFchs_DATA;
-	JEC_AK8_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK8PFchs_DATA;
-	JEC_AK8_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK8PFchs_DATA;
-	JEC_AK8_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK8PFchs_DATA;
-	JEC_AK8_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFchs_DATA;
+	JEC_AK8_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA;
+	JEC_AK8_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK8PFPuppi_DATA;
+	JEC_AK8_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK8PFPuppi_DATA;
+	JEC_AK8_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK8PFPuppi_DATA;
+	JEC_AK8_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK8PFPuppi_DATA;
+	JEC_AK8_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK8PFPuppi_DATA;
+	JEC_AK8_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFPuppi_DATA;
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
 	std::cout << "USING 2017 MC JEC" << std::endl;
@@ -487,11 +487,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
         JEC_AK4_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK4PFchs_DATA;
         JEC_AK4_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK4PFchs_DATA;
 
-	JEC_AK8_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFchs_DATA;
-	JEC_AK8_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFchs_DATA;
-	JEC_AK8_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFchs_DATA;
-	JEC_AK8_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFchs_DATA;
-	JEC_AK8_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFchs_DATA;
+	JEC_AK8_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFPuppi_DATA;
+	JEC_AK8_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFPuppi_DATA;
+	JEC_AK8_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFPuppi_DATA;
+	JEC_AK8_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFPuppi_DATA;
+	JEC_AK8_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFPuppi_DATA;
       }
       else if(year == Year::is2018 ){
 	std::cout << "USING 2016 MC JEC" << std::endl;
@@ -500,10 +500,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK4_C = JERFiles::Autumn18_V8_C_L123_AK4PFchs_DATA;
 	JEC_AK4_D = JERFiles::Autumn18_V8_D_L123_AK4PFchs_DATA;
 
-	JEC_AK8_A = JERFiles::Autumn18_V8_A_L123_AK8PFchs_DATA;
-	JEC_AK8_B = JERFiles::Autumn18_V8_B_L123_AK8PFchs_DATA;
-	JEC_AK8_C = JERFiles::Autumn18_V8_C_L123_AK8PFchs_DATA;
-	JEC_AK8_D = JERFiles::Autumn18_V8_D_L123_AK8PFchs_DATA;
+	JEC_AK8_A = JERFiles::Autumn18_V8_A_L123_AK8PFPuppi_DATA;
+	JEC_AK8_B = JERFiles::Autumn18_V8_B_L123_AK8PFPuppi_DATA;
+	JEC_AK8_C = JERFiles::Autumn18_V8_C_L123_AK8PFPuppi_DATA;
+	JEC_AK8_D = JERFiles::Autumn18_V8_D_L123_AK8PFPuppi_DATA;
       }
       for(int i=0; i<JEC_AK4_B.size(); ++i){ std::cout <<"AK4 B JEC: " << JEC_AK4_B[i] << std::endl;}
     }
