@@ -423,14 +423,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     }
 
     std::cout << "USING " << trigNames.size() << " TRIGGER PATHS:" << std::endl;
-    for(int i=0; i<trigNames.size(); ++i){
-      std::cout << trigNames[i] << std::endl;
-      trigger_selection.push_back(TriggerSelection(trigNames[i])); 
-      HLT_all.push_back( ctx.declare_event_output<bool>(trigNames[i].replace(trigNames[i].end()-3,trigNames[i].end(),"")) );
+    for (auto it = trigNames.begin(), end = trigNames.end(); it != end; ++it){
+      std::cout << *it << std::endl;
+      trigger_selection.push_back(TriggerSelection(*it)); 
+      HLT_all.push_back( ctx.declare_event_output<bool>((*it).replace((*it).end()-3,(*it).end(),"")) );
     }    
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     std::cout << "USING " << metFilters.size()+1 << " MET FILTERS:" << std::endl;                
-    for(int i=0; i<metFilters.size(); ++i){ std::cout << metFilters[i] << std::endl; metfilters.push_back( TriggerSelection(metFilters[i]) ); b_MET_filters_all.push_back(ctx.declare_event_output<bool>(metFilters[i])); }
+    for (auto it = metFilters.begin(), end = metFilters.end(); it != end; ++it){std::cout << *it << std::endl; metfilters.push_back( TriggerSelection(*it) ); b_MET_filters_all.push_back(ctx.declare_event_output<bool>(*it)); }
     std::cout << "Flag_EcalBadCalibSelection (for 2016 this is always = 1)" << std::endl;
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
     /*done with triggers and filters*/        
@@ -457,8 +457,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK4     = JERFiles::Autumn18_V8_L123_AK4PFchs_MC;
 	JEC_AK8     = JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC;
       }
-      for(int i=0; i<JEC_AK4.size(); ++i){ std::cout <<"AK4 JEC: " << JEC_AK4[i] << std::endl;}
-      for(int i=0; i<JEC_AK8.size(); ++i){ std::cout <<"AK8 JEC: " << JEC_AK8[i] << std::endl;}
+      for (auto it = JEC_AK4.begin(), end = JEC_AK4.end(); it != end; ++it){ std::cout <<"AK4 JEC: " << *it << std::endl;}
+      for (auto it = JEC_AK8.begin(), end = JEC_AK8.end(); it != end; ++it){ std::cout <<"AK8 JEC: " << *it << std::endl;}
     }
     else{
       if(year == Year::is2016v2 || year == Year::is2016v3){
@@ -505,7 +505,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 	JEC_AK8_C = JERFiles::Autumn18_V8_C_L123_AK8PFPuppi_DATA;
 	JEC_AK8_D = JERFiles::Autumn18_V8_D_L123_AK8PFPuppi_DATA;
       }
-      for(int i=0; i<JEC_AK4_B.size(); ++i){ std::cout <<"AK4 B JEC: " << JEC_AK4_B[i] << std::endl;}
+      for (auto it = JEC_AK4_B.begin(), end = JEC_AK4_B.end(); it != end; ++it){ std::cout <<"AK4 B JEC: " << *it << std::endl;}
     }
 
     if(isMC){
