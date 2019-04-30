@@ -761,7 +761,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
         
     // 1. run all modules other modules.
     common->process(event);   
-
+    h_nocuts->fill(event);
+  
     bool muon_selection = muon_sel->passes(event);
     if(!muon_selection) return false;
     bool electron_selection = electron_sel->passes(event);
@@ -895,9 +896,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(HLT_JJ, passedTriggers);
 
 
-    // 2. test selections and fill histograms
-    h_nocuts->fill(event);
-    
+    // 2. test selections and fill histograms    
     bool njet_selection = njet_sel->passes(event);
     if(njet_selection){
         h_njet->fill(event);
