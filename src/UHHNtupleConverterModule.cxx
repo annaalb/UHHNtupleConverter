@@ -11,6 +11,7 @@
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterSelections.h"
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterHists.h"
 #include "UHH2/common/include/Utils.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
 
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 
@@ -42,6 +43,9 @@ private:
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection; 
+    std::vector<TriggerSelection> metfilters;
+    std::unique_ptr<NPVSelection> pvfilter;
+    
     
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
     std::unique_ptr<Hists> h_nocuts, h_njet, h_dijet, h_ele;
@@ -67,7 +71,10 @@ private:
     uhh2::Event::Handle<float>  b_rho;
     uhh2::Event::Handle<int>    b_nVert;
     uhh2::Event::Handle<bool>   HLT_JJ;
+    uhh2::Event::Handle<bool>   b_passed_MET_filters;
+    uhh2::Event::Handle<bool>   b_passed_PV_filter;
     std::vector< uhh2::Event::Handle<bool> > HLT_all;
+    std::vector< uhh2::Event::Handle<bool> > b_MET_filters_all;
     uhh2::Event::Handle<int>    m_o_njj;  
 
     //reco CHS jet variables
@@ -273,6 +280,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     // common->set_jet_id(PtEtaCut(30.0, 2.4));
     // before the 'common->init(ctx)' line.
     common->switch_jetPtSorter(true);
+    common->disable_metfilters();
+    common->disable_pvfilter();
     common->init(ctx);
     jetcleaner.reset(new JetCleaner(ctx, 200.0, 2.4)); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
     massCalc.reset(new SoftDropMassCalculator(ctx, true, "common/data/2018/puppiCorr.root"));
@@ -294,33 +303,45 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_rho = ctx.declare_event_output<float>("rho");
     b_nVert = ctx.declare_event_output<int>("nVert");
     HLT_JJ = ctx.declare_event_output<bool>("HLT_JJ");
+    b_passed_MET_filters = ctx.declare_event_output<bool>("passed_METfilters");
+    b_passed_PV_filter = ctx.declare_event_output<bool>("passed_PVfilter");
     m_o_njj = ctx.declare_event_output<int>("njj");
         
+    /* some filters and triggers*/	
+    std::vector<std::string> trigNames;
+    std::vector<std::string> metFilters;
+    	
     //nb, not sure we need all the thresolds. Better to choose only one that was always unprescaled. To be checked.
     if( year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1 ){//from b2g-18-002
-     std::string trigNames[10] = {"HLT_PFHT1050_v*","HLT_AK8PFJet500_v*",
+     trigNames = {"HLT_PFHT1050_v*" ,"HLT_AK8PFJet500_v*",
                                  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFJet380_TrimMass30_v*","HLT_AK8PFJet400_TrimMass30_v*","HLT_AK8PFJet420_TrimMass30_v*", //pt=400 first always unprescaled. To be checked.
 				 "HLT_AK8PFHT750_TrimMass50_v*","HLT_AK8PFHT800_TrimMass50_v*","HLT_AK8PFHT850_TrimMass50_v*","HLT_AK8PFHT900_TrimMass50_v*"}; //ht=800 first always unprescaled. To be checked.
-     int ntrigs = 10;
-     for(int i=0; i<ntrigs; ++i){
-      trigger_selection.push_back(TriggerSelection(trigNames[i])); 
-      HLT_all.push_back( ctx.declare_event_output<bool>(trigNames[i].replace(trigNames[i].end()-3,trigNames[i].end(),"")) );
-     }
+     if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter"};     
+     else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter","Flag_eeBadScFilter"};          
     }
     else if( year == Year::is2016v2 || year == Year::is2016v3 ){//from b2g-17-001     
-     std::string trigNames[11] = {"HLT_PFHT800_v*","HLT_PFHT900_v*",
+     trigNames = {"HLT_PFHT800_v*","HLT_PFHT900_v*",
                                   "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
 				  "HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
 				  "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
-				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"};
-     int ntrigs = 11; 
-     for(int i=0; i<ntrigs; ++i){
-      trigger_selection.push_back(TriggerSelection(trigNames[i])); 
-      HLT_all.push_back( ctx.declare_event_output<bool>(trigNames[i].replace(trigNames[i].end()-3,trigNames[i].end(),"")) );
-     }
+				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"}; 
+     if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter"};
+     else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_eeBadScFilter"};
     }
 
-    
+    std::cout << "USING " << trigNames.size() << " TRIGGER PATHS:" << std::endl;
+    for(int i=0; i<trigNames.size(); ++i){
+      std::cout << trigNames[i] << std::endl;
+      trigger_selection.push_back(TriggerSelection(trigNames[i])); 
+      HLT_all.push_back( ctx.declare_event_output<bool>(trigNames[i].replace(trigNames[i].end()-3,trigNames[i].end(),"")) );
+    }    
+    std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "USING " << metFilters.size()+1 << " MET FILTERS:" << std::endl;                
+    for(int i=0; i<metFilters.size(); ++i){ std::cout << metFilters[i] << std::endl; metfilters.push_back( TriggerSelection(metFilters[i]) ); b_MET_filters_all.push_back(ctx.declare_event_output<bool>(metFilters[i])); }
+    std::cout << "Flag_EcalBadCalibSelection (for 2016 this is always = 1)" << std::endl;
+    b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
+    /*done with triggers and filters*/        
+	     
     //reco CHS jet variables
     m_o_mjj = ctx.declare_event_output<float>("jj_LV_mass"); 
     m_o_ptjj = ctx.declare_event_output<float>("jj_LV_pt"); 
@@ -489,6 +510,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     // 2. set up selections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
+    
+    PrimaryVertexId pvid=StandardPrimaryVertexId();
+    pvfilter.reset(new NPVSelection(1,-1,pvid) );
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new UHHNtupleConverterHists(ctx, "NoCuts"));
@@ -513,11 +537,23 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // is thrown away.
     
     //cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
-    
-    // 1. run all modules other modules.
-    int filters = common->process(event);
-    if( !filters ) return false;
+
+    // 2. test selections and fill histograms
+    h_nocuts->fill(event);
         
+    // 1. run all modules other modules.
+    common->process(event)   
+
+    bool passedMETFilters = true;
+    for(unsigned int i=0; i<metfilters.size(); ++i){
+     if(!metfilters[i].passes(event)) passedMETFilters = false;
+     event.set(b_MET_filters_all[i],metfilters[i].passes(event));
+    }
+    if( !event.passEcalBadCalib ) passedMETFilters = false;
+    event.set(b_MET_filters_all[metfilters.size()],event.passEcalBadCalib);
+    event.set(b_passed_MET_filters,passedMETFilters);
+    event.set(b_passed_PV_filter,pvfilter->passes(event));
+    	
     jetcleaner->process(event);
     massCalc->process(event);    
           
@@ -541,9 +577,6 @@ bool UHHNtupleConverterModule::process(Event & event) {
      event.set(HLT_all[i], isfired);
     }
     event.set(HLT_JJ, passedTriggers);
-
-    // 2. test selections and fill histograms
-    h_nocuts->fill(event);
     
     bool njet_selection = njet_sel->passes(event);
     if(njet_selection){
