@@ -101,6 +101,12 @@ private:
     double xSec_;
     bool isMC;
     
+    enum Sorting{
+     SORTING_RANDOM,
+     SORTING_BYBTAG
+    };
+    Sorting sorting;
+    
     //output tree variables
     
     //event variables
@@ -351,11 +357,19 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     for(auto & kv : ctx.get_all()){
         cout << " " << kv.first << " = " << kv.second << endl;
     }
-    
+    std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
+
     year = extract_year(ctx);
     isMC = ctx.get("dataset_type") == "MC";
+    if(ctx.get("jet_sorting")=="random") sorting = Sorting::SORTING_RANDOM;
+    else if(ctx.get("jet_sorting")=="btag") sorting = Sorting::SORTING_BYBTAG;
+    else{
+     std::cout << "WARNING: jet_sorting=="<<ctx.get("jet_sorting")<<" not among the options (btag,random). Set to random by default!" << std::endl;
+     sorting = Sorting::SORTING_RANDOM;
+    }
     
     if (isMC) xSec_ = m_xSec.getLumiWeight( ctx.get("sample_name") );//to be checked
+    std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     cout << "Cross section set to " << xSec_ << " for sample " << ctx.get("sample_name") << endl;
     
     MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose));
@@ -908,22 +922,36 @@ bool UHHNtupleConverterModule::process(Event & event) {
     
     h_dijet->fill(event);
 
-    //now random sorting    
+    //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
     Jet jet2 = event.jets->at(1);
-    if( event.event%2 != 0 ){
-     jet1 = event.jets->at(1);
-     jet2 = event.jets->at(0);
-    }
     
     auto closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     auto closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
+    if( !closest_puppijet1 || !closest_puppijet2 ) return false;  
+
+    if(sorting == Sorting::SORTING_RANDOM){
+     if( event.event%2 != 0 ){
+      jet1 = event.jets->at(1);
+      jet2 = event.jets->at(0);
+     }
+    } 
+    else if(sorting == Sorting::SORTING_BYBTAG){
+     double btag1 = closest_puppijet1->btag_MassDecorrelatedDeepBoosted_ZHbbvsQCD();
+     double btag2 = closest_puppijet2->btag_MassDecorrelatedDeepBoosted_ZHbbvsQCD(); 
+     if(btag2 > btag1){
+      jet1 = event.jets->at(1);
+      jet2 = event.jets->at(0);
+      auto tmp = closest_puppijet1;
+      closest_puppijet2 = closest_puppijet1;
+      closest_puppijet1 = tmp;
+     }     
+    } 
+    
     auto closest_softdrop_genjet1 = closestParticle(jet1, *(event.gentopjets));
     auto closest_softdrop_genjet2 = closestParticle(jet2, *(event.gentopjets));
     auto closest_genjet1 = closestParticle(jet1, *(event.genjets));
     auto closest_genjet2 = closestParticle(jet2, *(event.genjets));
-
-    if( !closest_puppijet1 || !closest_puppijet2 ) return false;  
           
     //event variables		   
     event.set(m_o_njj,1);     
