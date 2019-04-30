@@ -14,8 +14,9 @@ core/python/__init__.py
 *.json
 VLQToHiggsPairProd/*
 ZprimeSemiLeptonic/*
-
+obj/*
 BaconJets/*
 JECDatabase/*
 pydump.py
 Makefile.local
+config/UHHNtupleConverterLocal.xml
