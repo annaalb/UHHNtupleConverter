@@ -542,7 +542,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     h_nocuts->fill(event);
         
     // 1. run all modules other modules.
-    common->process(event)   
+    common->process(event);  
 
     bool passedMETFilters = true;
     for(unsigned int i=0; i<metfilters.size(); ++i){
