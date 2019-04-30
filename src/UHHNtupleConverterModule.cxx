@@ -5,6 +5,9 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/common/include/CommonModules.h"
 #include "UHH2/common/include/CleaningModules.h"
+#include "UHH2/common/include/MuonIds.h"
+#include "UHH2/common/include/ElectronIds.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/ElectronHists.h"
 #include "UHH2/common/include/NSelections.h"
 #include "UHH2/common/include/TriggerSelection.h"
@@ -80,7 +83,7 @@ private:
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> njet_sel, dijet_sel;
+    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection; 
@@ -317,6 +320,9 @@ private:
     const int runnr_2018_Db = 320673;
     const int runnr_2018_De = 325175;
 
+    MuonId     MuId;
+    ElectronId EleId;
+
 };
 
 
@@ -345,6 +351,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     if (isMC) xSec_ = m_xSec.getLumiWeight( ctx.get("sample_name") );//to be checked
     cout << "Cross section set to " << xSec_ << " for sample " << ctx.get("sample_name") << endl;
     
+    MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose));
+    EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
+    
+
     // 1. setup other modules. CommonModules and the JetCleaner:
     common.reset(new CommonModules());
     // TODO: configure common here, e.g. by 
@@ -695,6 +705,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_met_sumEt = ctx.declare_event_output<float>("met_sumEt");
                 
     // 2. set up selections
+    muon_sel.reset(new MuonVeto(0.8,MuId)); // see UHHNtupleConverterSelections
+    electron_sel.reset(new ElectronVeto(0.8,EleId)); // see UHHNtupleConverterSelections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
 
@@ -725,7 +737,12 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // 1. run all modules other modules.
     int filters = common->process(event);
     if( !filters ) return false;
-        
+
+    bool muon_selection = muon_sel->passes(event);
+    if(!muon_selection) return false;
+    bool electron_selection = electron_sel->passes(event);
+    if(!electron_selection) return false;
+    
     jetcleaner->process(event);
     massCalc->process(event);    
           

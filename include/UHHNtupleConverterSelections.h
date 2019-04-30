@@ -3,6 +3,7 @@
 #include "UHH2/core/include/fwd.h"
 #include "UHH2/core/include/Selection.h"
 #include "UHH2/core/include/Jet.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
 
 namespace uhh2examples {
     
@@ -18,6 +19,28 @@ public:
 private:
     float deta_max, mjj_min;
 };
+
+
+class MuonVeto: public uhh2::Selection {
+public:
+  MuonVeto(float deltR_min = 0.8f, const boost::optional<MuonId> & muid = boost::none);
+  virtual bool passes(const uhh2::Event & event) override;
+private:
+  float deltaR_min;
+  boost::optional<MuonId> muid;
+};
+
+class ElectronVeto: public uhh2::Selection {
+public:
+  ElectronVeto(float deltR_min = 0.8f, const boost::optional<ElectronId> & eleid = boost::none);
+  virtual bool passes(const uhh2::Event & event) override;
+private:
+  float deltaR_min;
+  boost::optional<ElectronId> eleid;
+};
+
+
+
 
 class GenHbbEventSelection: public uhh2::Selection {
 public:
