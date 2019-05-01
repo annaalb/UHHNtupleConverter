@@ -141,10 +141,10 @@ private:
     uhh2::Event::Handle<float>  m_o_phi_jet2;
     uhh2::Event::Handle<float>  m_o_mass_jet1;
     uhh2::Event::Handle<float>  m_o_mass_jet2; 
-    uhh2::Event::Handle<bool>    jj_mergedVTruth_jet1;
-    uhh2::Event::Handle<bool>    jj_mergedVTruth_jet2;
-    uhh2::Event::Handle<bool>    jj_mergedHTruth_jet1;
-    uhh2::Event::Handle<bool>    jj_mergedHTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedVTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedVTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedHTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHTruth_jet2;
             
     //reco puppi softdrop variables
     uhh2::Event::Handle<float>  m_o_pt_softdrop_jet1;
@@ -942,12 +942,11 @@ bool UHHNtupleConverterModule::process(Event & event) {
      if(btag2 > btag1){
       jet1 = event.jets->at(1);
       jet2 = event.jets->at(0);
-      auto tmp = closest_puppijet1;
-      closest_puppijet2 = closest_puppijet1;
-      closest_puppijet1 = tmp;
      }     
     } 
-    
+  
+    closest_puppijet1 = closestParticle(jet1, *(event.topjets));
+    closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
     auto closest_softdrop_genjet1 = closestParticle(jet1, *(event.gentopjets));
     auto closest_softdrop_genjet2 = closestParticle(jet2, *(event.gentopjets));
     auto closest_genjet1 = closestParticle(jet1, *(event.genjets));
