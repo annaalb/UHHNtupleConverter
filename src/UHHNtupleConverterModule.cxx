@@ -365,7 +365,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     
     isSignal = false;
     TString sample = ctx.get("sample_name");
-    if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime")) isSignal = true;
+    if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime") or sample.Contains("Radion")) isSignal = true;
 
     if(ctx.get("jet_sorting")=="random") sorting = Sorting::SORTING_RANDOM;
     else if(ctx.get("jet_sorting")=="btag") sorting = Sorting::SORTING_BYBTAG;
