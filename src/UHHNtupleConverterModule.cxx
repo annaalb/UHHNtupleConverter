@@ -100,6 +100,7 @@ private:
     LumiWeight m_xSec;
     double xSec_;
     bool isMC;
+    bool isSignal;
     
     enum Sorting{
      SORTING_RANDOM,
@@ -361,6 +362,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 
     year = extract_year(ctx);
     isMC = ctx.get("dataset_type") == "MC";
+    
+    isSignal = false;
+    TString sample = ctx.get("sample_name");
+    if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime")) isSignal = true;
+
     if(ctx.get("jet_sorting")=="random") sorting = Sorting::SORTING_RANDOM;
     else if(ctx.get("jet_sorting")=="btag") sorting = Sorting::SORTING_BYBTAG;
     else{
@@ -969,10 +975,18 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_mass_jet1,jet1.v4().M());
     event.set(m_o_mass_jet2,jet2.v4().M());
     
-    event.set(jj_mergedHTruth_jet1,genHbbEvent_sel->passes(event,jet1));
-    event.set(jj_mergedHTruth_jet2,genHbbEvent_sel->passes(event,jet2));
-    event.set(jj_mergedVTruth_jet1,genVqqEvent_sel->passes(event,jet1));
-    event.set(jj_mergedVTruth_jet2,genVqqEvent_sel->passes(event,jet2));
+    if(isMC && isSignal){
+     event.set(jj_mergedHTruth_jet1,genHbbEvent_sel->passes(event,jet1));
+     event.set(jj_mergedHTruth_jet2,genHbbEvent_sel->passes(event,jet2));
+     event.set(jj_mergedVTruth_jet1,genVqqEvent_sel->passes(event,jet1));
+     event.set(jj_mergedVTruth_jet2,genVqqEvent_sel->passes(event,jet2));
+    }
+    else{
+     event.set(jj_mergedHTruth_jet1,0);
+     event.set(jj_mergedHTruth_jet2,0);
+     event.set(jj_mergedVTruth_jet1,0);
+     event.set(jj_mergedVTruth_jet2,0);    
+    } 
                 
     //reco puppi softdrop variables	  
     event.set(m_o_pt_softdrop_jet1,closest_puppijet1->pt());
