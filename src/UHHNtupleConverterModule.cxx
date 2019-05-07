@@ -391,7 +391,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 
     year = extract_year(ctx);
     isMC = ctx.get("dataset_type") == "MC";
-  
+
     printGenparticle = false;
   
     isSignal = false;
@@ -498,24 +498,23 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       if(year == Year::is2016v2 || year == Year::is2016v3){
 	jec_tag = "Summer16_07Aug2017";
 	jec_ver = "11";
-	std::cout << "USING 2016 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
 	jec_tag = "Fall17_17Nov2017";
 	jec_ver = "32";
-	std::cout << "USING 2017 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
       else if(year == Year::is2018 ){
 	jec_tag = "Autumn18";
 	jec_ver = "8";
-	std::cout << "USING 2018 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
+      std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << " " << jec_jet_coll_AK8puppi << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
       topjet_corrector.reset(new TopJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8puppi)));
     }
     else{
+      std::cout << "USING " << year_str_map.at(year) << " DATA JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       if(year == Year::is2016v2 || year == Year::is2016v3){
 	jet_corrector_2016_B.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "B")));
 	jet_corrector_2016_C.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "C")));
