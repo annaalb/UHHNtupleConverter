@@ -63,8 +63,10 @@ GenHbbEventSelection::GenHbbEventSelection(){}
     
 bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
   std::vector<GenParticle> genQuarks;
+  bool Higgsboson = false;
   for(auto genp:*event.genparticles){
     if(abs(genp.pdgId())==25){
+      Higgsboson = true;
       if(abs(event.genparticles->at(genp.daughter1()).pdgId())==5 && abs(event.genparticles->at(genp.daughter2()).pdgId())==5){
        genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
        genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
@@ -73,8 +75,8 @@ bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
     if(genQuarks.size()>1) break;
   }
   
-  if(genQuarks.size()>2) cout << "WARNING: found more than two daughters for Higgs boson!" << endl;
-  if(genQuarks.size()<2) cout << "WARNING: found less than two daughters for Higgs boson!" << endl;
+  if(Higgsboson && genQuarks.size()>2) cout << "WARNING: found more than two daughters for Higgs boson!" << endl;
+  if(Higgsboson && genQuarks.size()<2) cout << "WARNING: found less than two daughters for Higgs boson!" << endl;
   
   int associatedQuarks=0;
   for(unsigned int i=0; i<genQuarks.size(); ++i){
@@ -89,8 +91,10 @@ GenVqqEventSelection::GenVqqEventSelection(){}
     
 bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
   std::vector<GenParticle> genQuarks;
+  bool vectorboson = false;
   for(auto genp:*event.genparticles){
     if(abs(genp.pdgId())==24 || abs(genp.pdgId())==23){
+       vectorboson = true;
        int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
        int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
        if( (dau1 >=1 && dau1 <=6) && (dau2 >=1 && dau2 <=6) ){
@@ -101,9 +105,10 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
     if(genQuarks.size()>1) break;
   }
   
-  if(genQuarks.size()>2) cout << "WARNING: found more than two daughters for Higgs boson!" << endl;
-  if(genQuarks.size()<2) cout << "WARNING: found less than two daughters for Higgs boson!" << endl;
-  
+  if(vectorboson && genQuarks.size()>2) cout << "WARNING: found more than two daughters for Vector boson!" << endl;
+  if(vectorboson && genQuarks.size()<2) cout << "WARNING: found less than two daughters for Vector boson! Are you using an inclusive sample?" << endl;
+
+ 
   int associatedQuarks=0;
   for(unsigned int i=0; i<genQuarks.size(); ++i){
    if( deltaR(jet.v4(),genQuarks[i].v4()) < 0.8) associatedQuarks +=1;
