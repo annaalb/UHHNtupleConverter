@@ -15,7 +15,7 @@
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterHists.h"
 #include "UHH2/common/include/Utils.h"
 #include "UHH2/common/include/ObjectIdUtils.h"
-
+#include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 
 using namespace std;
@@ -35,7 +35,7 @@ public:
     virtual bool process(Event & event) override;
 
 private:
-    
+    std::unique_ptr<AnalysisModule> Gen_printer;    
     std::unique_ptr<CommonModules> common;
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
@@ -101,7 +101,9 @@ private:
     double xSec_;
     bool isMC;
     bool isSignal;
-    
+
+    bool printGenparticle;    
+
     enum Sorting{
      SORTING_RANDOM,
      SORTING_BYBTAG
@@ -358,11 +360,17 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     for(auto & kv : ctx.get_all()){
         cout << " " << kv.first << " = " << kv.second << endl;
     }
+  
+
+    Gen_printer.reset(new GenParticlesPrinter(ctx));
+
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
 
     year = extract_year(ctx);
     isMC = ctx.get("dataset_type") == "MC";
-    
+  
+    printGenparticle = false;
+  
     isSignal = false;
     TString sample = ctx.get("sample_name");
     if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime") or sample.Contains("Radion")) isSignal = true;
@@ -777,7 +785,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // is thrown away.
     
     //cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
-    
+  if(printGenparticle)    Gen_printer->process(event);     
         
     // 1. run all modules other modules.
     common->process(event);   
