@@ -39,6 +39,8 @@ private:
     std::unique_ptr<CommonModules> common;
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
+
+    std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi, jec_jet_coll_AK8puppi;
    
     std::unique_ptr<JetCorrector> jet_corrector;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi; //need an additional corrector for Puppi AK4, for VBF jets
@@ -488,165 +490,91 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 
     /* jec year dependent initialization */ 
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
-    std::vector<std::string> JEC_AK4puppi,JEC_AK8chs,JEC_AK8puppi,JEC_AK4puppi_A,JEC_AK4puppi_B,JEC_AK4puppi_C,JEC_AK4puppi_D,JEC_AK4puppi_E,JEC_AK4puppi_F,JEC_AK4puppi_G,JEC_AK4puppi_H,JEC_AK8puppi_A,JEC_AK8puppi_B,JEC_AK8puppi_C,JEC_AK8puppi_D,JEC_AK8puppi_E,JEC_AK8puppi_F,JEC_AK8puppi_G,JEC_AK8puppi_H,JEC_AK8chs_A,JEC_AK8chs_B,JEC_AK8chs_C,JEC_AK8chs_D,JEC_AK8chs_E,JEC_AK8chs_F,JEC_AK8chs_G,JEC_AK8chs_H;
+    jec_jet_coll_AK8chs   = "AK8PFchs";
+    jec_jet_coll_AK4puppi = "AK4PFPuppi";
+    jec_jet_coll_AK8puppi = "AK8PFPuppi";
 
     if(isMC){
       if(year == Year::is2016v2 || year == Year::is2016v3){
-	std::cout << "USING 2016 MC JEC" << std::endl;
-	JEC_AK8chs   = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFchs_MC;
-	JEC_AK4puppi = JERFiles::Summer16_07Aug2017_V11_L123_AK4PFPuppi_MC;
-	JEC_AK8puppi = JERFiles::Summer16_07Aug2017_V11_L123_AK8PFPuppi_MC;
+	jec_tag = "Summer16_07Aug2017";
+	jec_ver = "11";
+	std::cout << "USING 2016 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
-	std::cout << "USING 2017 MC JEC:" << std::endl;
-	JEC_AK8chs   = JERFiles::Fall17_17Nov2017_V32_L123_AK8PFchs_MC;
-	JEC_AK4puppi = JERFiles::Fall17_17Nov2017_V32_L123_AK4PFPuppi_MC;
-	JEC_AK8puppi = JERFiles::Fall17_17Nov2017_V32_L123_AK8PFPuppi_MC;
+	jec_tag = "Fall17_17Nov2017";
+	jec_ver = "32";
+	std::cout << "USING 2017 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
       else if(year == Year::is2018 ){
-	std::cout << "USING 2018 MC JEC:" << std::endl;
-	JEC_AK8chs   = JERFiles::Autumn18_V8_L123_AK8PFchs_MC;
-	JEC_AK4puppi = JERFiles::Autumn18_V8_L123_AK4PFPuppi_MC;
-	JEC_AK8puppi = JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC;
+	jec_tag = "Autumn18";
+	jec_ver = "8";
+	std::cout << "USING 2018 MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       }
-      for (auto it = JEC_AK8chs.begin(), end = JEC_AK8chs.end(); it != end; ++it){ std::cout <<"AK8 JEC chs: " << *it << std::endl;}
-      for (auto it = JEC_AK4puppi.begin(), end = JEC_AK4puppi.end(); it != end; ++it){ std::cout <<"AK4 JEC puppi: " << *it << std::endl;}
-      for (auto it = JEC_AK8puppi.begin(), end = JEC_AK8puppi.end(); it != end; ++it){ std::cout <<"AK8 JEC puppi: " << *it << std::endl;}
+      std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << " " << jec_jet_coll_AK8puppi << std::endl;     
+      jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
+      jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
+      topjet_corrector.reset(new TopJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8puppi)));
     }
     else{
       if(year == Year::is2016v2 || year == Year::is2016v3){
-	std::cout << "USING 2016 data JEC" << std::endl;
-	JEC_AK8chs_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFchs_DATA;
-	JEC_AK8chs_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK8PFchs_DATA;
-	JEC_AK8chs_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK8PFchs_DATA;
-	JEC_AK8chs_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK8PFchs_DATA;
-	JEC_AK8chs_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK8PFchs_DATA;
-	JEC_AK8chs_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK8PFchs_DATA;
-	JEC_AK8chs_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFchs_DATA;
+	jet_corrector_2016_B.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "B")));
+	jet_corrector_2016_C.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "C")));
+	jet_corrector_2016_D.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "D")));
+	jet_corrector_2016_E.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "E")));
+	jet_corrector_2016_F.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "F")));
+	jet_corrector_2016_G.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "G")));
+	jet_corrector_2016_H.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "H")));
 
-	JEC_AK4puppi_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK4PFPuppi_DATA;
-
-	JEC_AK8puppi_B = JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_C = JERFiles::Summer16_07Aug2017_V11_C_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_D = JERFiles::Summer16_07Aug2017_V11_D_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_E = JERFiles::Summer16_07Aug2017_V11_E_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_F = JERFiles::Summer16_07Aug2017_V11_F_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_G = JERFiles::Summer16_07Aug2017_V11_G_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_H = JERFiles::Summer16_07Aug2017_V11_H_L123_AK8PFPuppi_DATA;
+	jet_corrector_puppi_2016_B.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "B"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_C.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "C"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_D.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "D"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_E.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "E"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_F.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "F"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_G.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "G"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2016_H.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "H"), "jetsAk4Puppi"));
+ 
+	topjet_corrector_2016_B.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "B")));
+	topjet_corrector_2016_C.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "C")));
+	topjet_corrector_2016_D.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "D")));
+	topjet_corrector_2016_E.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "F")));
+	topjet_corrector_2016_F.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "F")));
+	topjet_corrector_2016_G.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "G")));
+	topjet_corrector_2016_H.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "H")));
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
-	std::cout << "USING 2017 MC JEC" << std::endl;
-        JEC_AK8chs_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFchs_DATA;
-        JEC_AK8chs_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFchs_DATA;
-        JEC_AK8chs_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFchs_DATA;
-        JEC_AK8chs_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFchs_DATA;
-        JEC_AK8chs_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFchs_DATA;
+	jet_corrector_2017_B.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "B")));
+	jet_corrector_2017_C.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "C")));
+	jet_corrector_2017_D.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "D")));
+	jet_corrector_2017_E.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "E")));
+	jet_corrector_2017_F.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "F")));
 
-        JEC_AK4puppi_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK4PFPuppi_DATA;
-        JEC_AK4puppi_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK4PFPuppi_DATA;
-        JEC_AK4puppi_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK4PFPuppi_DATA;
-        JEC_AK4puppi_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK4PFPuppi_DATA;
-        JEC_AK4puppi_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK4PFPuppi_DATA;
-
-	JEC_AK8puppi_B = JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_C = JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_D = JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_E = JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_F = JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFPuppi_DATA;
+	jet_corrector_puppi_2017_B.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "B"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2017_C.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "C"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2017_D.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "D"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2017_E.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "E"), "jetsAk4Puppi"));
+	jet_corrector_puppi_2017_F.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "F"), "jetsAk4Puppi"));
+ 
+	topjet_corrector_2017_B.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "B")));
+	topjet_corrector_2017_C.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "C")));
+	topjet_corrector_2017_D.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "D")));
+	topjet_corrector_2017_E.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "F")));
+	topjet_corrector_2017_F.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "F")));
       }
       else if(year == Year::is2018 ){
-	std::cout << "USING 2016 MC JEC" << std::endl;
-        JEC_AK8chs_A = JERFiles::Autumn18_V8_A_L123_AK8PFchs_DATA;
-	JEC_AK8chs_B = JERFiles::Autumn18_V8_B_L123_AK8PFchs_DATA;
-	JEC_AK8chs_C = JERFiles::Autumn18_V8_C_L123_AK8PFchs_DATA;
-	JEC_AK8chs_D = JERFiles::Autumn18_V8_D_L123_AK8PFchs_DATA;
+        jet_corrector_2018_A.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "A")));
+        jet_corrector_2018_B.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "B")));
+        jet_corrector_2018_C.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "C")));
+        jet_corrector_2018_D.reset(new JetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8chs, "D")));
 
-        JEC_AK4puppi_A = JERFiles::Autumn18_V8_A_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_B = JERFiles::Autumn18_V8_B_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_C = JERFiles::Autumn18_V8_C_L123_AK4PFPuppi_DATA;
-	JEC_AK4puppi_D = JERFiles::Autumn18_V8_D_L123_AK4PFPuppi_DATA;
+        jet_corrector_puppi_2018_A.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "A"), "jetsAk4Puppi"));
+        jet_corrector_puppi_2018_B.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "B"), "jetsAk4Puppi"));
+        jet_corrector_puppi_2018_C.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "C"), "jetsAk4Puppi"));
+        jet_corrector_puppi_2018_D.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK4puppi, "D"), "jetsAk4Puppi"));
 
-	JEC_AK8puppi_A = JERFiles::Autumn18_V8_A_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_B = JERFiles::Autumn18_V8_B_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_C = JERFiles::Autumn18_V8_C_L123_AK8PFPuppi_DATA;
-	JEC_AK8puppi_D = JERFiles::Autumn18_V8_D_L123_AK8PFPuppi_DATA;
-      }
-      for (auto it = JEC_AK8chs_B.begin(), end = JEC_AK8chs_B.end(); it != end; ++it){ std::cout <<"AK8chs B JEC: " << *it << std::endl;}
-    }
-
-
-    if(isMC){
-      jet_corrector.reset(new JetCorrector(ctx, JEC_AK8chs));
-      jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JEC_AK4puppi,"jetsAk4Puppi"));
-      topjet_corrector.reset(new TopJetCorrector(ctx, JEC_AK8puppi));
-    }
-    else{
-      if(year == Year::is2016v2 || year == Year::is2016v3){
-	jet_corrector_2016_B.reset(new JetCorrector(ctx, JEC_AK8chs_B));
-	jet_corrector_2016_C.reset(new JetCorrector(ctx, JEC_AK8chs_C));
-	jet_corrector_2016_D.reset(new JetCorrector(ctx, JEC_AK8chs_D));
-	jet_corrector_2016_E.reset(new JetCorrector(ctx, JEC_AK8chs_E));
-	jet_corrector_2016_F.reset(new JetCorrector(ctx, JEC_AK8chs_F));
-	jet_corrector_2016_G.reset(new JetCorrector(ctx, JEC_AK8chs_G));
-	jet_corrector_2016_H.reset(new JetCorrector(ctx, JEC_AK8chs_H));
-
-	jet_corrector_puppi_2016_B.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_B,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_C.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_C,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_D.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_D,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_E.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_E,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_F.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_F,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_G.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_G,"jetsAk4Puppi"));
-	jet_corrector_puppi_2016_H.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_H,"jetsAk4Puppi"));
-
-	topjet_corrector_2016_B.reset(new TopJetCorrector(ctx, JEC_AK8puppi_B));
-	topjet_corrector_2016_C.reset(new TopJetCorrector(ctx, JEC_AK8puppi_C));
-	topjet_corrector_2016_D.reset(new TopJetCorrector(ctx, JEC_AK8puppi_D));
-	topjet_corrector_2016_E.reset(new TopJetCorrector(ctx, JEC_AK8puppi_F));
-	topjet_corrector_2016_F.reset(new TopJetCorrector(ctx, JEC_AK8puppi_F));
-	topjet_corrector_2016_G.reset(new TopJetCorrector(ctx, JEC_AK8puppi_G));
-	topjet_corrector_2016_H.reset(new TopJetCorrector(ctx, JEC_AK8puppi_H));
-      }
-      else if(year == Year::is2017v1 || year == Year::is2017v2){
-	jet_corrector_2017_B.reset(new JetCorrector(ctx, JEC_AK8chs_B));
-	jet_corrector_2017_C.reset(new JetCorrector(ctx, JEC_AK8chs_C));
-	jet_corrector_2017_D.reset(new JetCorrector(ctx, JEC_AK8chs_D));
-	jet_corrector_2017_E.reset(new JetCorrector(ctx, JEC_AK8chs_E));
-	jet_corrector_2017_F.reset(new JetCorrector(ctx, JEC_AK8chs_F));
-
-	jet_corrector_puppi_2017_B.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_B,"jetsAk4Puppi"));
-	jet_corrector_puppi_2017_C.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_C,"jetsAk4Puppi"));
-	jet_corrector_puppi_2017_D.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_D,"jetsAk4Puppi"));
-	jet_corrector_puppi_2017_E.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_E,"jetsAk4Puppi"));
-	jet_corrector_puppi_2017_F.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_F,"jetsAk4Puppi"));
-
-	topjet_corrector_2017_B.reset(new TopJetCorrector(ctx, JEC_AK8puppi_B));
-	topjet_corrector_2017_C.reset(new TopJetCorrector(ctx, JEC_AK8puppi_C));
-	topjet_corrector_2017_D.reset(new TopJetCorrector(ctx, JEC_AK8puppi_D));
-	topjet_corrector_2017_E.reset(new TopJetCorrector(ctx, JEC_AK8puppi_F));
-	topjet_corrector_2017_F.reset(new TopJetCorrector(ctx, JEC_AK8puppi_F));
-      }
-      else if(year == Year::is2018 ){
-	jet_corrector_2018_A.reset(new JetCorrector(ctx, JEC_AK8chs_A));
-	jet_corrector_2018_B.reset(new JetCorrector(ctx, JEC_AK8chs_B));
-	jet_corrector_2018_C.reset(new JetCorrector(ctx, JEC_AK8chs_C));
-	jet_corrector_2018_D.reset(new JetCorrector(ctx, JEC_AK8chs_D));
-
-	jet_corrector_puppi_2018_A.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_A,"jetsAk4Puppi"));
-	jet_corrector_puppi_2018_B.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_B,"jetsAk4Puppi"));
-	jet_corrector_puppi_2018_C.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_C,"jetsAk4Puppi"));
-	jet_corrector_puppi_2018_D.reset(new GenericJetCorrector(ctx, JEC_AK4puppi_D,"jetsAk4Puppi"));
-
-
-	topjet_corrector_2018_A.reset(new TopJetCorrector(ctx, JEC_AK8puppi_A));
-	topjet_corrector_2018_B.reset(new TopJetCorrector(ctx, JEC_AK8puppi_B));
-	topjet_corrector_2018_C.reset(new TopJetCorrector(ctx, JEC_AK8puppi_C));
-	topjet_corrector_2018_D.reset(new TopJetCorrector(ctx, JEC_AK8puppi_D));
+        topjet_corrector_2018_A.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "A")));
+        topjet_corrector_2018_B.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "B")));
+        topjet_corrector_2018_C.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "C")));
+        topjet_corrector_2018_D.reset(new TopJetCorrector(ctx, JERFiles::JECFilesDATA(jec_tag, jec_ver, jec_jet_coll_AK8puppi, "D")));
       }
     }
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
