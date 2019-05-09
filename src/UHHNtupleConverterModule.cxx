@@ -41,7 +41,9 @@ private:
     std::unique_ptr<AnalysisModule> massCalc;
 
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
-   
+    JERSmearing::SFtype1 JER_sf;
+    TString ResolutionFileName;   
+  
     std::unique_ptr<JetCorrector> jet_corrector;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi; //need an additional corrector for Puppi AK4, for VBF jets
 
@@ -481,22 +483,27 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       if(year == Year::is2016v2 || year == Year::is2016v3){
 	jec_tag = "Summer16_07Aug2017";
 	jec_ver = "11";
+	JER_sf  = JERSmearing::SF_13TeV_Summer16_25nsV1;
+	ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
 	jec_tag = "Fall17_17Nov2017";
 	jec_ver = "32";
+	JER_sf  = JERSmearing::SF_13TeV_Fall17_V3;
+	ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
       }
       else if(year == Year::is2018 ){
 	jec_tag = "Autumn18";
 	jec_ver = "8";
+	JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
+	ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
       }
       std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
       jet_EResSmearer.reset(new JetResolutionSmearer(ctx));                                                                                                                                                                                                           
-      //      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"h_VBFJets","h_VBFgenJets",JERSmearing::SF_13TeV_Summer16_25nsV1,"2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt"));
-      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JERSmearing::SF_13TeV_Summer16_25nsV1,"2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt"));
+      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JER_sf,ResolutionFileName));
     }
     else{
       std::cout << "USING " << year_str_map.at(year) << " DATA JEC: "<< jec_tag << " V" << jec_ver << std::endl;
