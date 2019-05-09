@@ -494,10 +494,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
-
       jet_EResSmearer.reset(new JetResolutionSmearer(ctx));                                                                                                                                                                                                           
-      //jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets",true,JERSmearing::SF_13TeV_2016_25nsV1,"Summer16_25nsV1_MC_PtResolution_AK8PFPuppi.txt"));                                                                                  
-
+      //      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"h_VBFJets","h_VBFgenJets",JERSmearing::SF_13TeV_Summer16_25nsV1,"2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt"));
+      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JERSmearing::SF_13TeV_Summer16_25nsV1,"2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt"));
     }
     else{
       std::cout << "USING " << year_str_map.at(year) << " DATA JEC: "<< jec_tag << " V" << jec_ver << std::endl;
@@ -774,6 +773,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
       jet_corrector_puppi->process(event);
       jet_corrector->correct_met(event);
       jet_EResSmearer->process(event);
+      jetpuppi_EResSmearer->process(event);
     }
     else{
       //2016                                                                                                                                                                                                                                                                   
