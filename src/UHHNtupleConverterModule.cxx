@@ -500,6 +500,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       }
       std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
+      std::cout << "Smearing: " << jec_jet_coll_AK8chs << " with year default " << std::endl;
+      std::cout << "Smearing: " << jec_jet_coll_AK4puppi << " with "<< ResolutionFileName << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
       jet_EResSmearer.reset(new JetResolutionSmearer(ctx));                                                                                                                                                                                                           
