@@ -17,6 +17,7 @@
 #include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
+#include "UHH2/UHHNtupleConverter/include/Ak4RemovalModule.h"
 
 using namespace std;
 using namespace uhh2;
@@ -89,6 +90,7 @@ private:
 
     std::unique_ptr<JetResolutionSmearer> jet_EResSmearer;                                                                                                                                                                                                              
     std::unique_ptr<GenericJetResolutionSmearer> jetpuppi_EResSmearer;                                                                                                                                                                                                    
+    std::unique_ptr<AnalysisModule> Ak4OverlapCleaner;    
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
@@ -418,7 +420,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     massCalc.reset(new SoftDropMassCalculator(ctx, true, "common/data/2018/puppiCorr.root"));
 
     vbfjetcleaner.reset(new JetCleaner(ctx, 30.0, 5.0, "jetsAk4Puppi")); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
-
+    Ak4OverlapCleaner.reset(new Ak4RemovalModule(ctx,1.2,"jetsAk4Puppi"));
     //branches for output tree
     
     //event variables
@@ -913,6 +915,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     h_dijet->fill(event);
 
     vbfjetcleaner->process(event);
+    Ak4OverlapCleaner->process(event);
 
     //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
