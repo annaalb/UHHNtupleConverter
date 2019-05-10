@@ -90,8 +90,6 @@ private:
     std::unique_ptr<JetResolutionSmearer> jet_EResSmearer;                                                                                                                                                                                                              
     std::unique_ptr<GenericJetResolutionSmearer> jetpuppi_EResSmearer;                                                                                                                                                                                                    
 
-    Event::Handle<vector<Jet>> VBFjets;
-
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
     std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel;
@@ -419,7 +417,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jetcleaner.reset(new JetCleaner(ctx, 200.0, 2.4)); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
     massCalc.reset(new SoftDropMassCalculator(ctx, true, "common/data/2018/puppiCorr.root"));
 
-    VBFjets = ctx.get_handle<vector<Jet>>("jetsAk4Puppi");
     vbfjetcleaner.reset(new JetCleaner(ctx, 30.0, 5.0, "jetsAk4Puppi")); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
 
     //branches for output tree
@@ -880,8 +877,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     jetcleaner->process(event);
     massCalc->process(event);    
 
-    vbfjetcleaner->process(event);
-          
+
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
     event.set(b_lumi, event.luminosityBlock); 
@@ -915,6 +911,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
     if(!dijet_selection) return false;
     
     h_dijet->fill(event);
+
+    vbfjetcleaner->process(event);
 
     //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
