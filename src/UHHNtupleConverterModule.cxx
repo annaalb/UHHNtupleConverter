@@ -138,6 +138,7 @@ private:
     std::vector< uhh2::Event::Handle<bool> > HLT_all;
     std::vector< uhh2::Event::Handle<bool> > b_MET_filters_all;
     uhh2::Event::Handle<int>    m_o_njj;  
+    uhh2::Event::Handle<int>    m_o_njj_vbf;  
 
     //reco CHS jet variables
     uhh2::Event::Handle<float>  m_o_mjj; 
@@ -436,6 +437,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_passed_MET_filters = ctx.declare_event_output<bool>("passed_METfilters");
     b_passed_PV_filter = ctx.declare_event_output<bool>("passed_PVfilter");
     m_o_njj = ctx.declare_event_output<int>("njj");
+    m_o_njj_vbf = ctx.declare_event_output<int>("njj_vbf");
         
     /* some filters and triggers*/	
     std::vector<std::string> trigNames;
@@ -939,6 +941,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
           
     //event variables		   
     event.set(m_o_njj,1);     
+    event.set(m_o_njj_vbf,0);     
         
     //reco CHS jet variables	     
     event.set(m_o_mjj,inv_mass_safe(jet1.v4()+jet2.v4()));
