@@ -38,6 +38,7 @@ private:
     std::unique_ptr<AnalysisModule> Gen_printer;    
     std::unique_ptr<CommonModules> common;
     std::unique_ptr<JetCleaner> jetcleaner;
+    std::unique_ptr<JetCleaner> vbfjetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
 
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
@@ -89,6 +90,7 @@ private:
     std::unique_ptr<JetResolutionSmearer> jet_EResSmearer;                                                                                                                                                                                                              
     std::unique_ptr<GenericJetResolutionSmearer> jetpuppi_EResSmearer;                                                                                                                                                                                                    
 
+    Event::Handle<vector<Jet>> VBFjets;
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
@@ -416,6 +418,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     common->init(ctx);
     jetcleaner.reset(new JetCleaner(ctx, 200.0, 2.4)); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
     massCalc.reset(new SoftDropMassCalculator(ctx, true, "common/data/2018/puppiCorr.root"));
+
+    VBFjets = ctx.get_handle<vector<Jet>>("jetsAk4Puppi");
+    vbfjetcleaner.reset(new JetCleaner(ctx, 30.0, 5.0, "jetsAk4Puppi")); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
 
     //branches for output tree
     
@@ -874,6 +879,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
 
     jetcleaner->process(event);
     massCalc->process(event);    
+
+    vbfjetcleaner->process(event);
           
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
