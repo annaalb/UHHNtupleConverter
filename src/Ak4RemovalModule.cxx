@@ -14,7 +14,7 @@ Ak4RemovalModule::Ak4RemovalModule(Context & ctx, float mindeta_, string const &
 bool Ak4RemovalModule::process(Event & event){
   assert(event.jets);
   if (!event.is_valid(hndlvbf)) {
-    cerr << "VBF: Handle not valid!\n";
+    cerr << "VBF cleaning: Handle not valid!\n";
     assert(false);
   }
   vector<Jet> & vbfjet_collection = event.get(hndlvbf);
