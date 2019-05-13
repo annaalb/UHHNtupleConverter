@@ -70,12 +70,12 @@ private:
 
 class VBFjetSelection: public uhh2::Selection {
 public:
-    VBFjetSelection(uhh2::Context & ctx, string const & VBFjet = "jetsAk4Puppi", float deta_min = 4.5f, float mjj_min = 800.0f);
+    VBFjetSelection(uhh2::Context & ctx, const string & VBFjet = "jetsAk4Puppi", float deta_min = 4.5f, float mjj_min = 800.0f);
     virtual bool passes(const uhh2::Event & event) override;
 private:
+    const string & VBFjet;
     float deta_min, mjj_min;
     Event::Handle<vector<Jet>> h_VBFjet;
-    string const & VBFjet;
   };
 
 
