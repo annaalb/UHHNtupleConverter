@@ -120,10 +120,17 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
 
 
 
-VBFjetSelection::VBFjetSelection(Event::Handle<vector<Jet>> VBFjet_, float deta_min_, float mjj_min_):VBFjet(VBFjet_), deta_min(deta_min_), mjj_min(mjj_min_){}
+VBFjetSelection::VBFjetSelection(Context & ctx, string const & VBFjet_, float deta_min_, float mjj_min_ ):VBFjet(VBFjet_), deta_min(deta_min_), mjj_min(mjj_min_){
+  h_VBFjet = ctx.get_handle<vector<Jet>>(VBFjet);
+}
 
 bool VBFjetSelection::passes(const Event & event){
-  vector<Jet> vbfjets = event.get(VBFjet);
+  if (!event.is_valid(h_VBFjet)) {
+    cerr << "VBF selections: Handle not valid!\n";
+    assert(false);
+  }
+
+  vector<Jet> vbfjets = event.get(h_VBFjet);
   if(vbfjets.size() < 2) return false;
   const auto & jet0 = vbfjets.at(0);
   const auto & jet1 = vbfjets.at(1);

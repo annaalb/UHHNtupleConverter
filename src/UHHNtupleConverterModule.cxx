@@ -46,6 +46,8 @@ private:
     JERSmearing::SFtype1 JER_sf;
     TString ResolutionFileName;   
   
+    Event::Handle<vector<Jet>> h_VBFJets;
+  
     std::unique_ptr<JetCorrector> jet_corrector;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi; //need an additional corrector for Puppi AK4, for VBF jets
 
@@ -94,7 +96,7 @@ private:
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel;
+    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel, vbf_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection; 
@@ -478,7 +480,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
     /*done with triggers and filters*/        
 
-
+    h_VBFJets = ctx.get_handle<vector<Jet>>("jetsAk4Puppi");
 
     /* jec year dependent initialization */ 
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
@@ -734,7 +736,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     electron_sel.reset(new ElectronVeto(0.8,EleId)); // see UHHNtupleConverterSelections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
-    
+    vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
+
     PrimaryVertexId pvid=StandardPrimaryVertexId();
     pvfilter.reset(new NPVSelection(1,-1,pvid) );
 
@@ -949,7 +952,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
           
     //event variables		   
     event.set(m_o_njj,1);     
-    event.set(m_o_njj_vbf,0);     
+    bool vbf_selection = vbf_sel->passes(event);
+    event.set(m_o_njj_vbf,vbf_selection);     
         
     //reco CHS jet variables	     
     event.set(m_o_mjj,inv_mass_safe(jet1.v4()+jet2.v4()));
