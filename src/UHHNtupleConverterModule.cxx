@@ -18,6 +18,7 @@
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 #include "UHH2/UHHNtupleConverter/include/Ak4RemovalModule.h"
+#include "UHH2/UHHNtupleConverter/include/VBFvariable.h"
 
 using namespace std;
 using namespace uhh2;
@@ -45,8 +46,6 @@ private:
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
     JERSmearing::SFtype1 JER_sf;
     TString ResolutionFileName;   
-  
-    Event::Handle<vector<Jet>> h_VBFJets;
   
     std::unique_ptr<JetCorrector> jet_corrector;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi; //need an additional corrector for Puppi AK4, for VBF jets
@@ -244,6 +243,9 @@ private:
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet2;  
                                             
+    //reco puppi VBF jet variables                                                                                                                                                                                                                                             
+    std::unique_ptr<AnalysisModule> VBFvariables;    
+
     //gen CHS jets variable    
     uhh2::Event::Handle<float>  m_o_genmjj; 
     uhh2::Event::Handle<float>  m_o_genptjj; 
@@ -480,8 +482,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
     /*done with triggers and filters*/        
 
-    h_VBFJets = ctx.get_handle<vector<Jet>>("jetsAk4Puppi");
-
     /* jec year dependent initialization */ 
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     jec_jet_coll_AK8chs   = "AK8PFchs";
@@ -666,6 +666,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_DeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probQCD"); 
     m_o_DeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probQCD");
     
+
+    //reco puppi VBF jet variables
+    VBFvariables.reset(new VBFvariable(ctx,"jetsAk4Puppi"));
+
     //gen CHS variable         
     m_o_genmjj = ctx.declare_event_output<float>("jj_gen_partialMass");  
     m_o_genptjj = ctx.declare_event_output<float>("jj_gen_LV_pt");  
@@ -1066,6 +1070,9 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
     	
+    //reco puppi VBF jet variables 
+    VBFvariables->process(event);
+
     //gen CHS variable  			  
     event.set(m_o_genmjj,(closest_genjet1 && closest_genjet2) ? inv_mass_safe(closest_genjet1->v4()+closest_genjet2->v4()) : -9999);		  
     event.set(m_o_genptjj,(closest_genjet1 && closest_genjet2) ? (closest_genjet1->v4()+closest_genjet2->v4()).Pt() : -9999);  	    
