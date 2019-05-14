@@ -41,7 +41,9 @@ private:
     std::unique_ptr<AnalysisModule> massCalc;
 
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
-   
+    JERSmearing::SFtype1 JER_sf;
+    TString ResolutionFileName;   
+  
     std::unique_ptr<JetCorrector> jet_corrector;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi; //need an additional corrector for Puppi AK4, for VBF jets
 
@@ -84,6 +86,8 @@ private:
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi_2018_C;
     std::unique_ptr<GenericJetCorrector> jet_corrector_puppi_2018_D;
 
+    std::unique_ptr<JetResolutionSmearer> jet_EResSmearer;                                                                                                                                                                                                              
+    std::unique_ptr<GenericJetResolutionSmearer> jetpuppi_EResSmearer;                                                                                                                                                                                                    
 
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
@@ -403,6 +407,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     // the cleaning can also be achieved with less code via CommonModules with:
     // common->set_jet_id(PtEtaCut(30.0, 2.4));
     // before the 'common->init(ctx)' line.
+    common->disable_jersmear(); //JER are done manually
     common->disable_jec(); //JEC are done manually
     common->switch_jetPtSorter(true);
     common->disable_metfilters();
@@ -478,19 +483,29 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       if(year == Year::is2016v2 || year == Year::is2016v3){
 	jec_tag = "Summer16_07Aug2017";
 	jec_ver = "11";
+	JER_sf  = JERSmearing::SF_13TeV_Summer16_25nsV1;
+	ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
       }
       else if(year == Year::is2017v1 || year == Year::is2017v2){
 	jec_tag = "Fall17_17Nov2017";
 	jec_ver = "32";
+	JER_sf  = JERSmearing::SF_13TeV_Fall17_V3;
+	ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
       }
       else if(year == Year::is2018 ){
 	jec_tag = "Autumn18";
 	jec_ver = "8";
+	JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
+	ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
       }
       std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
+      std::cout << "Smearing: " << jec_jet_coll_AK8chs << " with year default " << std::endl;
+      std::cout << "Smearing: " << jec_jet_coll_AK4puppi << " with "<< ResolutionFileName << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
+      jet_EResSmearer.reset(new JetResolutionSmearer(ctx));                                                                                                                                                                                                           
+      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JER_sf,ResolutionFileName));
     }
     else{
       std::cout << "USING " << year_str_map.at(year) << " DATA JEC: "<< jec_tag << " V" << jec_ver << std::endl;
@@ -766,6 +781,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
       jet_corrector->process(event);
       jet_corrector_puppi->process(event);
       jet_corrector->correct_met(event);
+      jet_EResSmearer->process(event);
+      jetpuppi_EResSmearer->process(event);
     }
     else{
       //2016                                                                                                                                                                                                                                                                   

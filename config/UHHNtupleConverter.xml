@@ -35,7 +35,7 @@
             <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
             <Item Name="METName" Value="slimmedMETsPuppi" />
             <Item Name="GenParticleCollection" Value="GenParticles" />
-            <Item Name="additionalBranches" Value="jetsAk4Puppi" /> <!-- additional jet collection for VBF jets -->
+            <Item Name="additionalBranches" Value="jetsAk4Puppi slimmedGenJets" /> <!-- additional jet collection for VBF jets -->
 	     
             <!-- The list of available collections to read in corresponds to the pointer members in event. The 'Name's to use here in the configuration are:
             
