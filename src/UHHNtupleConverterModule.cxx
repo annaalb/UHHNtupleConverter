@@ -17,8 +17,7 @@
 #include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
-#include "UHH2/UHHNtupleConverter/include/Ak4RemovalModule.h"
-#include "UHH2/UHHNtupleConverter/include/VBFvariable.h"
+#include "UHH2/UHHNtupleConverter/include/VBFModule.h"
 
 using namespace std;
 using namespace uhh2;
