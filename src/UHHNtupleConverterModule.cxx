@@ -479,25 +479,26 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jec_jet_coll_AK8chs   = "AK8PFchs";
     jec_jet_coll_AK4puppi = "AK4PFPuppi";
 
+    if(year == Year::is2016v2 || year == Year::is2016v3){
+      jec_tag = "Summer16_07Aug2017";
+      jec_ver = "11";
+      JER_sf  = JERSmearing::SF_13TeV_Summer16_25nsV1;
+      ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
+    }
+    else if(year == Year::is2017v1 || year == Year::is2017v2){
+      jec_tag = "Fall17_17Nov2017";
+      jec_ver = "32";
+      JER_sf  = JERSmearing::SF_13TeV_Fall17_V3;
+      ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
+    }
+    else if(year == Year::is2018 ){
+      jec_tag = "Autumn18";
+      jec_ver = "8";
+      JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
+      ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
+    }
+    
     if(isMC){
-      if(year == Year::is2016v2 || year == Year::is2016v3){
-	jec_tag = "Summer16_07Aug2017";
-	jec_ver = "11";
-	JER_sf  = JERSmearing::SF_13TeV_Summer16_25nsV1;
-	ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
-      }
-      else if(year == Year::is2017v1 || year == Year::is2017v2){
-	jec_tag = "Fall17_17Nov2017";
-	jec_ver = "32";
-	JER_sf  = JERSmearing::SF_13TeV_Fall17_V3;
-	ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
-      }
-      else if(year == Year::is2018 ){
-	jec_tag = "Autumn18";
-	jec_ver = "8";
-	JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
-	ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
-      }
       std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
       std::cout << "Smearing: " << jec_jet_coll_AK8chs << " with year default " << std::endl;
