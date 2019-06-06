@@ -486,7 +486,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jec_jet_coll_AK8chs   = "AK8PFchs";
     jec_jet_coll_AK4puppi = "AK4PFPuppi";
 
-
     if(year == Year::is2016v2 || year == Year::is2016v3){
       jec_tag = "Summer16_07Aug2017";
       jec_ver = "11";
@@ -505,7 +504,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       JER_sf  = JERSmearing::SF_13TeV_Autumn18_RunABCD_V4;
       ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
     }
-
+    
     if(isMC){
       std::cout << "USING "<< year_str_map.at(year) << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
       std::cout << "for the following jet collections: " << jec_jet_coll_AK8chs << " " << jec_jet_coll_AK4puppi << std::endl;     
