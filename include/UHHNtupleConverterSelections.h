@@ -3,7 +3,11 @@
 #include "UHH2/core/include/fwd.h"
 #include "UHH2/core/include/Selection.h"
 #include "UHH2/core/include/Jet.h"
+#include "UHH2/core/include/Event.h"
 #include "UHH2/common/include/ObjectIdUtils.h"
+
+using namespace std;
+using namespace uhh2;
 
 namespace uhh2examples {
     
@@ -61,5 +65,20 @@ public:
 private:    
 
 };
+
+
+
+class VBFjetSelection: public uhh2::Selection {
+public:
+    VBFjetSelection(uhh2::Context & ctx, const string & VBFjet = "jetsAk4Puppi", float deta_min = 4.5f, float mjj_min = 800.0f);
+    virtual bool passes(const uhh2::Event & event) override;
+private:
+    const string & VBFjet;
+    float deta_min, mjj_min;
+    Event::Handle<vector<Jet>> h_VBFjet;
+  };
+
+
+
 
 }
