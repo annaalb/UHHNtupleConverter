@@ -117,3 +117,26 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
   if (associatedQuarks ==2) return true;
   else return false;
 }
+
+
+
+VBFjetSelection::VBFjetSelection(Context & ctx, string const & VBFjet_, float deta_min_, float mjj_min_ ):VBFjet(VBFjet_), deta_min(deta_min_), mjj_min(mjj_min_){
+  h_VBFjet = ctx.get_handle<vector<Jet>>(VBFjet);
+}
+
+bool VBFjetSelection::passes(const Event & event){
+  if (!event.is_valid(h_VBFjet)) {
+    cerr << "VBF selections: Handle not valid!\n";
+    assert(false);
+  }
+
+  vector<Jet> vbfjets = event.get(h_VBFjet);
+  if(vbfjets.size() < 2) return false;
+  const auto & jet0 = vbfjets.at(0);
+  const auto & jet1 = vbfjets.at(1);
+  auto deta = fabs(jet0.eta() - jet1.eta());
+  if(deta < deta_min) return false;
+  if(jet0.eta() * jet1.eta() > 0) return false;
+  if(inv_mass_safe(jet0.v4()+jet1.v4()) < mjj_min ) return false;
+  return true;
+}
