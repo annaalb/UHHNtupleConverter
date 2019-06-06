@@ -17,6 +17,7 @@
 #include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
+#include "UHH2/UHHNtupleConverter/include/VBFModule.h"
 
 using namespace std;
 using namespace uhh2;
@@ -38,6 +39,7 @@ private:
     std::unique_ptr<AnalysisModule> Gen_printer;    
     std::unique_ptr<CommonModules> common;
     std::unique_ptr<JetCleaner> jetcleaner;
+    std::unique_ptr<JetCleaner> vbfjetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
 
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
@@ -88,11 +90,11 @@ private:
 
     std::unique_ptr<JetResolutionSmearer> jet_EResSmearer;                                                                                                                                                                                                              
     std::unique_ptr<GenericJetResolutionSmearer> jetpuppi_EResSmearer;                                                                                                                                                                                                    
-
+    std::unique_ptr<AnalysisModule> Ak4OverlapCleaner;    
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel;
+    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel, vbf_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection; 
@@ -138,6 +140,7 @@ private:
     std::vector< uhh2::Event::Handle<bool> > HLT_all;
     std::vector< uhh2::Event::Handle<bool> > b_MET_filters_all;
     uhh2::Event::Handle<int>    m_o_njj;  
+    uhh2::Event::Handle<int>    m_o_njj_vbf;  
 
     //reco CHS jet variables
     uhh2::Event::Handle<float>  m_o_mjj; 
@@ -239,6 +242,9 @@ private:
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet2;  
                                             
+    //reco puppi VBF jet variables                                                                                                                                                                                                                                             
+    std::unique_ptr<AnalysisModule> VBFvariables;    
+
     //gen CHS jets variable    
     uhh2::Event::Handle<float>  m_o_genmjj; 
     uhh2::Event::Handle<float>  m_o_genptjj; 
@@ -416,6 +422,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jetcleaner.reset(new JetCleaner(ctx, 200.0, 2.4)); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
     massCalc.reset(new SoftDropMassCalculator(ctx, true, "common/data/2018/puppiCorr.root"));
 
+    vbfjetcleaner.reset(new JetCleaner(ctx, 30.0, 5.0, "jetsAk4Puppi")); //automatically run PFJetID Tight for CHS in the Common modules unless disable_jetpfidfilter() is run
+    Ak4OverlapCleaner.reset(new Ak4RemovalModule(ctx,1.2,"jetsAk4Puppi"));
     //branches for output tree
     
     //event variables
@@ -436,6 +444,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_passed_MET_filters = ctx.declare_event_output<bool>("passed_METfilters");
     b_passed_PV_filter = ctx.declare_event_output<bool>("passed_PVfilter");
     m_o_njj = ctx.declare_event_output<int>("njj");
+    m_o_njj_vbf = ctx.declare_event_output<int>("njj_vbf");
         
     /* some filters and triggers*/	
     std::vector<std::string> trigNames;
@@ -472,8 +481,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
     /*done with triggers and filters*/        
 
-
-
     /* jec year dependent initialization */ 
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     jec_jet_coll_AK8chs   = "AK8PFchs";
@@ -494,7 +501,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     else if(year == Year::is2018 ){
       jec_tag = "Autumn18";
       jec_ver = "8";
-      JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
+      JER_sf  = JERSmearing::SF_13TeV_Autumn18_RunABCD_V4;
       ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
     }
     
@@ -659,6 +666,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_DeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probQCD"); 
     m_o_DeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probQCD");
     
+
+    //reco puppi VBF jet variables
+    VBFvariables.reset(new VBFvariable(ctx,"jetsAk4Puppi"));
+
     //gen CHS variable         
     m_o_genmjj = ctx.declare_event_output<float>("jj_gen_partialMass");  
     m_o_genptjj = ctx.declare_event_output<float>("jj_gen_LV_pt");  
@@ -729,7 +740,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     electron_sel.reset(new ElectronVeto(0.8,EleId)); // see UHHNtupleConverterSelections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
-    
+    vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
+
     PrimaryVertexId pvid=StandardPrimaryVertexId();
     pvfilter.reset(new NPVSelection(1,-1,pvid) );
 
@@ -873,7 +885,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
 
     jetcleaner->process(event);
     massCalc->process(event);    
-          
+
+
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
     event.set(b_lumi, event.luminosityBlock); 
@@ -908,6 +921,9 @@ bool UHHNtupleConverterModule::process(Event & event) {
     
     h_dijet->fill(event);
 
+    vbfjetcleaner->process(event);
+    Ak4OverlapCleaner->process(event);
+
     //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
     Jet jet2 = event.jets->at(1);
@@ -940,6 +956,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
           
     //event variables		   
     event.set(m_o_njj,1);     
+    bool vbf_selection = vbf_sel->passes(event);
+    event.set(m_o_njj_vbf,vbf_selection);     
         
     //reco CHS jet variables	     
     event.set(m_o_mjj,inv_mass_safe(jet1.v4()+jet2.v4()));
@@ -1052,6 +1070,9 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
     	
+    //reco puppi VBF jet variables 
+    VBFvariables->process(event);
+
     //gen CHS variable  			  
     event.set(m_o_genmjj,(closest_genjet1 && closest_genjet2) ? inv_mass_safe(closest_genjet1->v4()+closest_genjet2->v4()) : -9999);		  
     event.set(m_o_genptjj,(closest_genjet1 && closest_genjet2) ? (closest_genjet1->v4()+closest_genjet2->v4()).Pt() : -9999);  	    
