@@ -751,7 +751,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     h_dijet.reset(new UHHNtupleConverterHists(ctx, "Dijet"));    
     genHbbEvent_sel.reset(new GenHbbEventSelection());
     genVqqEvent_sel.reset(new GenVqqEventSelection());
-    
 
 }
 
