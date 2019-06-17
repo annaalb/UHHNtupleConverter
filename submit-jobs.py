@@ -1,6 +1,8 @@
 #python submit-jobs.py --sample ZprimeToZhToZhadhbb_narrow_M-3500_13TeV-madgraph --nfiles_per_job 2 --outdir /eos/cms/store/cmst3/group/exovv/VVtuple/FullRun2VVVHNtuple/2016_byBTag/
 import sys, os, commands, optparse
 import xml.etree.ElementTree as ET
+import ROOT
+from ROOT import *
 
 def makeSubmitFileCondor(exe,jobname,jobflavour):
     print "make options file for condor job submission "
@@ -154,12 +156,16 @@ for s,files in samples.iteritems():
 
  outdir = options.outdir+"/"+s
  if os.path.exists(outdir):
-  print "Output directory",outdir,"already exists. Removing it ..."
-  os.system('rm -rf %s'%outdir) 
- os.mkdir(outdir)
-    
+  print "Output directory",outdir,"already exists."
+  answer = raw_input('Do you want to remove it first? (YES or NO) ')
+  if answer == "YES":
+   os.system('rm -rf %s'%outdir) 
+   os.mkdir(outdir)
+ else: os.mkdir(outdir)  
+  
+ nevents = 0   
  for i in range(njobs):
- 
+    
   files_per_job = files[i*nfiles_per_job:(i+1)*nfiles_per_job]
   if len(files_per_job) == 0: continue
   
@@ -178,11 +184,16 @@ for s,files in samples.iteritems():
   cycle.set('PostFix','-%i'%(i+1))
   data = cycle.find('InputData')
      
-  for f in files_per_job:
+  for test_i,f in enumerate(files_per_job):
    filename = 'root://dcache-cms-xrootd.desy.de:1094'+f
    element = data.makeelement('In', {'FileName':filename,'Lumi':'1.0'})
    data.append(element)
-  
+   tf_test = ROOT.TFile.Open(filename,'READ')
+   tr_test = tf_test.AnalysisTree
+   nevents+=tr_test.GetEntries()
+   tf_test.Close()
+   #print "Job",i,"file",test_i+1,"nevents",nevents
+       
   config = cycle.find('UserConfig')
   for child in config.getchildren():
    if child.attrib['Name'] == 'sample_name':
@@ -227,3 +238,7 @@ for s,files in samples.iteritems():
   print "job nr " + str(i+1) + " submitted"
    
   os.chdir("../")
+
+ print "**************************************************"
+ print "Expected number of processed events",nevents
+ print "**************************************************"
