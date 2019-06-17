@@ -53,7 +53,8 @@ void UHHNtupleConverterHists::fill(const Event & event){
   // slow when you have many histograms; therefore, better
   // use histogram pointers as members as in 'UHH2/common/include/ElectronHists.h'
   
-  hist("genEvents")->Fill(event.genInfo->weights().at(0));
+  if(!event.isRealData) hist("genEvents")->Fill(event.genInfo->weights().at(0));  
+  else hist("genEvents")->Fill(1); 
   
   // Don't forget to always use the weight when filling.
   double weight = event.weight;
@@ -102,6 +103,7 @@ void UHHNtupleConverterHists::fill(const Event & event){
   
   int Npvs = event.pvs->size();
   hist("N_pv")->Fill(Npvs, weight);
+
 }
 
 UHHNtupleConverterHists::~UHHNtupleConverterHists(){}

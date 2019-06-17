@@ -15,9 +15,22 @@ LumiWeight::~LumiWeight( void ){
 //==============================================================================================
 double LumiWeight::getLumiWeight( TString sample ){
 
+  if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime") or sample.Contains("Radion")) return 1.0;
 
-  if( sample.Contains( "WJetsToQQ_HT"          ) ) return 95.14;
-  if( sample.Contains( "ZJetsToQQ_HT600toInf"  ) ) return 41.34;
+  if( sample.Contains( "WW_"      ) ) return 118.7; //NNLO, https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+  if( sample.Contains( "WZ_"      ) ) return 47.13; //NLO, https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#Diboson 
+  if( sample.Contains( "ZZ_"      ) ) return 16.5; //NLO, https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#Diboson
+  if( sample.Contains( "TT_Mtt-700to1000"      ) ) return 76.605;
+  if( sample.Contains( "TT_Mtt-1000toInf"      ) ) return 20.578;
+  if( sample.Contains( "TTToHadronic"          ) ) return 313.9;
+  //if( sample.Contains( "WJetsToQQ_HT"          ) ) return 95.14;
+  //if( sample.Contains( "ZJetsToQQ_HT600toInf"  ) ) return 41.34;
+  if( sample.Contains( "WJetsToQQ_HT400to600"          ) ) return 315.6;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
+  if( sample.Contains( "WJetsToQQ_HT600to800"          ) ) return 68.57;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
+  if( sample.Contains( "WJetsToQQ_HT-800toInf"          ) ) return 34.9;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
+  if( sample.Contains( "ZJetsToQQ_HT400to600"          ) ) return 145.4;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
+  if( sample.Contains( "ZJetsToQQ_HT600to800"          ) ) return 34.0;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
+  if( sample.Contains( "ZJetsToQQ_HT-800toInf"          ) ) return 18.67;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
   if( sample.Contains( "QCD_Pt_170to300_"      ) ) return 117276.;
   if( sample.Contains( "QCD_Pt_300to470_"      ) ) return 7823.;                   
   if( sample.Contains( "QCD_Pt_470to600_"      ) ) return 648.2;                  
@@ -37,7 +50,6 @@ double LumiWeight::getLumiWeight( TString sample ){
   if( sample.Contains( "QCD_HT1500to2000"      ) ) return 120.4;
   if( sample.Contains( "QCD_HT2000toInf"       ) ) return 25.25;
   if( sample.Contains( "QCD_Pt-15to7000" ) or sample.Contains( "QCD_Pt_15to7000" )) return  2.022100000e+09*60.5387252324;
-  if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime") or sample.Contains("Radion")) return 1.0;
   
   
   std::cout << "Cross section not defined for this sample!!" << std::endl;
