@@ -18,6 +18,7 @@
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 #include "UHH2/UHHNtupleConverter/include/VBFModule.h"
+#include "UHH2/UHHNtupleConverter/include/NLOweightsModule.h"
 
 using namespace std;
 using namespace uhh2;
@@ -37,13 +38,17 @@ public:
     ~UHHNtupleConverterModule();
 
 private:
+
+    bool PRINT = false;
+
     std::unique_ptr<AnalysisModule> Gen_printer;    
     std::unique_ptr<CommonModules> common;
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<JetCleaner> vbfjetcleaner;
     std::unique_ptr<AnalysisModule> massCalc;
 
-    std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi;
+    std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi,Vcorr;
+    bool isVjet;
     JERSmearing::SFtype1 JER_sf;
     TString ResolutionFileName;   
   
@@ -248,6 +253,9 @@ private:
     //reco puppi VBF jet variables                                                                                                                                                                                                                                             
     std::unique_ptr<AnalysisModule> VBFvariables;    
 
+    //NLO weights for Vjets background samples                                                                                                                                                                                                                                            
+    std::unique_ptr<AnalysisModule> NLOweights;    
+
     //gen CHS jets variable    
     uhh2::Event::Handle<float>  m_o_genmjj; 
     uhh2::Event::Handle<float>  m_o_genptjj; 
@@ -391,6 +399,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     printGenparticle = false;
   
     isSignal = false;
+    isVjet = false;
+    Vcorr = "";
     TString sample = ctx.get("sample_name");
     if( sample.Contains("BulkGrav") or sample.Contains("Qstar") or sample.Contains("Wprime") or sample.Contains("Zprime") or sample.Contains("Radion")) isSignal = true;
 
@@ -684,6 +694,19 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     //reco puppi VBF jet variables
     VBFvariables.reset(new VBFvariable(ctx,"jetsAk4Puppi"));
 
+    //NLO weights
+    if( sample.Contains("WJets") or sample.Contains("ZJets")) { 
+      if( sample.Contains("WJets")) {
+	Vcorr="WJets";  
+      }
+      if( sample.Contains("ZJets")){
+	Vcorr="ZJets";
+      } 
+      isVjet = true;
+      if(PRINT) cout << "********* isVjet " << isVjet << " " << Vcorr << endl; 
+      NLOweights.reset(new NLOweight(ctx,"NLOweights/"+Vcorr+"Corr.root"));
+    }
+
     //gen CHS variable         
     m_o_genmjj = ctx.declare_event_output<float>("jj_gen_partialMass");  
     m_o_genptjj = ctx.declare_event_output<float>("jj_gen_LV_pt");  
@@ -780,20 +803,24 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // returns true, the event is kept; if it returns false, the event
     // is thrown away.
     
-    //cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
+  if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
   if(printGenparticle)    Gen_printer->process(event);     
         
     // 1. run all modules other modules.
     common->process(event);   
     h_nocuts->fill(event);
+
     if( isMC ) totalGenEvents+=event.genInfo->weights().at(0);
     else totalGenEvents+=1;
     totalEvents+=1;
-  
+
+    if(PRINT)   cout << " common modules done " << endl;  
+
     bool muon_selection = muon_sel->passes(event);
     if(!muon_selection) return false;
     bool electron_selection = electron_sel->passes(event);
     if(!electron_selection) return false;
+    if(PRINT)     cout << " leptons done" << endl;
 
     bool passedMETFilters = true;
     for(unsigned int i=0; i<metfilters.size(); ++i){
@@ -804,6 +831,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_MET_filters_all[metfilters.size()],event.passEcalBadCalib);
     event.set(b_passed_MET_filters,passedMETFilters);
     event.set(b_passed_PV_filter,pvfilter->passes(event));
+
+    if(PRINT)     cout << " met filters done" << endl;
     	
     /* Apply JEC */
     if(isMC){
@@ -899,8 +928,13 @@ bool UHHNtupleConverterModule::process(Event & event) {
     }//else on MC or data
     /* JEC are now applied */
 
+    if(PRINT)     cout << " JEC/JER done" << endl;
+
+
     jetcleaner->process(event);
     massCalc->process(event);    
+
+    if(PRINT)     cout << " cleaner & SD mass  done" << endl;
 
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
@@ -923,21 +957,25 @@ bool UHHNtupleConverterModule::process(Event & event) {
     }
     event.set(HLT_JJ, passedTriggers);
 
+    if(PRINT)     cout << " triggers done" << endl;
+
+
     // 2. test selections and fill histograms    
     bool njet_selection = njet_sel->passes(event);
     if(njet_selection){
         h_njet->fill(event);
     }    
     if(!njet_selection) return false;
-    
+    if(PRINT)     cout << " njet sel done" << endl;
     bool dijet_selection = dijet_sel->passes(event);
     if(!dijet_selection) return false;
     
     h_dijet->fill(event);
+    if(PRINT)     cout << " dijet sel done" << endl;
 
     vbfjetcleaner->process(event);
     Ak4OverlapCleaner->process(event);
-
+    if(PRINT)     cout << " VBF jet cleaner and overlap done" << endl;
     //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
     Jet jet2 = event.jets->at(1);
@@ -945,7 +983,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     auto closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     auto closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
     if( !closest_puppijet1 || !closest_puppijet2 ) return false;  
-
+    if(PRINT)     cout << " closest puppi jets done" << endl;
     if(sorting == Sorting::SORTING_RANDOM){
      if( event.event%2 != 0 ){
       jet1 = event.jets->at(1);
@@ -960,7 +998,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
       jet2 = event.jets->at(0);
      }     
     } 
-  
+      if(PRINT)     cout << " sorting done" << endl;
     closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
     auto closest_softdrop_genjet1 = isMC ? closestParticle(jet1, *(event.gentopjets)) : 0;
@@ -972,7 +1010,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_njj,1);     
     bool vbf_selection = vbf_sel->passes(event);
     event.set(m_o_njj_vbf,vbf_selection);     
-        
+    if(PRINT)     cout << " vbf done" << endl;    
     //reco CHS jet variables	     
     event.set(m_o_mjj,inv_mass_safe(jet1.v4()+jet2.v4()));
     event.set(m_o_ptjj, (jet1.v4()+jet2.v4()).Pt());
@@ -991,7 +1029,9 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(jj_mergedHTruth_jet2,isMC ? genHbbEvent_sel->passes(event,jet2) : 0);
     event.set(jj_mergedVTruth_jet1,isMC ? genVqqEvent_sel->passes(event,jet1) : 0);
     event.set(jj_mergedVTruth_jet2,isMC ? genVqqEvent_sel->passes(event,jet2) : 0);
-                 
+
+    if(PRINT)     cout << " reco chs variable  done" << endl;
+
     //reco puppi softdrop variables	  
     event.set(m_o_pt_softdrop_jet1,closest_puppijet1->pt());
     event.set(m_o_pt_softdrop_jet2,closest_puppijet2->pt());
@@ -1075,10 +1115,10 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_DeepDoubleBvLJet_probHbb_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probHbb()); 
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
     event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
-    	
+    if(PRINT)     cout << " reco puppi SD variable  done" << endl;
     //reco puppi VBF jet variables 
     VBFvariables->process(event);
-
+   if(PRINT)     cout << " reco vbf variable  done" << endl;
     //gen CHS variable  			  
     event.set(m_o_genmjj,(closest_genjet1 && closest_genjet2) ? inv_mass_safe(closest_genjet1->v4()+closest_genjet2->v4()) : -9999);		  
     event.set(m_o_genptjj,(closest_genjet1 && closest_genjet2) ? (closest_genjet1->v4()+closest_genjet2->v4()).Pt() : -9999);  	    
@@ -1092,7 +1132,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_genphi_jet2,closest_genjet2 ? closest_genjet2->phi() : -9999);
     event.set(m_o_genmass_jet1,closest_genjet1 ? closest_genjet1->v4().M() : -9999);
     event.set(m_o_genmass_jet2,closest_genjet2 ? closest_genjet2->v4().M() : -9999);
-    	  
+    if(PRINT)     cout << " gen chs variable  done" << endl;
     //gen softdrop jets variable	    
     event.set(m_o_pt_gen_softdrop_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->pt() : -9999);
     event.set(m_o_pt_gen_softdrop_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->pt() : -9999);
@@ -1138,14 +1178,22 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_ecfN3_beta2_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN3_beta2() : -9999); 
     event.set(m_o_ecfN3_beta1_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN3_beta1() : -9999); 
     event.set(m_o_ecfN3_beta2_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN3_beta2() : -9999); 
-
+   if(PRINT)     cout << " gen puppi variable  done" << endl;
     //puppi met variables	
     event.set(m_o_met_pt,event.met->pt());
     event.set(m_o_met_eta,event.met->v4().Eta());
     event.set(m_o_met_phi,event.met->phi());
     event.set(m_o_met_mass,event.met->v4().M());
     event.set(m_o_met_sumEt,event.met->sumEt());
-                                         
+
+
+    //NLO weights                                                                                                                                                                                          
+    if(isVjet)      NLOweights->process(event);
+   
+
+  
+    if(PRINT)     cout << " done!!! " << endl;
+     
     // 3. decide whether or not to keep the current event in the output:
     return njet_selection && dijet_selection;
 }
