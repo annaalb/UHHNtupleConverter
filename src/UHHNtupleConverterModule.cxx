@@ -1015,27 +1015,12 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_mass_jet1,jet1.v4().M());
     event.set(m_o_mass_jet2,jet2.v4().M());
 
-    if(PRINT)     cout << "set first part of reco chs variable  done" << endl;    
-    //    if(PRINT)     cout << "reco chs variable jj_mergedHTruth_jet1 " << jj_mergedHTruth_jet1 <<endl;
-    //if(PRINT)     cout << "reco chs variable jj_mergedHTruth_jet2 " << jj_mergedHTruth_jet2 <<endl;
-    if(isMC && isSignal){
-     event.set(jj_mergedHTruth_jet1,genHbbEvent_sel->passes(event,jet1));
-     if(PRINT)     cout << "genHbbEvent_sel 1 reco chs variable  done" << endl;
-     event.set(jj_mergedHTruth_jet2,genHbbEvent_sel->passes(event,jet2));
-     if(PRINT)     cout << "genHbbEvent_sel 2 reco chs variable  done" << endl;
-     event.set(jj_mergedVTruth_jet1,genVqqEvent_sel->passes(event,jet1));
-     if(PRINT)     cout << "genVbbEvent_sel 1 reco chs variable  done" << endl;
-     event.set(jj_mergedVTruth_jet2,genVqqEvent_sel->passes(event,jet2));
-     if(PRINT)     cout << "genVbbEvent_sel 2 reco chs variable  done" << endl;
-     if(PRINT)     cout << "set gen event sel  of reco chs variable  done" << endl;
-    }
-    else{
-     event.set(jj_mergedHTruth_jet1,0);
-     event.set(jj_mergedHTruth_jet2,0);
-     event.set(jj_mergedVTruth_jet1,0);
-     event.set(jj_mergedVTruth_jet2,0);    
-    } 
-               
+    event.set(jj_mergedHTruth_jet1,(isMC && isSignal) ? genHbbEvent_sel->passes(event,jet1) : 0);
+    event.set(jj_mergedHTruth_jet2,(isMC && isSignal) ? genHbbEvent_sel->passes(event,jet2) : 0);
+    event.set(jj_mergedVTruth_jet1,(isMC && isSignal) ? genVqqEvent_sel->passes(event,jet1) : 0);
+    event.set(jj_mergedVTruth_jet2,(isMC && isSignal) ? genVqqEvent_sel->passes(event,jet2) : 0);
+
+
     if(PRINT)     cout << " reco chs variable  done" << endl;
     //reco puppi softdrop variables	  
     event.set(m_o_pt_softdrop_jet1,closest_puppijet1->pt());
