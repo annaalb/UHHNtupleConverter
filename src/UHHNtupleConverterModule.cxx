@@ -407,6 +407,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     }
     
     if (isMC) xSec_ = m_xSec.getLumiWeight( ctx.get("sample_name") );//to be checked
+    else xSec_ = 1;
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     cout << "Cross section set to " << xSec_ << " for sample " << ctx.get("sample_name") << endl;
     
@@ -468,12 +469,20 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
      if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter"};     
      else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter","Flag_eeBadScFilter"};          
     }
-    else if( year == Year::is2016v2 || year == Year::is2016v3 ){//from b2g-17-001     
-     trigNames = {"HLT_PFHT800_v*","HLT_PFHT900_v*",
+    else if( year == Year::is2016v2 || year == Year::is2016v3 ){//from b2g-17-001 
+     if(sample.Contains("Run2016H")){
+      trigNames = {"HLT_PFHT900_v*",
                                   "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
 				  "HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
 				  "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
 				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"}; 
+     }
+     else{
+      trigNames = {"HLT_PFHT800_v*","HLT_PFHT900_v*",
+                                  "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
+				  "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
+				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"};           
+     }				  
      if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter"};
      else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_eeBadScFilter"};
     }
@@ -757,7 +766,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_met_phi = ctx.declare_event_output<float>("met_phi");
     m_o_met_mass = ctx.declare_event_output<float>("met_mass");
     m_o_met_sumEt = ctx.declare_event_output<float>("met_sumEt");
-                
+         
     // 2. set up selections
     muon_sel.reset(new MuonVeto(0.8,MuId)); // see UHHNtupleConverterSelections
     electron_sel.reset(new ElectronVeto(0.8,EleId)); // see UHHNtupleConverterSelections
@@ -774,7 +783,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     h_dijet.reset(new UHHNtupleConverterHists(ctx, "Dijet"));    
     genHbbEvent_sel.reset(new GenHbbEventSelection());
     genVqqEvent_sel.reset(new GenVqqEventSelection());
-    
 
 }
 
@@ -923,11 +931,11 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_lumi, event.luminosityBlock); 
     event.set(b_run, event.run);  
     event.set(b_event, event.event);
-    event.set(b_weightGen,event.genInfo->weights().at(0));
-    event.set(b_weightPU,event.weight/event.genInfo->weights().at(0));
+    event.set(b_weightGen, isMC ? event.genInfo->weights().at(0) : 1);
+    event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
     event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
-    event.set(b_nTrueInt,event.genInfo->pileup_TrueNumInteractions());
+    event.set(b_nTrueInt,isMC ? event.genInfo->pileup_TrueNumInteractions() : 1);
     event.set(b_rho,event.rho);
     event.set(b_nVert,event.pvs->size());
         
@@ -983,11 +991,11 @@ bool UHHNtupleConverterModule::process(Event & event) {
       if(PRINT)     cout << " sorting done" << endl;
     closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
-    auto closest_softdrop_genjet1 = closestParticle(jet1, *(event.gentopjets));
-    auto closest_softdrop_genjet2 = closestParticle(jet2, *(event.gentopjets));
-    auto closest_genjet1 = closestParticle(jet1, *(event.genjets));
-    auto closest_genjet2 = closestParticle(jet2, *(event.genjets));
-    if(PRINT)     cout << " closest gen jets done" << endl;
+    auto closest_softdrop_genjet1 = isMC ? closestParticle(jet1, *(event.gentopjets)) : 0;
+    auto closest_softdrop_genjet2 = isMC ? closestParticle(jet2, *(event.gentopjets)) : 0;
+    auto closest_genjet1 = isMC ? closestParticle(jet1, *(event.genjets)) : 0;
+    auto closest_genjet2 = isMC ? closestParticle(jet2, *(event.genjets)) : 0;
+          
     //event variables		   
     event.set(m_o_njj,1);     
     bool vbf_selection = vbf_sel->passes(event);
@@ -1006,6 +1014,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_phi_jet2,jet2.phi());
     event.set(m_o_mass_jet1,jet1.v4().M());
     event.set(m_o_mass_jet2,jet2.v4().M());
+
     if(PRINT)     cout << "set first part of reco chs variable  done" << endl;    
     //    if(PRINT)     cout << "reco chs variable jj_mergedHTruth_jet1 " << jj_mergedHTruth_jet1 <<endl;
     //if(PRINT)     cout << "reco chs variable jj_mergedHTruth_jet2 " << jj_mergedHTruth_jet2 <<endl;
@@ -1026,7 +1035,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
      event.set(jj_mergedVTruth_jet1,0);
      event.set(jj_mergedVTruth_jet2,0);    
     } 
-                
+               
     if(PRINT)     cout << " reco chs variable  done" << endl;
     //reco puppi softdrop variables	  
     event.set(m_o_pt_softdrop_jet1,closest_puppijet1->pt());

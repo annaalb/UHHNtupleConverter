@@ -12,6 +12,7 @@ using namespace uhh2examples;
 UHHNtupleConverterHists::UHHNtupleConverterHists(Context & ctx, const string & dirname): Hists(ctx, dirname){
   // book all histograms here
   // jets
+  book<TH1F>("genEvents", "number of generated Events", 2, 0, 2);
   book<TH1F>("N_jets", "N_{jets}", 20, 0, 20);  
   book<TH1F>("N_PU", "N_{PU}", 100, 0, 100);  
   book<TH1F>("eta_jet1", "#eta^{jet 1}", 40, -2.5, 2.5);
@@ -51,6 +52,9 @@ void UHHNtupleConverterHists::fill(const Event & event){
   // 'hist' is used here a lot for simplicity, but it will be rather
   // slow when you have many histograms; therefore, better
   // use histogram pointers as members as in 'UHH2/common/include/ElectronHists.h'
+  
+  if(!event.isRealData) hist("genEvents")->Fill(event.genInfo->weights().at(0));  
+  else hist("genEvents")->Fill(1); 
   
   // Don't forget to always use the weight when filling.
   double weight = event.weight;
@@ -99,6 +103,7 @@ void UHHNtupleConverterHists::fill(const Event & event){
   
   int Npvs = event.pvs->size();
   hist("N_pv")->Fill(Npvs, weight);
+
 }
 
 UHHNtupleConverterHists::~UHHNtupleConverterHists(){}
