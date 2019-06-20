@@ -22,7 +22,7 @@ double LumiWeight::getLumiWeight( TString sample ){
   if( sample.Contains( "ZZ_"      ) ) return 16.5; //NLO, https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#Diboson
   if( sample.Contains( "TT_Mtt-700to1000"      ) ) return 76.605;
   if( sample.Contains( "TT_Mtt-1000toInf"      ) ) return 20.578;
-  if( sample.Contains( "TTToHadronic"          ) ) return 313.9;
+  if( sample.Contains( "TTToHadronic"          ) ) return 380.13;
   //if( sample.Contains( "WJetsToQQ_HT"          ) ) return 95.14;
   //if( sample.Contains( "ZJetsToQQ_HT600toInf"  ) ) return 41.34;
   if( sample.Contains( "WJetsToQQ_HT400to600"          ) ) return 315.6;//EXO-18-012, http://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2017/335
