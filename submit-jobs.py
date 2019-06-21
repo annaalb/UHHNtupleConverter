@@ -149,7 +149,8 @@ for s,files in samples.iteritems():
  if nfiles == 0: continue
  njobs = int(nfiles/nfiles_per_job)+1
  print "Sample",s,": nfiles = ",nfiles,"njobs = ",njobs
- answer = raw_input('Would you like to submit the jobs? (YES or NO) ')
+ #answer = raw_input('Would you like to submit the jobs? (YES or NO) ')
+ answer = 'YES'
  if answer=='NO':
   print "Exiting!"
   sys.exit()

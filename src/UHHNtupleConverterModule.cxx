@@ -35,6 +35,7 @@ public:
     
     explicit UHHNtupleConverterModule(Context & ctx);
     virtual bool process(Event & event) override;
+    ~UHHNtupleConverterModule();
 
 private:
 
@@ -116,6 +117,8 @@ private:
     double xSec_;
     bool isMC;
     bool isSignal;
+    float totalEvents;
+    float totalGenEvents;
 
     bool printGenparticle;    
 
@@ -390,6 +393,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
 
     year = extract_year(ctx);
     isMC = ctx.get("dataset_type") == "MC";
+    totalEvents=0;
+    totalGenEvents=0;
 
     printGenparticle = false;
   
@@ -642,10 +647,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_ecfN2_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta2");
     m_o_ecfN2_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta1");
     m_o_ecfN2_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta2");
-    m_o_ecfN3_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta1");
-    m_o_ecfN3_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta2");
-    m_o_ecfN3_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta1");
-    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta2");    
+    m_o_ecfN3_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta1");
+    m_o_ecfN3_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta2");
+    m_o_ecfN3_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta1");
+    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta2");    
     m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_bbvsLight"); 
     m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_bbvsLight"); 
     m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_ZHbbvsQCD"); 
@@ -783,7 +788,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     h_dijet.reset(new UHHNtupleConverterHists(ctx, "Dijet"));    
     genHbbEvent_sel.reset(new GenHbbEventSelection());
     genVqqEvent_sel.reset(new GenVqqEventSelection());
-
+    
 }
 
 
@@ -804,6 +809,11 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // 1. run all modules other modules.
     common->process(event);   
     h_nocuts->fill(event);
+
+    if( isMC ) totalGenEvents+=event.genInfo->weights().at(0);
+    else totalGenEvents+=1;
+    totalEvents+=1;
+
     if(PRINT)   cout << " common modules done " << endl;  
 
     bool muon_selection = muon_sel->passes(event);
@@ -1014,14 +1024,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_phi_jet2,jet2.phi());
     event.set(m_o_mass_jet1,jet1.v4().M());
     event.set(m_o_mass_jet2,jet2.v4().M());
-
-    event.set(jj_mergedHTruth_jet1,(isMC && isSignal) ? genHbbEvent_sel->passes(event,jet1) : 0);
-    event.set(jj_mergedHTruth_jet2,(isMC && isSignal) ? genHbbEvent_sel->passes(event,jet2) : 0);
-    event.set(jj_mergedVTruth_jet1,(isMC && isSignal) ? genVqqEvent_sel->passes(event,jet1) : 0);
-    event.set(jj_mergedVTruth_jet2,(isMC && isSignal) ? genVqqEvent_sel->passes(event,jet2) : 0);
-
+    
+    event.set(jj_mergedHTruth_jet1,isMC ? genHbbEvent_sel->passes(event,jet1) : 0);
+    event.set(jj_mergedHTruth_jet2,isMC ? genHbbEvent_sel->passes(event,jet2) : 0);
+    event.set(jj_mergedVTruth_jet1,isMC ? genVqqEvent_sel->passes(event,jet1) : 0);
+    event.set(jj_mergedVTruth_jet2,isMC ? genVqqEvent_sel->passes(event,jet2) : 0);
 
     if(PRINT)     cout << " reco chs variable  done" << endl;
+
     //reco puppi softdrop variables	  
     event.set(m_o_pt_softdrop_jet1,closest_puppijet1->pt());
     event.set(m_o_pt_softdrop_jet2,closest_puppijet2->pt());
@@ -1186,6 +1196,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
      
     // 3. decide whether or not to keep the current event in the output:
     return njet_selection && dijet_selection;
+}
+
+UHHNtupleConverterModule::~UHHNtupleConverterModule(){
+
+
+    std::cout << "Total processed events = " << totalEvents << std::endl;
+    std::cout << "Total generated events = " << totalGenEvents << std::endl;
+
 }
 
 // as we want to run the UHHNtupleConverterCycleNew directly with AnalysisModuleRunner,
