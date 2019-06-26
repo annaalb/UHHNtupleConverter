@@ -745,8 +745,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_met_sumEt = ctx.declare_event_output<float>("met_sumEt");
          
     // 2. set up selections
-    muon_sel.reset(new MuonVeto(0.8,MuId)); // see UHHNtupleConverterSelections
-    electron_sel.reset(new ElectronVeto(0.8,EleId)); // see UHHNtupleConverterSelections
+    muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
+    electron_sel.reset(new ElectronVeto(EleId,0.8)); // see UHHNtupleConverterSelections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
     vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
