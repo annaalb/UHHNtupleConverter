@@ -54,6 +54,4 @@ JetHT_Run2017F_31Mar2018 /pnfs/desy.de/cms/tier2//store/user/salbrech/RunII_102X
 JetHT_Run2018A_17Sep2018 /pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/JetHT2018/Run2018A_default
 JetHT_Run2018B_17Sep2018 /pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/JetHT2018/Run2018B_default
 JetHT_Run2018C_17Sep2018 /pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/JetHT2018/Run2018C_default
-JetHT_Run2018C_17Sep2018 /pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/JetHT2018/Run2018D_default
-
-
+JetHT_Run2018D_17Sep2018 /pnfs/desy.de/cms/tier2/store/user/akaravdi/RunII_102X_v1_TEST/JetHT2018/Run2018D_default

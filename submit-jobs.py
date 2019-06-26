@@ -47,6 +47,7 @@ parser.add_option("--xml","--xml",dest="xmlfile",help="SFrame config xml file",d
 parser.add_option("--list","--list",dest="samplelist",help="File with samples list",default='samples.txt')
 parser.add_option("--check_jobs","--check_jobs",dest="check_jobs", action="store_true", help="Check and resubmit failed jobs",default=False)
 parser.add_option("--queue","--queue",dest="queue", help="Queue: workday or tomorrow",default='workday')
+parser.add_option("--count","--count",dest="count", action="store_true", help="Count events",default=False)
 (options,args) = parser.parse_args()
 
 if options.check_jobs:
@@ -149,8 +150,8 @@ for s,files in samples.iteritems():
  if nfiles == 0: continue
  njobs = int(nfiles/nfiles_per_job)+1
  print "Sample",s,": nfiles = ",nfiles,"njobs = ",njobs
- #answer = raw_input('Would you like to submit the jobs? (YES or NO) ')
- answer = 'YES'
+ answer = raw_input('Would you like to submit the jobs? (YES or NO) ')
+ #answer = 'YES'
  if answer=='NO':
   print "Exiting!"
   sys.exit()
@@ -189,11 +190,12 @@ for s,files in samples.iteritems():
    filename = 'root://dcache-cms-xrootd.desy.de:1094'+f
    element = data.makeelement('In', {'FileName':filename,'Lumi':'1.0'})
    data.append(element)
-   tf_test = ROOT.TFile.Open(filename,'READ')
-   tr_test = tf_test.AnalysisTree
-   nevents+=tr_test.GetEntries()
-   tf_test.Close()
-   #print "Job",i,"file",test_i+1,"nevents",nevents
+   if options.count:
+    tf_test = ROOT.TFile.Open(filename,'READ')
+    tr_test = tf_test.AnalysisTree
+    nevents+=tr_test.GetEntries()
+    tf_test.Close()
+    #print "Job",i,"file",test_i+1,"nevents",nevents
        
   config = cycle.find('UserConfig')
   for child in config.getchildren():
@@ -240,6 +242,7 @@ for s,files in samples.iteritems():
    
   os.chdir("../")
 
- print "**************************************************"
- print "Expected number of processed events",nevents
- print "**************************************************"
+ if options.count:
+  print "**************************************************"
+  print "Expected number of processed events",nevents
+  print "**************************************************"
