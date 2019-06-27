@@ -27,13 +27,13 @@ bool DijetSelection::passes(const Event & event){
 MuonVeto::MuonVeto(const MuonId & muid_, float deltaR_min_): deltaR_min(deltaR_min_), muid(muid_){}
 
 bool MuonVeto::passes(const Event & event){
-  assert(event.topjets); // if this fails, it probably means jets are not read in                                                                                                                                                                                             
+  assert(event.jets); // if this fails, it probably means jets are not read in                                                                                                                                                                                             
   assert(event.muons); // if this fails, it probably means jets are not read in                                                                                                                                                                                               
  
   for(const auto & muon : *event.muons) {
     if(muid(muon,event)) {
-      for(const auto & topjets : *event.topjets){
-	if(deltaR(topjets,muon)  < deltaR_min ) return false;
+      for(const auto & jet : *event.jets){
+	if(deltaR(jet,muon)  < deltaR_min ) return false;
       }
     }
   }
@@ -45,13 +45,13 @@ bool MuonVeto::passes(const Event & event){
 ElectronVeto::ElectronVeto(const ElectronId & eleid_, float deltaR_min_): deltaR_min(deltaR_min_), eleid(eleid_){}
 
 bool ElectronVeto::passes(const Event & event){
-  assert(event.topjets); // if this fails, it probably means jets are not read in                                                                                                                                                                                             
+  assert(event.jets); // if this fails, it probably means jets are not read in                                                                                                                                                                                             
   assert(event.electrons); // if this fails, it probably means jets are not read in                                                                                                                                                                                           
 
   for(const auto & electron : *event.electrons){
     if(eleid(electron,event)) {
-	for(const auto & topjets : *event.topjets){
-	  if(deltaR(topjets,electron)  < deltaR_min) return false;
+	for(const auto & jet : *event.jets){
+	  if(deltaR(jet,electron)  < deltaR_min) return false;
 	}
       }
   }
