@@ -4,7 +4,7 @@
     <Library Name="libSUHH2UHHNtupleConverter"/>
     <Package Name="SUHH2UHHNtupleConverter.par" />
    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./" PostFix="" TargetLumi="1" >        
-        <InputData Lumi="1" NEventsMax="-1" Type="Data" Version="2016v2" Cacheable="False">
+        <InputData Lumi="1" NEventsMax="-1" Type="Data" Version="2016v3" Cacheable="False">
             <InputTree Name="AnalysisTree" /> 
             <OutputTree Name="AnalysisTree" />	    
         </InputData>            
