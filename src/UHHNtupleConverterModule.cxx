@@ -14,7 +14,6 @@
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterSelections.h"
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterHists.h"
 #include "UHH2/common/include/Utils.h"
-#include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 #include "UHH2/UHHNtupleConverter/include/VBFModule.h"
@@ -100,16 +99,17 @@ private:
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel, vbf_sel;
+    std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel,dijet_sel_loose, vbf_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
-    std::vector<TriggerSelection> trigger_selection; 
+    std::vector<TriggerSelection> trigger_selection, ref_triggers; 
     std::vector<TriggerSelection> metfilters;
     std::unique_ptr<NPVSelection> pvfilter;
     
     
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
     std::unique_ptr<Hists> h_nocuts, h_njet, h_dijet, h_ele;
+    std::unique_ptr<TriggerHists> h_trig;
     
     //some other useful objects
     Year year;
@@ -119,6 +119,7 @@ private:
     bool isSignal;
     float totalEvents;
     float totalGenEvents;
+    std::vector<std::string> trigNames;
 
     bool printGenparticle;    
 
@@ -463,36 +464,35 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_njj_vbf = ctx.declare_event_output<int>("njj_vbf");
         
     /* some filters and triggers*/	
-    std::vector<std::string> trigNames;
     std::vector<std::string> metFilters;
     	
     //nb, not sure we need all the thresolds. Better to choose only one that was always unprescaled. To be checked.
     if( year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1 ){//from b2g-18-002
      trigNames = {"HLT_PFHT1050_v*" ,"HLT_AK8PFJet500_v*",
-                                 "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFJet380_TrimMass30_v*","HLT_AK8PFJet400_TrimMass30_v*","HLT_AK8PFJet420_TrimMass30_v*", //pt=400 first always unprescaled. To be checked.
-				 "HLT_AK8PFHT750_TrimMass50_v*","HLT_AK8PFHT800_TrimMass50_v*","HLT_AK8PFHT850_TrimMass50_v*","HLT_AK8PFHT900_TrimMass50_v*"}; //ht=800 first always unprescaled. To be checked.
+                  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFJet380_TrimMass30_v*","HLT_AK8PFJet400_TrimMass30_v*","HLT_AK8PFJet420_TrimMass30_v*", //pt=400 first always unprescaled. To be checked.
+		  "HLT_AK8PFHT750_TrimMass50_v*","HLT_AK8PFHT800_TrimMass50_v*","HLT_AK8PFHT850_TrimMass50_v*","HLT_AK8PFHT900_TrimMass50_v*"}; //ht=800 first always unprescaled. To be checked.
      if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter"};     
      else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter","Flag_eeBadScFilter"};          
     }
     else if( year == Year::is2016v2 || year == Year::is2016v3 ){//from b2g-17-001 
      if(sample.Contains("Run2016H")){
       trigNames = {"HLT_PFHT900_v*",
-                                  "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
-				  "HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
-				  "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
-				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"}; 
+                   "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
+		   "HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
+		   "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
+		   "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"}; 
      }
      else{
       trigNames = {"HLT_PFHT800_v*","HLT_PFHT900_v*",
-                                  "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
-				  "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
-				  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"};           
+                   "HLT_PFJet400_v*","HLT_PFJet450_v*","HLT_PFJet500_v*",
+		   "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
+		   "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"};		
      }				  
      if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter"};
      else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_eeBadScFilter"};
     }
 
-    std::cout << "USING " << trigNames.size() << " TRIGGER PATHS:" << std::endl;
+    std::cout << "USING " << trigNames.size() << " SIGNAL TRIGGER PATHS:" << std::endl;
     for (auto it = trigNames.begin(), end = trigNames.end(); it != end; ++it){
       std::cout << *it << std::endl;
       trigger_selection.push_back(TriggerSelection(*it)); 
@@ -503,6 +503,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     for (auto it = metFilters.begin(), end = metFilters.end(); it != end; ++it){std::cout << *it << std::endl; metfilters.push_back( TriggerSelection(*it) ); b_MET_filters_all.push_back(ctx.declare_event_output<bool>(*it)); }
     std::cout << "Flag_EcalBadCalibSelection (for 2016 this is always = 1)" << std::endl;
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
+    
+    ref_triggers.push_back(TriggerSelection("HLT_IsoMu24_v*"));
+    ref_triggers.push_back(TriggerSelection("HLT_IsoMu27_v*"));
+    ref_triggers.push_back(TriggerSelection("HLT_Mu50_v*"));
+
     /*done with triggers and filters*/        
 
     /* jec year dependent initialization */ 
@@ -777,17 +782,21 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     electron_sel.reset(new ElectronVeto(EleId,0.8)); // see UHHNtupleConverterSelections
     njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
     dijet_sel.reset(new DijetSelection(1.3,700)); // see UHHNtupleConverterSelections
+    dijet_sel_loose.reset(new DijetSelection(1.3,0.0)); // see UHHNtupleConverterSelections
     vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
-
+    genHbbEvent_sel.reset(new GenHbbEventSelection());
+    genVqqEvent_sel.reset(new GenVqqEventSelection());
+    
     PrimaryVertexId pvid=StandardPrimaryVertexId();
     pvfilter.reset(new NPVSelection(1,-1,pvid) );
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new UHHNtupleConverterHists(ctx, "NoCuts"));
     h_njet.reset(new UHHNtupleConverterHists(ctx, "Njet"));
-    h_dijet.reset(new UHHNtupleConverterHists(ctx, "Dijet"));    
-    genHbbEvent_sel.reset(new GenHbbEventSelection());
-    genVqqEvent_sel.reset(new GenVqqEventSelection());
+    h_dijet.reset(new UHHNtupleConverterHists(ctx, "Dijet")); 
+    h_trig.reset(new TriggerHists(ctx,"Trigger",trigNames));
+       
+
     
 }
 
@@ -815,12 +824,6 @@ bool UHHNtupleConverterModule::process(Event & event) {
     totalEvents+=1;
 
     if(PRINT)   cout << " common modules done " << endl;  
-
-    bool muon_selection = muon_sel->passes(event);
-    if(!muon_selection) return false;
-    bool electron_selection = electron_sel->passes(event);
-    if(!electron_selection) return false;
-    if(PRINT)     cout << " leptons done" << endl;
 
     bool passedMETFilters = true;
     for(unsigned int i=0; i<metfilters.size(); ++i){
@@ -930,12 +933,33 @@ bool UHHNtupleConverterModule::process(Event & event) {
 
     if(PRINT)     cout << " JEC/JER done" << endl;
 
-
     jetcleaner->process(event);
     massCalc->process(event);    
 
     if(PRINT)     cout << " cleaner & SD mass  done" << endl;
 
+    bool muon_selection = muon_sel->passes(event);
+    if(!muon_selection) return false;
+    bool electron_selection = electron_sel->passes(event);
+    if(!electron_selection) return false;
+    if(PRINT)     cout << " leptons done" << endl;
+    
+    bool njet_selection = njet_sel->passes(event);
+    if(njet_selection){    
+        h_njet->fill(event);	
+    }    
+    if(!njet_selection) return false;
+    if(PRINT)     cout << " njet sel done" << endl;
+
+    bool dijet_loose_selection = dijet_sel_loose->passes(event);
+    if(!dijet_loose_selection) return false;
+    if(PRINT)     cout << " dijet sel loose done" << endl;
+    
+    //fill histograms for trigger turn on
+    for(unsigned int i=0; i<ref_triggers.size(); ++i){
+      if(ref_triggers[i].passes(event)){ h_trig->fill(event,trigger_selection,trigNames); break; }
+    }    
+	    
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
     event.set(b_lumi, event.luminosityBlock); 
@@ -959,14 +983,6 @@ bool UHHNtupleConverterModule::process(Event & event) {
 
     if(PRINT)     cout << " triggers done" << endl;
 
-
-    // 2. test selections and fill histograms    
-    bool njet_selection = njet_sel->passes(event);
-    if(njet_selection){
-        h_njet->fill(event);
-    }    
-    if(!njet_selection) return false;
-    if(PRINT)     cout << " njet sel done" << endl;
     bool dijet_selection = dijet_sel->passes(event);
     if(!dijet_selection) return false;
     
@@ -998,7 +1014,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
       jet2 = event.jets->at(0);
      }     
     } 
-      if(PRINT)     cout << " sorting done" << endl;
+    if(PRINT)     cout << " sorting done" << endl;
     closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
     auto closest_softdrop_genjet1 = isMC ? closestParticle(jet1, *(event.gentopjets)) : 0;
@@ -1200,7 +1216,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
 
 UHHNtupleConverterModule::~UHHNtupleConverterModule(){
 
-
+    std::cout.precision(10); 
     std::cout << "Total processed events = " << totalEvents << std::endl;
     std::cout << "Total generated events = " << totalGenEvents << std::endl;
 
