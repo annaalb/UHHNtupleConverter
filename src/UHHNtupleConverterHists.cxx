@@ -159,13 +159,13 @@ void TriggerHists::fill(const Event & event, std::vector<TriggerSelection> jet_t
 
     //fill denominators = # events passing the reference triggers
     if(mjet1 > 55 && mjet2 > 55){ hist("mjj_HLT_JJ_den")->Fill(mjj); }
-    if(jet1.pt() > 600 && jet2.pt() > 600){ hist("mjet1_HLT_JJ_den")->Fill(mjet1); hist("mjet2_HLT_JJ_den")->Fill(mjet2);}
+    if(jet1.pt() > 600 && jet2.pt() > 600){
+     hist("mjet1_HLT_JJ_den")->Fill(mjet1); hist("mjet2_HLT_JJ_den")->Fill(mjet2);
+     hist("mjet1_HLT_TrimmedMass_den")->Fill(mjet1); hist("mjet2_HLT_TrimmedMass_den")->Fill(mjet2);
+    }
     for(unsigned int i=0; i<jet_triggers.size(); ++i){
      if(mjet1 > 55 && mjet2 > 55){ hist(("mjj_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjj); }
-     if(jet1.pt() > 600 && jet2.pt() > 600){
-      hist(("mjet1_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet1); hist(("mjet2_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet2);
-      if( jet_triggers_n[i].find("Trim") != std::string::npos ){ hist("mjet1_HLT_TrimmedMass_den")->Fill(mjet1); hist("mjet2_HLT_TrimmedMass_den")->Fill(mjet2); }
-      }
+     if(jet1.pt() > 600 && jet2.pt() > 600){ hist(("mjet1_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet1); hist(("mjet2_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet2); }
     }
     
     //fill numerator = # events passing jet triggers    
