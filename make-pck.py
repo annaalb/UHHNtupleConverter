@@ -9,8 +9,9 @@ parser.add_option("--outfile","--outfile",dest="outfile",default='QCD_HT200to300
 (options,args) = parser.parse_args()
 
 if os.path.isfile(options.outdir+"/"+options.outfile): 
- print "Final merged file",options.outdir+"/"+options.outfile,"already exist! Removing it..."
- os.system('rm %s'%(options.outdir+"/"+options.outfile))
+ print "Final merged file",options.outdir+"/"+options.outfile,"already exist!"
+ answer = raw_input('Do you want to remove it? (YES or NO) ')
+ if answer=='YES': os.system('rm %s'%(options.outdir+"/"+options.outfile))
 
 totalEvents = 0
 totalGenEvents = 0
@@ -31,7 +32,7 @@ for d in os.listdir('./'):
      print l.split(' ')[-1].replace('\n',''),float(l.split(' ')[-1].replace('\n',''))
     if l.find('Total processed events') != -1: totalEvents+=float(l.split(' ')[-1])
  if not found:
-  print "The job output file not found for directory",d   
+  print "The job output file not found for directory",d
   sys.exit()
 
 hadd_cmd = 'hadd -f %s '%(options.outdir+"/"+options.outfile)

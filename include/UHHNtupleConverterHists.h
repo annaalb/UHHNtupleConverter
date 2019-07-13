@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UHH2/core/include/Hists.h"
+#include "UHH2/common/include/TriggerSelection.h"
 
 namespace uhh2examples {
 
@@ -18,6 +19,16 @@ public:
 
     virtual void fill(const uhh2::Event & ev) override;
     virtual ~UHHNtupleConverterHists();
+};
+
+class TriggerHists: public uhh2::Hists {
+public:
+    // use the same constructor arguments as Hists for forwarding:
+    TriggerHists(uhh2::Context & ctx, const std::string & dirname, std::vector<std::string> jet_triggers_n);
+
+    virtual void fill(const uhh2::Event & ev) override {return;};
+    void fill(const uhh2::Event & ev,std::vector<TriggerSelection> jet_triggers, std::vector<std::string> jet_triggers_n);
+    virtual ~TriggerHists();
 };
 
 }

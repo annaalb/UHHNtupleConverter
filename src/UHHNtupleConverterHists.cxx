@@ -1,5 +1,6 @@
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterHists.h"
 #include "UHH2/core/include/Event.h"
+#include "UHH2/common/include/Utils.h"
 
 #include "TH1F.h"
 #include "TH2F.h"
@@ -107,3 +108,73 @@ void UHHNtupleConverterHists::fill(const Event & event){
 }
 
 UHHNtupleConverterHists::~UHHNtupleConverterHists(){}
+
+TriggerHists::TriggerHists(Context & ctx, const string & dirname, std::vector<std::string> jet_triggers_n): Hists(ctx, dirname){
+
+
+  const int NBINS = 82;
+  double edges[NBINS + 1] = {0,3,6,10,16,23,31,40,50,61,74,88,103,119,137,156,176,197,220,244,270,296,325,354,386,419,453,489,526,565,606,649,693,740,788,838,890,944,1000,1058,1118,1181,1246,1313,1383,1455,1530,1607,1687,1770,1856,1945,2037,2132,2231,2332,2438,2546,2659,2775,2895,3019,3147,3279,3416,3558,3704,3854,4010,4171,4337,4509,4686,4869,5058,5253,5455,5663,5877,6099,6328,6564,7000};
+
+  book<TH1F>("mjj_HLT_JJ_num", "mjj_HLT_JJ_num", NBINS, edges);
+  book<TH1F>("mjj_HLT_JJ_den", "mjj_HLT_JJ_den", NBINS, edges);
+  book<TH1F>("mjet1_HLT_JJ_num", "mjet1_HLT_JJ_num", 50,0,250);
+  book<TH1F>("mjet1_HLT_JJ_den", "mjet1_HLT_JJ_den", 50,0,250);
+  book<TH1F>("mjet2_HLT_JJ_num", "mjet2_HLT_JJ_num", 50,0,250);
+  book<TH1F>("mjet2_HLT_JJ_den", "mjet2_HLT_JJ_den", 50,0,250);
+  
+ for(std::string t : jet_triggers_n){
+   book<TH1F>("mjj_"+t+"_num", "mjj_"+t+"_num", NBINS, edges);
+   book<TH1F>("mjj_"+t+"_den", "mjj_"+t+"_den", NBINS, edges);
+   book<TH1F>("mjet1_"+t+"_num", "mjet1_"+t+"_num", 50,0,250);
+   book<TH1F>("mjet1_"+t+"_den", "mjet1_"+t+"_den", 50,0,250);
+   book<TH1F>("mjet2_"+t+"_num", "mjet2_"+t+"_num", 50,0,250);
+   book<TH1F>("mjet2_"+t+"_den", "mjet2_"+t+"_den", 50,0,250);
+ }  
+
+}
+
+void TriggerHists::fill(const Event & event, std::vector<TriggerSelection> jet_triggers, std::vector<std::string> jet_triggers_n){
+
+    Jet jet1 = event.jets->at(0);
+    Jet jet2 = event.jets->at(1);
+
+    //do random sorting as in the main analysis
+    if( event.event%2 != 0 ){
+      jet1 = event.jets->at(1);
+      jet2 = event.jets->at(0);
+    }
+
+    auto closest_puppijet1 = closestParticle(jet1, *(event.topjets));
+    auto closest_puppijet2 = closestParticle(jet2, *(event.topjets));     
+    if( !closest_puppijet1 || !closest_puppijet2 ) return;
+        
+    float mjj = inv_mass_safe(jet1.v4()+jet2.v4());
+    float mjet1 = closest_puppijet1->softdropmass();
+    float mjet2 = closest_puppijet2->softdropmass();
+
+    //fill denominators = # events passing the reference triggers
+    if(mjet1 > 55 && mjet2 > 55){ hist("mjj_HLT_JJ_den")->Fill(mjj); }
+    if(jet1.pt() > 600 && jet2.pt() > 600){ hist("mjet1_HLT_JJ_den")->Fill(mjet1); hist("mjet2_HLT_JJ_den")->Fill(mjet2);}
+    for(unsigned int i=0; i<jet_triggers.size(); ++i){
+     if(mjet1 > 55 && mjet2 > 55){ hist(("mjj_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjj); }
+     if(jet1.pt() > 600 && jet2.pt() > 600){ hist(("mjet1_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet1); hist(("mjet2_"+jet_triggers_n[i]+"_den").c_str())->Fill(mjet2);}
+    }
+    
+    //fill numerator = # events passing jet triggers    
+    bool passedTriggers=false;				     
+    for(unsigned int i=0; i<jet_triggers.size(); ++i){
+     bool isfired = jet_triggers[i].passes(event);
+     if(isfired){ 
+      passedTriggers=true; 
+      if(mjet1 > 55 && mjet2 > 55){ hist(("mjj_"+jet_triggers_n[i]+"_num").c_str())->Fill(mjj); }
+      if(jet1.pt() > 600 && jet2.pt() > 600){ hist(("mjet1_"+jet_triggers_n[i]+"_num").c_str())->Fill(mjet1); hist(("mjet2_"+jet_triggers_n[i]+"_num").c_str())->Fill(mjet2); }      
+     }
+    }
+    if(passedTriggers){
+     if(mjet1 > 55 && mjet2 > 55){ hist("mjj_HLT_JJ_num")->Fill(mjj); }
+     if(jet1.pt() > 600 && jet2.pt() > 600){ hist("mjet1_HLT_JJ_num")->Fill(mjet1); hist("mjet2_HLT_JJ_num")->Fill(mjet2); }        
+    }
+         
+}
+
+TriggerHists::~TriggerHists(){}
