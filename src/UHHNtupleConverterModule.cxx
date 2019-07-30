@@ -467,18 +467,23 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     std::vector<std::string> metFilters;
     	
     //nb, not sure we need all the thresolds. Better to choose only one that was always unprescaled. To be checked.
-    if( year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1 ){//from b2g-18-002
+    if( year == Year::is2018 || ((year == Year::is2017v2 || year == Year::is2017v1) && !sample.Contains("Run2017B")) ){//from b2g-18-002
      trigNames = {"HLT_PFHT1050_v*" ,"HLT_AK8PFJet500_v*",
-                  "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFJet380_TrimMass30_v*","HLT_AK8PFJet400_TrimMass30_v*","HLT_AK8PFJet420_TrimMass30_v*", //pt=400 first always unprescaled. To be checked.
+                  "HLT_AK8PFJet360_TrimMass30_v*", "HLT_AK8PFJet380_TrimMass30_v*","HLT_AK8PFJet400_TrimMass30_v*","HLT_AK8PFJet420_TrimMass30_v*", //pt=400 first always unprescaled. To be checked.
 		  "HLT_AK8PFHT750_TrimMass50_v*","HLT_AK8PFHT800_TrimMass50_v*","HLT_AK8PFHT850_TrimMass50_v*","HLT_AK8PFHT900_TrimMass50_v*"}; //ht=800 first always unprescaled. To be checked.
+     if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter"};     
+     else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter","Flag_eeBadScFilter"};          
+    }
+    if( (year == Year::is2017v2 || year == Year::is2017v1) && sample.Contains("Run2017B") ){//from b2g-18-002
+     trigNames = {"HLT_PFHT1050_v*" ,"HLT_AK8PFJet500_v*"};
      if(isMC) metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter"};     
      else metFilters = {"Flag_goodVertices","Flag_globalSuperTightHalo2016Filter","Flag_HBHENoiseFilter","Flag_HBHENoiseIsoFilter","Flag_EcalDeadCellTriggerPrimitiveFilter","Flag_BadPFMuonFilter","Flag_eeBadScFilter"};          
     }
     else if( year == Year::is2016v2 || year == Year::is2016v3 ){//from b2g-17-001 
      if(sample.Contains("Run2016H")){
       trigNames = {"HLT_PFHT900_v*",
-                   "HLT_PFJet450_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
-		   "HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
+                   "HLT_PFJet400_v*","HLT_PFJet500_v*","HLT_PFJet450_v*",
+		   "HLT_AK8PFJet400_v*","HLT_AK8PFJet450_v*","HLT_AK8PFJet500_v*",
 		   "HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*","HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*",
 		   "HLT_AK8PFJet360_TrimMass30_v*","HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*"}; 
      }
