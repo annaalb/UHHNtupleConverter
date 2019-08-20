@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import ROOT
 from ROOT import *
 
-def makeSubmitFileCondor(exe,jobname,jobflavour,localinput):
+def makeSubmitFileCondor(exe,jobname,jobflavour,localinput,cmst3):
     print "make options file for condor job submission "
     submitfile = open("submit.sub","w")        
     submitfile.write("should_transfer_files = YES\n")
@@ -24,6 +24,8 @@ def makeSubmitFileCondor(exe,jobname,jobflavour,localinput):
     submitfile.write("error                 = "+jobname+".$(ClusterId).$(ProcId).err\n")
     submitfile.write("log                   = "+jobname+".$(ClusterId).log\n")
     submitfile.write('+JobFlavour           = "'+jobflavour+'"\n')
+    if cmst3:
+     submitfile.write("+AccountingGroup = group_u_CMST3.all\n")
     submitfile.write("queue")
     submitfile.close()  
     
@@ -53,6 +55,7 @@ parser.add_option("--xml","--xml",dest="xmlfile",help="SFrame config xml file",d
 parser.add_option("--list","--list",dest="samplelist",help="File with samples list",default='samples.txt')
 parser.add_option("--check_jobs","--check_jobs",dest="check_jobs", action="store_true", help="Check and resubmit failed jobs",default=False)
 parser.add_option("--queue","--queue",dest="queue", help="Queue: workday or tomorrow",default='workday')
+parser.add_option("--cmst3","--cmst3",dest="cmst3", action="store_true",help="use cmst3 queue on condor",default=False)
 parser.add_option("--count","--count",dest="count", action="store_true", help="Count events",default=False)
 (options,args) = parser.parse_args()
 
@@ -249,7 +252,7 @@ for s,files in samples.iteritems():
   os.system("chmod 755 job.sh")    
     
   ###### sends bjobs ######
-  makeSubmitFileCondor("job.sh","job",options.queue,options.localinput)
+  makeSubmitFileCondor("job.sh","job",options.queue,options.localinput,options.cmst3)
   os.system("condor_submit submit.sub")
   print "job nr " + str(i+1) + " submitted"
    
