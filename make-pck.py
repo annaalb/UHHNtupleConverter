@@ -26,11 +26,15 @@ for d in os.listdir('./'):
   if '.out' in f:
    print f,d,
    for l in open(d+'/'+f,'r').readlines():
+    if l.find('Total processed events') != -1:
+     totalEvents+=float(l.split(' ')[-1].replace('\n',''))
+     found = True
+     print float(l.split(' ')[-1].replace('\n','')),
     if l.find('Total generated events') != -1:
      totalGenEvents+=float(l.split(' ')[-1].replace('\n',''))
      found = True
-     print l.split(' ')[-1].replace('\n',''),float(l.split(' ')[-1].replace('\n',''))
-    if l.find('Total processed events') != -1: totalEvents+=float(l.split(' ')[-1])
+     print float(l.split(' ')[-1].replace('\n',''))
+     break
  if not found:
   print "The job output file not found for directory",d
   sys.exit()
