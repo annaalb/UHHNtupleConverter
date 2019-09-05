@@ -46,6 +46,17 @@ def indent(elem, level=0):
             elem.tail = j
     return elem
 
+def getFileList(filelist_xml):
+ f_filelist = open(filelist_xml,'r')
+ list_ = []
+ nevs_ = 0
+ for l in f_filelist.readlines():
+  if not '.root' in l:
+   nevs_ = int(l.split('"')[1])
+   continue
+  list_.append(l.split('"')[1])
+ return list_,nevs_
+ 
 parser = optparse.OptionParser()
 parser.add_option("--sample","--sample",dest="sample",default='',help="samples to be processed from the file samples.txt")
 parser.add_option("--localinput","--localinput",dest="localinput", action="store_true",help="input ntuple is local, no protocol needed",default=False)
@@ -56,7 +67,6 @@ parser.add_option("--list","--list",dest="samplelist",help="File with samples li
 parser.add_option("--check_jobs","--check_jobs",dest="check_jobs", action="store_true", help="Check and resubmit failed jobs",default=False)
 parser.add_option("--queue","--queue",dest="queue", help="Queue: workday or tomorrow",default='workday')
 parser.add_option("--cmst3","--cmst3",dest="cmst3", action="store_true",help="use cmst3 queue on condor",default=False)
-parser.add_option("--count","--count",dest="count", action="store_true", help="Count events",default=False)
 (options,args) = parser.parse_args()
 
 if options.check_jobs:
@@ -139,35 +149,43 @@ f_samples.close()
 #print samples
 
 print "--------------------------------------------------------"
-for s,f in samples.iteritems():
- print "Sample:",s
- files = []
- for d in f:
-  print "  * folder:",d
-  if options.localinput:
+nevents = {}
+if options.localinput:
+ for s,f in samples.iteritems():
+  print "Sample:",s
+  files = []
+  for d in f:
+   print "  * folder:",d
    cmd = 'ls -l '
-  else:
-   cmd = 'gfal-ls -l srm://dcache-se-cms.desy.de:8443/srm/managerv2?SFN='
-  cmd+=d
-  status,output = commands.getstatusoutput(cmd)
-  if status != 0:
-   print output
-   continue
-  output = output.split('\n')
-  for o in output:
-   file = d+'/'+o.split(' ')[-1].replace('\t','')
-   if '.root' in file: files.append(file)
- samples[s] = files
- 
+   cmd+=d
+   status,output = commands.getstatusoutput(cmd)
+   if status != 0:
+    print output
+    continue
+   output = output.split('\n')
+   for o in output:
+    file = d+'/'+o.split(' ')[-1].replace('\t','')
+    if '.root' in file: files.append(file)
+  samples[s] = files
+  nevents[s] = 0
+else:
+ for s,f in samples.iteritems():
+  print "Sample:",s
+  files = []
+  for d in f:
+   print "  * using xml filelist:",d
+   files,nevs = getFileList(d)
+  samples[s] = files
+  nevents[s] = nevs
+   
 print "--------------------------------------------------------"
 for s,files in samples.iteritems():
 
  nfiles = len(files)
  if nfiles == 0: continue
  njobs = int(nfiles/nfiles_per_job)+1
- print "Sample",s,": nfiles = ",nfiles,"njobs = ",njobs
+ print "Sample",s,": nfiles = ",nfiles,"njobs = ",njobs,"nevents =",nevents[s]
  answer = raw_input('Would you like to submit the jobs? (YES or NO) ')
- #answer = 'YES'
  if answer=='NO':
   print "Exiting!"
   sys.exit()
@@ -181,7 +199,6 @@ for s,files in samples.iteritems():
    os.mkdir(outdir)
  else: os.mkdir(outdir)  
   
- nevents = 0   
  for i in range(njobs):
     
   files_per_job = files[i*nfiles_per_job:(i+1)*nfiles_per_job]
@@ -212,7 +229,7 @@ for s,files in samples.iteritems():
    if options.count:
     tf_test = ROOT.TFile.Open(filename,'READ')
     tr_test = tf_test.AnalysisTree
-    nevents+=tr_test.GetEntries()
+    nevents[s]+=tr_test.GetEntries()
     tf_test.Close()
     #print "Job",i,"file",test_i+1,"nevents",nevents
        
@@ -262,7 +279,6 @@ for s,files in samples.iteritems():
    
   os.chdir("../")
 
- if options.count:
-  print "**************************************************"
-  print "Expected number of processed events",nevents
-  print "**************************************************"
+ print "**************************************************"
+ print "Expected number of processed events",nevents[s]
+ print "**************************************************"
