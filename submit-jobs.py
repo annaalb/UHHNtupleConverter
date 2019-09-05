@@ -67,6 +67,7 @@ parser.add_option("--list","--list",dest="samplelist",help="File with samples li
 parser.add_option("--check_jobs","--check_jobs",dest="check_jobs", action="store_true", help="Check and resubmit failed jobs",default=False)
 parser.add_option("--queue","--queue",dest="queue", help="Queue: workday or tomorrow",default='workday')
 parser.add_option("--cmst3","--cmst3",dest="cmst3", action="store_true",help="use cmst3 queue on condor",default=False)
+parser.add_option("--count","--count",dest="count", action="store_true", help="Count events",default=False)
 (options,args) = parser.parse_args()
 
 if options.check_jobs:
