@@ -52,6 +52,7 @@ parser.add_option("--count","--count",dest="count", action="store_true", help="C
 
 if options.check_jobs:
  ndirs = 0
+ resubmit_jobs = []
  for d in os.listdir('./'):
   if options.sample in d:
    print d
@@ -63,6 +64,7 @@ if options.check_jobs:
        print d,l
        answer = raw_input('Would you like to resubmit the job? (YES or NO) ')
        if answer == 'YES':
+        resubmit_jobs.append(d.split('-')[-1])
         os.chdir(d)
 	os.system('rm *.out *.err *.log')
         os.system('condor_submit submit.sub')
@@ -88,11 +90,13 @@ if options.check_jobs:
     print "File",i+1,"probably missing!"
     answer = raw_input('Would you like to resubmit the job? (YES or NO) ')
     if answer == 'YES':
+     resubmit_jobs.append(i+1)
      os.chdir(options.sample+"-%i"%(i+1))
      os.system('rm *.out *.err *.log')
      os.system('condor_submit submit.sub')
      print "Job submitted!"
      os.chdir('../')
+ print resubmit_jobs   
  sys.exit()
         
 sframe_dir = os.getenv("SFRAME_DIR")

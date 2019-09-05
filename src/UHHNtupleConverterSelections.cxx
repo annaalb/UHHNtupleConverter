@@ -1,4 +1,5 @@
 #include "UHH2/UHHNtupleConverter/include/UHHNtupleConverterSelections.h"
+
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Particle.h"
 #include "UHH2/common/include/Utils.h"
@@ -65,10 +66,10 @@ GenHbbEventSelection::GenHbbEventSelection(){}
     
 bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
   std::vector<GenParticle> genQuarks;
-  bool Higgsboson = false;
+  //bool Higgsboson = false;
   for(auto genp:*event.genparticles){
     if(abs(genp.pdgId())==25){
-      Higgsboson = true;
+      //Higgsboson = true;
       if(abs(event.genparticles->at(genp.daughter1()).pdgId())==5 && abs(event.genparticles->at(genp.daughter2()).pdgId())==5){
        genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
        genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
@@ -94,13 +95,13 @@ GenVqqEventSelection::GenVqqEventSelection(){}
 bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
   assert(event.genparticles); // if this fails, it probably means genparticles are not read in    
   std::vector<GenParticle> genQuarks;
-  bool vectorboson = false;
+  //bool vectorboson = false;
   if(PRINT) cout << "GenVqqEventSelection" << endl;
   for(auto genp:*event.genparticles){
     if(PRINT) cout << "loop on gen particles" << endl;
     if(abs(genp.pdgId())==24 || abs(genp.pdgId())==23){
       if(PRINT) cout << "I have a vector boson!" << endl;
-       vectorboson = true;
+       //vectorboson = true;
        int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
        if(PRINT) cout << "I have one daughter" << endl;
        int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
