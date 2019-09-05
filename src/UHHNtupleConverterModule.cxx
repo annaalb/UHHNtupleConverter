@@ -509,7 +509,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     std::cout << "Flag_EcalBadCalibSelection (for 2016 this is always = 1)" << std::endl;
     b_MET_filters_all.push_back( ctx.declare_event_output<bool>("Flag_EcalBadCalibSelection") );  
     
-    ref_triggers.push_back(TriggerSelection("HLT_IsoMu24_v*"));
     ref_triggers.push_back(TriggerSelection("HLT_IsoMu27_v*"));
     ref_triggers.push_back(TriggerSelection("HLT_Mu50_v*"));
 
@@ -819,15 +818,15 @@ bool UHHNtupleConverterModule::process(Event & event) {
          
     if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     if(printGenparticle)    Gen_printer->process(event);     
-        
-    // 1. run all modules other modules.
-    common->process(event);   
-    h_nocuts->fill(event);
-        
+
     if( isMC ) totalGenEvents+=event.genInfo->weights().at(0);
     else totalGenEvents+=1;
     totalEvents+=1;
-
+            
+    // 1. run all modules other modules.
+    bool common_sel = common->process(event);
+    if(!common_sel) return false;
+    h_nocuts->fill(event);       
     if(PRINT)   cout << " common modules done " << endl;  
 
     bool passedMETFilters = true;
@@ -961,10 +960,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     if(PRINT)     cout << " dijet sel loose done" << endl;
     
     //fill histograms for trigger turn on
+    bool passedTriggers = false;
     for(unsigned int i=0; i<ref_triggers.size(); ++i){
-      if(ref_triggers[i].passes(event)){ h_trig->fill(event,trigger_selection,trigNames); break; }
+      bool isfired = ref_triggers[i].passes(event);
+      if(isfired){ passedTriggers = true; }
     }    
-	    
+    
+    if(passedTriggers) h_trig->fill(event,trigger_selection,trigNames);
+    	    
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
     event.set(b_lumi, event.luminosityBlock); 
@@ -978,7 +981,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_rho,event.rho);
     event.set(b_nVert,event.pvs->size());
         
-    bool passedTriggers=false;				     
+    passedTriggers=false;				     
     for(unsigned int i=0; i<trigger_selection.size(); ++i){
      bool isfired = trigger_selection[i].passes(event);
      if(isfired) passedTriggers=true;
