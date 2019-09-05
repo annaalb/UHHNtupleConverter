@@ -4,21 +4,28 @@ import xml.etree.ElementTree as ET
 import ROOT
 from ROOT import *
 
-def makeSubmitFileCondor(exe,jobname,jobflavour):
+def makeSubmitFileCondor(exe,jobname,jobflavour,localinput,cmst3):
     print "make options file for condor job submission "
-    submitfile = open("submit.sub","w")
-    submitfile.write("Proxy_filename = x509up_%s\n"%os.getenv("USER"))
-    submitfile.write("Proxy_path = %s/$(Proxy_filename)\n"%os.getenv("HOME"))
+    submitfile = open("submit.sub","w")        
     submitfile.write("should_transfer_files = YES\n")
     submitfile.write("when_to_transfer_output = ON_EXIT\n")
     submitfile.write('transfer_output_files = ""\n')
-    submitfile.write("transfer_input_files = $(Proxy_path)\n")
     submitfile.write("executable  = "+exe+"\n")
-    submitfile.write("arguments             = $(Proxy_path) $(ClusterID) $(ProcId)\n")
+    
+    if localinput:
+      submitfile.write("arguments             = $(ClusterID) $(ProcId)\n")
+    else:
+     submitfile.write("Proxy_filename = x509up_%s\n"%os.getenv("USER"))
+     submitfile.write("Proxy_path = %s/$(Proxy_filename)\n"%os.getenv("HOME"))
+     submitfile.write("transfer_input_files = $(Proxy_path)\n")
+     submitfile.write("arguments             = $(Proxy_path) $(ClusterID) $(ProcId)\n")  
+    
     submitfile.write("output                = "+jobname+".$(ClusterId).$(ProcId).out\n")
     submitfile.write("error                 = "+jobname+".$(ClusterId).$(ProcId).err\n")
     submitfile.write("log                   = "+jobname+".$(ClusterId).log\n")
     submitfile.write('+JobFlavour           = "'+jobflavour+'"\n')
+    if cmst3:
+     submitfile.write("+AccountingGroup = group_u_CMST3.all\n")
     submitfile.write("queue")
     submitfile.close()  
     
@@ -41,12 +48,14 @@ def indent(elem, level=0):
 
 parser = optparse.OptionParser()
 parser.add_option("--sample","--sample",dest="sample",default='',help="samples to be processed from the file samples.txt")
+parser.add_option("--localinput","--localinput",dest="localinput", action="store_true",help="input ntuple is local, no protocol needed",default=False)
 parser.add_option("--nfiles_per_job","--nfiles_per_job",dest="nfiles_per_job",type=int, help="number of files per job",default=10)
 parser.add_option("--outdir","--outdir",dest="outdir",help="jobs directory",default='./')
 parser.add_option("--xml","--xml",dest="xmlfile",help="SFrame config xml file",default='config/config-2016.xml')
 parser.add_option("--list","--list",dest="samplelist",help="File with samples list",default='samples.txt')
 parser.add_option("--check_jobs","--check_jobs",dest="check_jobs", action="store_true", help="Check and resubmit failed jobs",default=False)
 parser.add_option("--queue","--queue",dest="queue", help="Queue: workday or tomorrow",default='workday')
+parser.add_option("--cmst3","--cmst3",dest="cmst3", action="store_true",help="use cmst3 queue on condor",default=False)
 parser.add_option("--count","--count",dest="count", action="store_true", help="Count events",default=False)
 (options,args) = parser.parse_args()
 
@@ -135,7 +144,10 @@ for s,f in samples.iteritems():
  files = []
  for d in f:
   print "  * folder:",d
-  cmd = 'gfal-ls -l srm://dcache-se-cms.desy.de:8443/srm/managerv2?SFN='
+  if options.localinput:
+   cmd = 'ls -l '
+  else:
+   cmd = 'gfal-ls -l srm://dcache-se-cms.desy.de:8443/srm/managerv2?SFN='
   cmd+=d
   status,output = commands.getstatusoutput(cmd)
   if status != 0:
@@ -191,7 +203,10 @@ for s,files in samples.iteritems():
   data = cycle.find('InputData')
      
   for test_i,f in enumerate(files_per_job):
-   filename = 'root://dcache-cms-xrootd.desy.de:1094'+f
+   if options.localinput:
+    filename = f
+   else:
+    filename = 'root://dcache-cms-xrootd.desy.de:1094'+f
    element = data.makeelement('In', {'FileName':filename,'Lumi':'1.0'})
    data.append(element)
    if options.count:
@@ -229,10 +244,11 @@ for s,files in samples.iteritems():
       fout.write("cd "+str(workdir)+"\n")
       fout.write("cmsenv\n")
       fout.write("source "+str(sframe_dir)+"/setup.sh\n")
-      fout.write("export X509_USER_PROXY=$1\n")
-      fout.write("echo $X509_USER_PROXY\n")
-      fout.write("voms-proxy-info -all\n")
-      fout.write("voms-proxy-info -all -file $1\n")
+      if not options.localinput:
+       fout.write("export X509_USER_PROXY=$1\n")
+       fout.write("echo $X509_USER_PROXY\n")
+       fout.write("voms-proxy-info -all\n")
+       fout.write("voms-proxy-info -all -file $1\n")
       fout.write("sframe_main %s/%s.xml\n"%(jobdir,config_file))
       fout.write("echo 'STOP---------------'\n")
       fout.write("echo\n")
@@ -240,7 +256,7 @@ for s,files in samples.iteritems():
   os.system("chmod 755 job.sh")    
     
   ###### sends bjobs ######
-  makeSubmitFileCondor("job.sh","job",options.queue)
+  makeSubmitFileCondor("job.sh","job",options.queue,options.localinput,options.cmst3)
   os.system("condor_submit submit.sub")
   print "job nr " + str(i+1) + " submitted"
    
