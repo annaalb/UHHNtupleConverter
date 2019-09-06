@@ -364,6 +364,15 @@ private:
     uhh2::Event::Handle<float> m_o_met_phi;
     uhh2::Event::Handle<float> m_o_met_mass;
     uhh2::Event::Handle<float> m_o_met_sumEt;
+
+    //variables for spike killer
+    uhh2::Event::Handle<float> m_o_genHT;
+    uhh2::Event::Handle<float> m_o_qscale;
+    uhh2::Event::Handle<float> m_o_PU_pThat;
+    uhh2::Event::Handle<bool> b_pt_over_genHT;
+    uhh2::Event::Handle<bool> b_pt_over_qscale;
+    uhh2::Event::Handle<bool> b_PUpthat_over_genHT;
+    uhh2::Event::Handle<bool> b_spikekiller;
     
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
@@ -859,6 +868,16 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_met_mass = ctx.declare_event_output<float>("met_mass");
     m_o_met_sumEt = ctx.declare_event_output<float>("met_sumEt");
          
+    //variables for spike killer
+    m_o_genHT = ctx.declare_event_output<float>("genHT");
+    m_o_qscale = ctx.declare_event_output<float>("qscale");
+    m_o_PU_pThat = ctx.declare_event_output<float>("PU_pThat");
+    b_pt_over_genHT = ctx.declare_event_output<bool>("b_pt_over_genHT");
+    b_pt_over_qscale = ctx.declare_event_output<bool>("b_pt_over_qscale");
+    b_PUpthat_over_genHT = ctx.declare_event_output<bool>("b_PUpthat_over_genHT");
+    b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
+    
+
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
     electron_sel.reset(new ElectronVeto(EleId,0.8)); // see UHHNtupleConverterSelections
@@ -1362,6 +1381,26 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_met_mass,event.met->v4().M());
     event.set(m_o_met_sumEt,event.met->sumEt());
 
+    //variables for spike killer
+    float genHT = 0.;
+
+    if (!event.isRealData) {
+      for (const auto & itr: *event.genparticles) {
+	if (abs(itr.status()) != 23) continue;
+	uint pdg = abs(itr.pdgId());
+	if (( pdg <= 6 && pdg >= 2) || pdg == 21) {
+	  genHT += itr.pt();
+	}
+      }
+    }
+
+    event.set(m_o_genHT,!event.isRealData ? genHT : -9999 );
+    event.set(m_o_qscale, !event.isRealData ? event.genInfo->qScale() : -9999);
+    event.set(m_o_PU_pThat, !event.isRealData ? event.genInfo->PU_pT_hat_max() : -9999);
+    event.set(b_pt_over_genHT, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) ? false : true); 
+    event.set(b_pt_over_qscale, !event.isRealData && event.jets->size() && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) ? false: true);
+    event.set(b_PUpthat_over_genHT, !event.isRealData && genHT > 0 && event.jets->size() && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false: true);
+    event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
 
     //NLO weights                                                                                                                                                                                          
     if(isVjet)      NLOweights->process(event);
