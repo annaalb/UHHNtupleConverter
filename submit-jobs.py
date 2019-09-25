@@ -52,7 +52,7 @@ def getFileList(filelist_xml):
  nevs_ = 0
  for l in f_filelist.readlines():
   if not '.root' in l:
-   nevs_ = int(l.split('"')[1])
+   nevs_ = int(float(l.split('"')[1]))
    continue
   list_.append(l.split('"')[1])
  return list_,nevs_
