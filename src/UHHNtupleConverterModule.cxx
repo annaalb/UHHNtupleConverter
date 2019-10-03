@@ -126,6 +126,7 @@ private:
     bool isSignal;
     float totalEvents;
     float totalGenEvents;
+    float totalGenEvents_LO;
     std::vector<std::string> trigNames;
 
     bool printGenparticle;    
@@ -144,7 +145,11 @@ private:
     uhh2::Event::Handle<int>    b_run;
     uhh2::Event::Handle<int>    b_event;
     uhh2::Event::Handle<double> b_xSec;
+    uhh2::Event::Handle<float>  b_pdf_x1;
+    uhh2::Event::Handle<float>  b_pdf_x2;
+    uhh2::Event::Handle<float>  b_pdf_scalePDF;
     uhh2::Event::Handle<float>  b_weightGen;
+    uhh2::Event::Handle<float>  b_weightGen_LO;
     uhh2::Event::Handle<float>  b_weightPU;
     uhh2::Event::Handle<float>  b_weightBTag;
     uhh2::Event::Handle<float>  b_nTrueInt;
@@ -448,6 +453,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     isMC = ctx.get("dataset_type") == "MC";
     totalEvents=0;
     totalGenEvents=0;
+    totalGenEvents_LO=0;
 
     printGenparticle = false;
   
@@ -503,7 +509,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_run = ctx.declare_event_output<int>("run");
     b_event = ctx.declare_event_output<int>("evt");
     b_xSec = ctx.declare_event_output<double>("xsec");
+    b_pdf_x1 = ctx.declare_event_output<float>("pdf_x1");
+    b_pdf_x2 = ctx.declare_event_output<float>("pdf_x2");
+    b_pdf_scalePDF = ctx.declare_event_output<float>("pdf_scalePDF");
     b_weightGen = ctx.declare_event_output<float>("genWeight");
+    b_weightGen_LO = ctx.declare_event_output<float>("genWeight_LO");
     b_weightPU = ctx.declare_event_output<float>("puWeight");
     b_weightBTag = ctx.declare_event_output<float>("btagWeight");
     b_nTrueInt = ctx.declare_event_output<float>("nTrueInt");
@@ -915,9 +925,37 @@ bool UHHNtupleConverterModule::process(Event & event) {
          
     if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     if(printGenparticle)    Gen_printer->process(event);     
-
-    if( isMC ) totalGenEvents+=event.genInfo->weights().at(0);
-    else totalGenEvents+=1;
+    
+    float genWeight = 1;
+    float genWeight_LO = 1;
+    if( isMC ){
+      genWeight = event.genInfo->weights().at(0);
+      // In 2017 and 2018 MG (LO) signal samples, reweight to LO PDF set since central NNLO PDF set (NNPDF31_nnlo_hessian_pdfas or NNPDF31_nnlo_as_0118_nf_4) is not positive definite
+      if( isSignal && (year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1) ){
+        if(event.genInfo->systweights().size()==0){
+            // Pure Phythia samples that don't need reweighting
+            genWeight_LO = genWeight;
+        }
+        else if(event.genInfo->systweights().size()==882){
+            // Scenario 1: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF30_lo_as_0130_nf_4
+            genWeight_LO = (event.genInfo->systweights()[777] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else if(event.genInfo->systweights().size()==919){
+            // Scenario 2: reweight central PDF NNPDF31_nnlo_as_0118_nf_4 to NNPDF30_lo_as_0130_nf_4
+            genWeight_LO = (event.genInfo->systweights()[814] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else if(event.genInfo->systweights().size()==1116){
+            // Scenario 3: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF31_lo_as_0130
+            genWeight_LO = (event.genInfo->systweights()[1112] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else{
+            cout << "WARNING: encountered unexpected LHE weight scenario, with number of weights: " << event.genInfo->systweights().size() << endl;
+            cout << "         Please check which LHE weight to take to reweight to LO PDF" << endl;
+        }
+      }
+    }
+    totalGenEvents+=genWeight;
+    totalGenEvents_LO+=genWeight_LO;
     totalEvents+=1;
             
     // 1. run all modules other modules.
@@ -1070,10 +1108,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_lumi, event.luminosityBlock); 
     event.set(b_run, event.run);  
     event.set(b_event, event.event);
-    event.set(b_weightGen, isMC ? event.genInfo->weights().at(0) : 1);
+    event.set(b_weightGen, genWeight);
+    event.set(b_weightGen_LO, genWeight_LO);
     event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
     event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
+    event.set(b_pdf_x1, isMC ? event.genInfo->pdf_x1() : -9999);
+    event.set(b_pdf_x2, isMC ? event.genInfo->pdf_x2() : -9999);
+    event.set(b_pdf_scalePDF, isMC ? event.genInfo->pdf_scalePDF() : -9999);
     event.set(b_nTrueInt,isMC ? event.genInfo->pileup_TrueNumInteractions() : 1);
     event.set(b_rho,event.rho);
     event.set(b_nVert,event.pvs->size());
@@ -1418,6 +1460,7 @@ UHHNtupleConverterModule::~UHHNtupleConverterModule(){
     std::cout.precision(10); 
     std::cout << "Total processed events = " << totalEvents << std::endl;
     std::cout << "Total generated events = " << totalGenEvents << std::endl;
+    std::cout << "Total generated events (LO PDF reweighted) = " << totalGenEvents_LO << std::endl;
 
 }
 
