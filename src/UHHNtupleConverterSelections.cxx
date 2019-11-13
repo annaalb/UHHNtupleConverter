@@ -170,3 +170,60 @@ bool VBFjetSelection::passes(const Event & event){
   if(inv_mass_safe(jet0.v4()+jet1.v4()) < mjj_min ) return false;
   return true;
 }
+
+
+///Brute Force Decorrelation
+BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string percentage_){
+
+  percentage = percentage_;
+  string h_name = "DeepBoosted_ZHbbvsQCD_"+percentage;
+  string h_name2 = "DeepBoosted_WvsQCD_"+percentage;
+  h_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>(h_name);
+  h_DeepBoosted_WvsQCD= ctx.declare_event_output<float>(h_name2);
+
+  TString filename_zh = (TString)"/nfs/dust/cms/user/abenecke/scripts/diboson/taggerstudies/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+".root" ;
+  TString filename_w = (TString) "/nfs/dust/cms/user/abenecke/scripts/diboson/taggerstudies/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+".root"; 
+  infile_ZHbbvsQCD =  new TFile(filename_zh);
+  infile_WvsQCD =  new TFile(filename_w);
+
+  map_ZHbbvsQCD = (TH2F*)infile_ZHbbvsQCD->Get("DeepBoosted_ZHbbvsQCD_v_rho_v_pT_yx");
+  map_WvsQCD = (TH2F*)infile_WvsQCD->Get("DeepBoosted_WvsQCD_v_rho_v_pT_yx");
+}
+    
+bool BruteForceDecorrelation::process(Event & event){
+  assert(event.topjets);
+
+
+  for(auto jet:*event.topjets){
+    //// find pT bin
+    pt_bin = map_ZHbbvsQCD->GetYaxis()->FindFixBin(jet.pt());
+    if(pt_bin > map_ZHbbvsQCD->GetYaxis()->GetNbins()){
+      pt_bin = map_ZHbbvsQCD->GetYaxis()->GetNbins();
+    }else if(pt_bin <=0){
+      pt_bin = 1;
+    }
+
+    /// find rho bin
+    x = 2 * TMath::Log(jet.softdropmass()/ jet.pt());
+    x_bin = map_ZHbbvsQCD->GetXaxis()->FindFixBin(x);
+    if(x_bin > map_ZHbbvsQCD->GetXaxis()->GetNbins()){
+      x_bin = map_ZHbbvsQCD->GetXaxis()->GetNbins();
+    }else if(x_bin <= 0){
+      x_bin = 1;
+    }
+    
+  }
+  cut_ZHbbvsQCD = map_ZHbbvsQCD->GetBinContent(x_bin,pt_bin);
+  cut_WvsQCD = map_WvsQCD->GetBinContent(x_bin,pt_bin);
+
+  event.set(h_DeepBoosted_ZHbbvsQCD,cut_ZHbbvsQCD);
+  event.set(h_DeepBoosted_WvsQCD,cut_WvsQCD);
+
+  return true;
+}
+
+
+
+
+
+
