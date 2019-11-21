@@ -380,6 +380,13 @@ private:
     uhh2::Event::Handle<bool> b_PUpthat_over_genHT;
     uhh2::Event::Handle<bool> b_spikekiller;
     
+    // //cut values for decorrelation
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p02;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
+ 
+
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
     const int runnr_2016_Ae = 271658;
@@ -894,6 +901,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_PUpthat_over_genHT = ctx.declare_event_output<bool>("b_PUpthat_over_genHT");
     b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
     
+    // //cut values for decorrelation
+    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05"));
+    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10"));
+    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03"));
+    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02"));
 
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
@@ -1450,6 +1462,13 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_pt_over_qscale, !event.isRealData && event.jets->size() && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) ? false: true);
     event.set(b_PUpthat_over_genHT, !event.isRealData && genHT > 0 && event.jets->size() && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false: true);
     event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
+
+    //cut values for decorrelation
+    bruteForce_Decorrelation_0p02->process(event);
+    bruteForce_Decorrelation_0p03->process(event);
+    bruteForce_Decorrelation_0p05->process(event);
+    bruteForce_Decorrelation_0p10->process(event);
+
 
     //NLO weights                                                                                                                                                                                          
     if(isVjet)      NLOweights->process(event);
