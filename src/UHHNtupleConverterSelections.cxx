@@ -181,10 +181,10 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   h_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>(h_name);
   h_DeepBoosted_WvsQCD= ctx.declare_event_output<float>(h_name2);
 
-  TString filename_zh = (TString)"/nfs/dust/cms/user/abenecke/scripts/diboson/taggerstudies/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+".root" ;
-  TString filename_w = (TString) "/nfs/dust/cms/user/abenecke/scripts/diboson/taggerstudies/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+".root"; 
-  infile_ZHbbvsQCD =  new TFile(filename_zh);
-  infile_WvsQCD =  new TFile(filename_w);
+  std::string filename_zh = "UHHNtupleConverter/data/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+".root" ;
+  std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+".root"; 
+  infile_ZHbbvsQCD.reset(TFile::Open(locate_file(filename_zh).c_str()));
+  infile_WvsQCD.reset(TFile::Open(locate_file(filename_w).c_str()));
 
   map_ZHbbvsQCD = (TH2F*)infile_ZHbbvsQCD->Get("DeepBoosted_ZHbbvsQCD_v_rho_v_pT_yx");
   map_WvsQCD = (TH2F*)infile_WvsQCD->Get("DeepBoosted_WvsQCD_v_rho_v_pT_yx");

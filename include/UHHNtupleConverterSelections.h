@@ -97,7 +97,7 @@ private:
     string percentage;
     uhh2::Event::Handle<float> h_DeepBoosted_ZHbbvsQCD;
     uhh2::Event::Handle<float> h_DeepBoosted_WvsQCD;
-    TFile *infile_ZHbbvsQCD, *infile_WvsQCD;
+    std::unique_ptr<TFile> infile_ZHbbvsQCD, infile_WvsQCD;
     TH2F* map_ZHbbvsQCD, *map_WvsQCD;
     int pt_bin,x_bin;
     double x,cut_ZHbbvsQCD,cut_WvsQCD;
