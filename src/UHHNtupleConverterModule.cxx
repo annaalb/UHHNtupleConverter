@@ -55,7 +55,8 @@ private:
 
     std::string jec_tag, jec_ver, jec_jet_coll_AK8chs, jec_jet_coll_AK4puppi,Vcorr;
     bool isVjet;
-    JERSmearing::SFtype1 JER_sf;
+    JERSmearing::SFtype1 JER_sf = {};
+    std::string sfFilename = "";
     TString ResolutionFileName;   
   
     std::unique_ptr<JetCorrector> jet_corrector;
@@ -126,6 +127,7 @@ private:
     bool isSignal;
     float totalEvents;
     float totalGenEvents;
+    float totalGenEvents_LO;
     std::vector<std::string> trigNames;
 
     bool printGenparticle;    
@@ -144,7 +146,11 @@ private:
     uhh2::Event::Handle<int>    b_run;
     uhh2::Event::Handle<int>    b_event;
     uhh2::Event::Handle<double> b_xSec;
+    uhh2::Event::Handle<float>  b_pdf_x1;
+    uhh2::Event::Handle<float>  b_pdf_x2;
+    uhh2::Event::Handle<float>  b_pdf_scalePDF;
     uhh2::Event::Handle<float>  b_weightGen;
+    uhh2::Event::Handle<float>  b_weightGen_LO;
     uhh2::Event::Handle<float>  b_weightPU;
     uhh2::Event::Handle<float>  b_weightBTag;
     uhh2::Event::Handle<float>  b_nTrueInt;
@@ -374,6 +380,13 @@ private:
     uhh2::Event::Handle<bool> b_PUpthat_over_genHT;
     uhh2::Event::Handle<bool> b_spikekiller;
     
+    // //cut values for decorrelation
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p02;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
+ 
+
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
     const int runnr_2016_Ae = 271658;
@@ -448,6 +461,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     isMC = ctx.get("dataset_type") == "MC";
     totalEvents=0;
     totalGenEvents=0;
+    totalGenEvents_LO=0;
 
     printGenparticle = false;
   
@@ -503,7 +517,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_run = ctx.declare_event_output<int>("run");
     b_event = ctx.declare_event_output<int>("evt");
     b_xSec = ctx.declare_event_output<double>("xsec");
+    b_pdf_x1 = ctx.declare_event_output<float>("pdf_x1");
+    b_pdf_x2 = ctx.declare_event_output<float>("pdf_x2");
+    b_pdf_scalePDF = ctx.declare_event_output<float>("pdf_scalePDF");
     b_weightGen = ctx.declare_event_output<float>("genWeight");
+    b_weightGen_LO = ctx.declare_event_output<float>("genWeight_LO");
     b_weightPU = ctx.declare_event_output<float>("puWeight");
     b_weightBTag = ctx.declare_event_output<float>("btagWeight");
     b_nTrueInt = ctx.declare_event_output<float>("nTrueInt");
@@ -585,9 +603,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     }
     else if(year == Year::is2018 ){
       jec_tag = "Autumn18";
-      jec_ver = "8";
-      JER_sf  = JERSmearing::SF_13TeV_Autumn18_RunABCD_V4;
-      ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK4PFPuppi.txt";
+      jec_ver = "19";
+      sfFilename = "common/data/2018/Autumn18_V7_MC_SF_AK4PFPuppi.txt";
+      ResolutionFileName = "2018/Autumn18_V7_MC_PtResolution_AK4PFPuppi.txt";
     }
     
     if(isMC){
@@ -597,8 +615,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       std::cout << "Smearing: " << jec_jet_coll_AK4puppi << " with "<< ResolutionFileName << std::endl;     
       jet_corrector.reset(new JetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK8chs)));
       jet_corrector_puppi.reset(new GenericJetCorrector(ctx, JERFiles::JECFilesMC(jec_tag, jec_ver, jec_jet_coll_AK4puppi),"jetsAk4Puppi"));
-      jet_EResSmearer.reset(new JetResolutionSmearer(ctx));                                                                                                                                                                                                           
-      jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JER_sf,ResolutionFileName));
+      jet_EResSmearer.reset(new JetResolutionSmearer(ctx));
+      if (sfFilename != "") {                                                                                                                                                                                                           
+	jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",sfFilename,ResolutionFileName));
+      } else if (JER_sf.size() > 0) {
+	jetpuppi_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk4Puppi","slimmedGenJets",JER_sf,ResolutionFileName));
+      } else {
+	throw runtime_error("No valid JER SF either as text file nor JERSmearing::SFtype1");
+      }
     }
     else{
       std::cout << "USING " << year_str_map.at(year) << " DATA JEC: "<< jec_tag << " V" << jec_ver << std::endl;
@@ -877,6 +901,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_PUpthat_over_genHT = ctx.declare_event_output<bool>("b_PUpthat_over_genHT");
     b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
     
+    // //cut values for decorrelation
+    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05"));
+    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10"));
+    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03"));
+    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02"));
 
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
@@ -915,9 +944,37 @@ bool UHHNtupleConverterModule::process(Event & event) {
          
     if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     if(printGenparticle)    Gen_printer->process(event);     
-
-    if( isMC ) totalGenEvents+=event.genInfo->weights().at(0);
-    else totalGenEvents+=1;
+    
+    float genWeight = 1;
+    float genWeight_LO = 1;
+    if( isMC ){
+      genWeight = event.genInfo->weights().at(0);
+      // In 2017 and 2018 MG (LO) signal samples, reweight to LO PDF set since central NNLO PDF set (NNPDF31_nnlo_hessian_pdfas or NNPDF31_nnlo_as_0118_nf_4) is not positive definite
+      if( isSignal && (year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1) ){
+        if(event.genInfo->systweights().size()==0){
+            // Pure Phythia samples that don't need reweighting
+            genWeight_LO = genWeight;
+        }
+        else if(event.genInfo->systweights().size()==882){
+            // Scenario 1: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF30_lo_as_0130_nf_4
+            genWeight_LO = (event.genInfo->systweights()[777] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else if(event.genInfo->systweights().size()==919){
+            // Scenario 2: reweight central PDF NNPDF31_nnlo_as_0118_nf_4 to NNPDF30_lo_as_0130_nf_4
+            genWeight_LO = (event.genInfo->systweights()[814] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else if(event.genInfo->systweights().size()==1116){
+            // Scenario 3: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF31_lo_as_0130
+            genWeight_LO = (event.genInfo->systweights()[1112] / event.genInfo->systweights()[0]) * genWeight;
+        }
+        else{
+            cout << "WARNING: encountered unexpected LHE weight scenario, with number of weights: " << event.genInfo->systweights().size() << endl;
+            cout << "         Please check which LHE weight to take to reweight to LO PDF" << endl;
+        }
+      }
+    }
+    totalGenEvents+=genWeight;
+    totalGenEvents_LO+=genWeight_LO;
     totalEvents+=1;
             
     // 1. run all modules other modules.
@@ -1070,10 +1127,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_lumi, event.luminosityBlock); 
     event.set(b_run, event.run);  
     event.set(b_event, event.event);
-    event.set(b_weightGen, isMC ? event.genInfo->weights().at(0) : 1);
+    event.set(b_weightGen, genWeight);
+    event.set(b_weightGen_LO, genWeight_LO);
     event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
     event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
+    event.set(b_pdf_x1, isMC ? event.genInfo->pdf_x1() : -9999);
+    event.set(b_pdf_x2, isMC ? event.genInfo->pdf_x2() : -9999);
+    event.set(b_pdf_scalePDF, isMC ? event.genInfo->pdf_scalePDF() : -9999);
     event.set(b_nTrueInt,isMC ? event.genInfo->pileup_TrueNumInteractions() : 1);
     event.set(b_rho,event.rho);
     event.set(b_nVert,event.pvs->size());
@@ -1402,6 +1463,13 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_PUpthat_over_genHT, !event.isRealData && genHT > 0 && event.jets->size() && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false: true);
     event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
 
+    //cut values for decorrelation
+    bruteForce_Decorrelation_0p02->process(event);
+    bruteForce_Decorrelation_0p03->process(event);
+    bruteForce_Decorrelation_0p05->process(event);
+    bruteForce_Decorrelation_0p10->process(event);
+
+
     //NLO weights                                                                                                                                                                                          
     if(isVjet)      NLOweights->process(event);
    
@@ -1418,6 +1486,7 @@ UHHNtupleConverterModule::~UHHNtupleConverterModule(){
     std::cout.precision(10); 
     std::cout << "Total processed events = " << totalEvents << std::endl;
     std::cout << "Total generated events = " << totalGenEvents << std::endl;
+    std::cout << "Total generated events (LO PDF reweighted) = " << totalGenEvents_LO << std::endl;
 
 }
 
