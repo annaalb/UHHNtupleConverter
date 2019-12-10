@@ -1464,10 +1464,10 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
 
     //cut values for decorrelation
-    bruteForce_Decorrelation_0p02->process(event);
-    bruteForce_Decorrelation_0p03->process(event);
-    bruteForce_Decorrelation_0p05->process(event);
-    bruteForce_Decorrelation_0p10->process(event);
+    bruteForce_Decorrelation_0p02->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p03->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p05->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p10->process(event,closest_puppijet1,closest_puppijet2);
 
 
     //NLO weights                                                                                                                                                                                          
