@@ -91,16 +91,21 @@ private:
 
   public:
     explicit BruteForceDecorrelation(uhh2::Context & ctx,string percentage_);
-    virtual bool process(uhh2::Event & event) override; 
+    //virtual bool process(uhh2::Event & event) override; 
+    virtual bool process(uhh2::Event & event) override {return false;};
+    bool process(uhh2::Event & event, TopJet const* jet1_, TopJet const* jet2_);
 
   private:
     string percentage;
-    uhh2::Event::Handle<float> h_DeepBoosted_ZHbbvsQCD;
-    uhh2::Event::Handle<float> h_DeepBoosted_WvsQCD;
+    uhh2::Event::Handle<float> h_l1_DeepBoosted_ZHbbvsQCD;
+    uhh2::Event::Handle<float> h_l1_DeepBoosted_WvsQCD;
+    uhh2::Event::Handle<float> h_l2_DeepBoosted_ZHbbvsQCD;
+    uhh2::Event::Handle<float> h_l2_DeepBoosted_WvsQCD;
     std::unique_ptr<TFile> infile_ZHbbvsQCD, infile_WvsQCD;
     TH2F* map_ZHbbvsQCD, *map_WvsQCD;
     int pt_bin,x_bin;
-    double x,cut_ZHbbvsQCD,cut_WvsQCD;
+    double x;
+    float cut_ZHbbvsQCD,cut_WvsQCD;
   };
 
 

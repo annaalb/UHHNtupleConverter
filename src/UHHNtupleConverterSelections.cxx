@@ -178,9 +178,11 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   percentage = percentage_;
   string h_name = "DeepBoosted_ZHbbvsQCD_"+percentage;
   string h_name2 = "DeepBoosted_WvsQCD_"+percentage;
-  h_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>(h_name);
-  h_DeepBoosted_WvsQCD= ctx.declare_event_output<float>(h_name2);
-
+  h_l1_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name);
+  h_l1_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name2);
+  h_l2_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name);
+  h_l2_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name2);
+  
   std::string filename_zh = "UHHNtupleConverter/data/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+".root" ;
   std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+".root"; 
   infile_ZHbbvsQCD.reset(TFile::Open(locate_file(filename_zh).c_str()));
@@ -190,35 +192,50 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   map_WvsQCD = (TH2F*)infile_WvsQCD->Get("DeepBoosted_WvsQCD_v_rho_v_pT_yx");
 }
     
-bool BruteForceDecorrelation::process(Event & event){
-  assert(event.topjets);
+bool BruteForceDecorrelation::process(Event & event, TopJet const* jet1_, TopJet const* jet2_){
 
-
-  for(auto jet:*event.topjets){
-    //// find pT bin
-    pt_bin = map_ZHbbvsQCD->GetYaxis()->FindFixBin(jet.pt());
-    if(pt_bin > map_ZHbbvsQCD->GetYaxis()->GetNbins()){
-      pt_bin = map_ZHbbvsQCD->GetYaxis()->GetNbins();
-    }else if(pt_bin <=0){
-      pt_bin = 1;
-    }
-
-    /// find rho bin
-    x = 2 * TMath::Log(jet.softdropmass()/ jet.pt());
-    x_bin = map_ZHbbvsQCD->GetXaxis()->FindFixBin(x);
-    if(x_bin > map_ZHbbvsQCD->GetXaxis()->GetNbins()){
-      x_bin = map_ZHbbvsQCD->GetXaxis()->GetNbins();
-    }else if(x_bin <= 0){
-      x_bin = 1;
-    }
-    
+  //find cut value for jet1
+  pt_bin = map_ZHbbvsQCD->GetYaxis()->FindFixBin(jet1_->pt());
+  if(pt_bin > map_ZHbbvsQCD->GetYaxis()->GetNbins()){
+    pt_bin = map_ZHbbvsQCD->GetYaxis()->GetNbins();
+  }else if(pt_bin <=0){
+    pt_bin = 1;
   }
+  
+  x = 2 * TMath::Log(jet1_->softdropmass()/ jet1_->pt());
+  x_bin = map_ZHbbvsQCD->GetXaxis()->FindFixBin(x);
+  if(x_bin > map_ZHbbvsQCD->GetXaxis()->GetNbins()){
+    x_bin = map_ZHbbvsQCD->GetXaxis()->GetNbins();
+  }else if(x_bin <= 0){
+    x_bin = 1;
+  }
+  
   cut_ZHbbvsQCD = map_ZHbbvsQCD->GetBinContent(x_bin,pt_bin);
-  cut_WvsQCD = map_WvsQCD->GetBinContent(x_bin,pt_bin);
+  cut_WvsQCD = map_WvsQCD->GetBinContent(x_bin,pt_bin);        
+  event.set(h_l1_DeepBoosted_ZHbbvsQCD,cut_ZHbbvsQCD);
+  event.set(h_l1_DeepBoosted_WvsQCD,cut_WvsQCD);
 
-  event.set(h_DeepBoosted_ZHbbvsQCD,cut_ZHbbvsQCD);
-  event.set(h_DeepBoosted_WvsQCD,cut_WvsQCD);
-
+  //find cut value for jet2
+  pt_bin = map_ZHbbvsQCD->GetYaxis()->FindFixBin(jet2_->pt());
+  if(pt_bin > map_ZHbbvsQCD->GetYaxis()->GetNbins()){
+    pt_bin = map_ZHbbvsQCD->GetYaxis()->GetNbins();
+  }else if(pt_bin <=0){
+    pt_bin = 1;
+  }
+  
+  x = 2 * TMath::Log(jet2_->softdropmass()/ jet2_->pt());
+  x_bin = map_ZHbbvsQCD->GetXaxis()->FindFixBin(x);
+  if(x_bin > map_ZHbbvsQCD->GetXaxis()->GetNbins()){
+    x_bin = map_ZHbbvsQCD->GetXaxis()->GetNbins();
+  }else if(x_bin <= 0){
+    x_bin = 1;
+  }
+  
+  cut_ZHbbvsQCD = map_ZHbbvsQCD->GetBinContent(x_bin,pt_bin);
+  cut_WvsQCD = map_WvsQCD->GetBinContent(x_bin,pt_bin);        
+  event.set(h_l2_DeepBoosted_ZHbbvsQCD,cut_ZHbbvsQCD);
+  event.set(h_l2_DeepBoosted_WvsQCD,cut_WvsQCD);
+  
   return true;
 }
 
