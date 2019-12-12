@@ -255,6 +255,8 @@ private:
     uhh2::Event::Handle<float>  m_o_DeepBoosted_ZbbvsQCD_jet2;
     uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet2;  
+    uhh2::Event::Handle<float>  m_o_DeepBoosted_ZHbbvsQCD_jet1; 
+    uhh2::Event::Handle<float>  m_o_DeepBoosted_ZHbbvsQCD_jet2;
     uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet2;  
     uhh2::Event::Handle<float>  m_o_DeepBoosted_probQCDbb_jet1; 
@@ -766,6 +768,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_DeepBoosted_ZbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_ZbbvsQCD");     
     m_o_DeepBoosted_HbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_HbbvsQCD"); 
     m_o_DeepBoosted_HbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_HbbvsQCD");  
+    m_o_DeepBoosted_ZHbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_ZHbbvsQCD"); 
+    m_o_DeepBoosted_ZHbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_ZHbbvsQCD");  
     m_o_DeepBoosted_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probHbb"); 
     m_o_DeepBoosted_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probHbb");  
     m_o_DeepBoosted_probQCDbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probQCDbb"); 
@@ -1289,6 +1293,8 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_DeepBoosted_ZbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_ZbbvsQCD());	 
     event.set(m_o_DeepBoosted_HbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_HbbvsQCD()); 
     event.set(m_o_DeepBoosted_HbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_HbbvsQCD());   
+    event.set(m_o_DeepBoosted_ZHbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_ZHbbvsQCD()); 
+    event.set(m_o_DeepBoosted_ZHbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_ZHbbvsQCD());  
     event.set(m_o_DeepBoosted_probHbb_jet1,closest_puppijet1->btag_DeepBoosted_probHbb()); 
     event.set(m_o_DeepBoosted_probHbb_jet2,closest_puppijet2->btag_DeepBoosted_probHbb()); 
     event.set(m_o_DeepBoosted_probQCDbb_jet1,closest_puppijet1->btag_DeepBoosted_probQCDbb());  
