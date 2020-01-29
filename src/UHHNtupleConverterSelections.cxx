@@ -183,8 +183,8 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   h_l2_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name);
   h_l2_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name2);
   
-  std::string filename_zh = "UHHNtupleConverter/data/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+"_uptopT200GeV.root" ;
-  std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+"_uptopT200GeV.root"; 
+  std::string filename_zh = "UHHNtupleConverter/data/DDTMap_ZHbbvsQCD/myDeepBoostedMap"+percentage+".root" ;
+  std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/myDeepBoostedMap"+percentage+".root"; 
   infile_ZHbbvsQCD.reset(TFile::Open(locate_file(filename_zh).c_str()));
   infile_WvsQCD.reset(TFile::Open(locate_file(filename_w).c_str()));
 
