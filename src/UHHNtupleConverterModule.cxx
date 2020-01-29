@@ -387,6 +387,11 @@ private:
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
+
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p15;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p20;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p30;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p50;
  
 
     //run numbers to apply vorrect JEC
@@ -910,6 +915,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10"));
     bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03"));
     bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02"));
+
+    bruteForce_Decorrelation_0p15.reset(new BruteForceDecorrelation(ctx, "_0p15"));
+    bruteForce_Decorrelation_0p20.reset(new BruteForceDecorrelation(ctx, "_0p20"));
+    bruteForce_Decorrelation_0p30.reset(new BruteForceDecorrelation(ctx, "_0p30"));
+    bruteForce_Decorrelation_0p50.reset(new BruteForceDecorrelation(ctx, "_0p50"));
 
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
@@ -1474,6 +1484,11 @@ bool UHHNtupleConverterModule::process(Event & event) {
     bruteForce_Decorrelation_0p03->process(event,closest_puppijet1,closest_puppijet2);
     bruteForce_Decorrelation_0p05->process(event,closest_puppijet1,closest_puppijet2);
     bruteForce_Decorrelation_0p10->process(event,closest_puppijet1,closest_puppijet2);
+
+    bruteForce_Decorrelation_0p15->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p20->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p30->process(event,closest_puppijet1,closest_puppijet2);
+    bruteForce_Decorrelation_0p50->process(event,closest_puppijet1,closest_puppijet2);
 
 
     //NLO weights                                                                                                                                                                                          
