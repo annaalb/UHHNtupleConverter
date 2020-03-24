@@ -105,9 +105,10 @@ bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
 
 GenVqqEventSelection::GenVqqEventSelection(){}
 
-bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
+std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & jet){
   assert(event.genparticles); // if this fails, it probably means genparticles are not read in    
   std::vector<GenParticle> genQuarks;
+  bool isZbb = false;
   int associatedQuarks=0;
   //bool vectorboson = false;
   if(PRINT) cout << " GenVqqEventSelection" << endl;
@@ -124,6 +125,7 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
        if( (dau1 >=1 && dau1 <=6) && (dau2 >=1 && dau2 <=6) ){
           genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
           genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
+	  if( dau1==5 && dau2==5 && abs(genp.pdgId())==23 ) isZbb = true;
        }
     }
 
@@ -136,6 +138,7 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
       if(associatedQuarks != 2){
          genQuarks.clear();
          associatedQuarks=0;
+	 isZbb=false;
          continue;
       }
       else break;
@@ -145,8 +148,8 @@ bool GenVqqEventSelection::passes(const Event & event, Jet & jet){
   //if(vectorboson && genQuarks.size()>2) cout << "WARNING: found more than two daughters for Vector boson!" << endl;
   //if(vectorboson && genQuarks.size()<2) cout << "WARNING: found less than two daughters for Vector boson! Are you using an inclusive sample?" << endl;
 
-  if (associatedQuarks == 2) return true;
-  else return false;
+  if (associatedQuarks == 2) return std::make_tuple(true,isZbb);
+  else return std::make_tuple(false,isZbb);
 }   
 
 

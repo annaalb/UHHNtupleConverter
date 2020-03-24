@@ -67,7 +67,7 @@ class GenVqqEventSelection: public uhh2::Selection {
 public:
     GenVqqEventSelection();
     virtual bool passes(const uhh2::Event & event) override {return false;};
-    bool passes(const uhh2::Event & event, Jet & jet_);
+    std::tuple<bool, bool> passes(const uhh2::Event & event, Jet & jet_);
     
 private:    
 

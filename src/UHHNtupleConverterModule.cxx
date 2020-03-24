@@ -179,6 +179,8 @@ private:
     uhh2::Event::Handle<float>  m_o_mass_jet2; 
     uhh2::Event::Handle<bool>   jj_mergedVTruth_jet1;
     uhh2::Event::Handle<bool>   jj_mergedVTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedZbbTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedZbbTruth_jet2;
     uhh2::Event::Handle<bool>   jj_mergedHTruth_jet1;
     uhh2::Event::Handle<bool>   jj_mergedHTruth_jet2;
             
@@ -697,6 +699,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_mass_jet2 = ctx.declare_event_output<float>("jj_l2_mass");
     jj_mergedVTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedVTruth");
     jj_mergedVTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedVTruth");
+    jj_mergedZbbTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedZbbTruth");
+    jj_mergedZbbTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedZbbTruth");
     jj_mergedHTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHTruth");
     jj_mergedHTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHTruth");
               
@@ -1201,7 +1205,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     auto closest_softdrop_genjet2 = isMC ? closestParticle(jet2, *(event.gentopjets)) : 0;
     auto closest_genjet1 = isMC ? closestParticle(jet1, *(event.genjets)) : 0;
     auto closest_genjet2 = isMC ? closestParticle(jet2, *(event.genjets)) : 0;
-          
+              
     //event variables		   
     event.set(m_o_njj,1);     
     bool vbf_selection = vbf_sel->passes(event);
@@ -1221,11 +1225,15 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_mass_jet1,jet1.v4().M());
     event.set(m_o_mass_jet2,jet2.v4().M());
     
+    auto [ isVqq1, isZbb1 ] =  isMC ? genVqqEvent_sel->passes(event,jet1) : std::make_tuple(false,false);
+    auto [ isVqq2, isZbb2 ] =  isMC ? genVqqEvent_sel->passes(event,jet2) : std::make_tuple(false,false);
     event.set(jj_mergedHTruth_jet1,isMC ? genHbbEvent_sel->passes(event,jet1) : 0);
     event.set(jj_mergedHTruth_jet2,isMC ? genHbbEvent_sel->passes(event,jet2) : 0);
-    event.set(jj_mergedVTruth_jet1,isMC ? genVqqEvent_sel->passes(event,jet1) : 0);
-    event.set(jj_mergedVTruth_jet2,isMC ? genVqqEvent_sel->passes(event,jet2) : 0);
-
+    event.set(jj_mergedVTruth_jet1,isVqq1);
+    event.set(jj_mergedVTruth_jet2,isVqq2);
+    event.set(jj_mergedZbbTruth_jet1,isZbb1);
+    event.set(jj_mergedZbbTruth_jet2,isZbb2);
+        
     if(PRINT)     cout << " reco chs variable  done" << endl;
 
     //reco puppi softdrop variables	  
@@ -1238,7 +1246,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_mpuppisoftdrop_jet1,closest_puppijet1->softdropmass());
     event.set(m_o_mpuppisoftdrop_jet2,closest_puppijet2->softdropmass());
     int nsubjets1 = closest_puppijet1->subjets().size();
-    int nsubjets2 = closest_puppijet2->subjets().size();
+    int nsubjets2 = closest_puppijet2->subjets().size();    
     event.set(m_o_nSubJets_softdrop_jet1,nsubjets1);
     event.set(m_o_nSubJets_softdrop_jet2,nsubjets2);	   
     event.set(m_o_pt_softdrop_s1_jet1,nsubjets1 > 0 ? closest_puppijet1->subjets()[0].pt() : -9999);
