@@ -278,4 +278,41 @@ VBF_WprimeToWZinclusive_narrow_M-7000_13TeV-madgraph-pythia8 new_deepAK8-V2_samp
 VBF_WprimeToWZinclusive_narrow_M-7500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2016v3/VBF_WprimeToWZ/VBF_WprimeToWZinclusive_narrow_M-7500.xml
 VBF_WprimeToWZinclusive_narrow_M-8000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2016v3/VBF_WprimeToWZ/VBF_WprimeToWZinclusive_narrow_M-8000.xml
 ###################################
+#QstarToQW
+###################################
+QstarToQW_M-600_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-600.xml
+QstarToQW_M-800_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-800.xml
+QstarToQW_M-1000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-1000.xml
+QstarToQW_M-1200_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-1200.xml
+QstarToQW_M-1400_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-1400.xml
+QstarToQW_M-1600_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-1600.xml
+QstarToQW_M-1800_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-1800.xml
+QstarToQW_M-2000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-2000.xml
+QstarToQW_M-2500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-2500.xml
+QstarToQW_M-3000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-3000.xml
+QstarToQW_M-3500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-3500.xml
+QstarToQW_M-4000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-4000.xml
+QstarToQW_M-4500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-4500.xml
+QstarToQW_M-5000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-5000.xml
+QstarToQW_M-6000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-6000.xml
+QstarToQW_M-7000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQW/QstarToQW_M-7000.xml
+###################################
+#QstarToQZ
+###################################
+QstarToQZ_M-600_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-600.xml
+QstarToQZ_M-800_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-800.xml
+QstarToQZ_M-1000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-1000.xml
+QstarToQZ_M-1200_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-1200.xml
+QstarToQZ_M-1400_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-1400.xml
+QstarToQZ_M-1600_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-1600.xml
+QstarToQZ_M-1800_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-1800.xml
+QstarToQZ_M-2000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-2000.xml
+QstarToQZ_M-2500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-2500.xml
+QstarToQZ_M-3000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-3000.xml
+QstarToQZ_M-3500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-3500.xml
+QstarToQZ_M-4000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-4000.xml
+QstarToQZ_M-4500_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-4500.xml
+QstarToQZ_M-5000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-5000.xml
+QstarToQZ_M-6000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-6000.xml
+QstarToQZ_M-7000_TuneCUETP8M2T4_13TeV-pythia8 new_deepAK8-V2_samples_xml/2016v3/QstarToQZ/QstarToQZ_M-7000.xml
 #./create_dataset_xmlfile.py "/eos/cms/store/user/clange/RunII_102X_v2/2016v3/BulkGravToWW_narrow_M-3500_13TeV-madgraph/crab_BulkGravToWW_narrow_M-3500_13TeV-madgraph_Summer16_v1/200113_100327/0000/*.root" BulkGravToWW_narrow_M-3500.xml && python readaMCatNloEntries.py 10 BulkGravToWW_narrow_M-3500.xml True

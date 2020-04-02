@@ -181,10 +181,10 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   percentage = percentage_;
   string h_name = "DeepBoosted_ZHbbvsQCD_"+percentage;
   string h_name2 = "DeepBoosted_WvsQCD_"+percentage;
-  h_l1_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name);
-  h_l1_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name2);
-  h_l2_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name);
-  h_l2_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name2);
+  h_l1_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name+"_"+folder);
+  h_l1_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l1_"+h_name2+"_"+folder);
+  h_l2_DeepBoosted_ZHbbvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name+"_"+folder);
+  h_l2_DeepBoosted_WvsQCD= ctx.declare_event_output<float>("jj_l2_"+h_name2+"_"+folder);
   
   std::string filename_zh = "UHHNtupleConverter/data/DDTMap_ZHbbvsQCD/"+folder+"/myDeepBoostedMap"+percentage+".root" ;
   std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/"+folder+"/myDeepBoostedMap"+percentage+".root"; 
@@ -238,7 +238,7 @@ bool BruteForceDecorrelation::process(Event & event, TopJet const* jet1_, TopJet
   cut_WvsQCD = map_WvsQCD->GetBinContent(x_bin,pt_bin);        
   event.set(h_l2_DeepBoosted_ZHbbvsQCD,cut_ZHbbvsQCD);
   event.set(h_l2_DeepBoosted_WvsQCD,cut_WvsQCD);
-  
+    
   return true;
 }
 

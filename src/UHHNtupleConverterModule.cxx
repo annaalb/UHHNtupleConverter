@@ -385,14 +385,16 @@ private:
     uhh2::Event::Handle<bool> b_spikekiller;
     
     // //cut values for decorrelation
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p02;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_16;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_16;
+   /*std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p02;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p15;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p20;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p30;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p50;
+   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p50;*/
    
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
@@ -913,14 +915,10 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
     
     // //cut values for decorrelation
-    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05", "default_16"));
-    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10", "default_16"));
-    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03", "default_16"));
-    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02", "default_16"));
-    bruteForce_Decorrelation_0p15.reset(new BruteForceDecorrelation(ctx, "_0p15", "default_16"));
-    bruteForce_Decorrelation_0p20.reset(new BruteForceDecorrelation(ctx, "_0p20", "default_16"));
-    bruteForce_Decorrelation_0p30.reset(new BruteForceDecorrelation(ctx, "_0p30", "default_16"));
-    bruteForce_Decorrelation_0p50.reset(new BruteForceDecorrelation(ctx, "_0p50", "default_16"));
+    string percentage_16[8] = { "_0p02", "_0p03", "_0p05", "_0p10", "_0p15", "_0p20", "_0p30", "_0p50" };
+    for(int i=0; i<8; ++i){ bruteForce_Decorrelation_default_16.emplace_back(new BruteForceDecorrelation(ctx, percentage_16[i], "default_16")); }
+    string percentage_smooth_16[4] = { "_0p02", "_0p03", "_0p05", "_0p10"};
+    for(int i=0; i<4; ++i){ bruteForce_Decorrelation_smooth_16.emplace_back(new BruteForceDecorrelation(ctx, percentage_smooth_16[i], "smooth_16"));}
 
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
@@ -1482,18 +1480,10 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_pt_over_genHT, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) ? false : true); 
     event.set(b_pt_over_qscale, !event.isRealData && event.jets->size() && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) ? false: true);
     event.set(b_PUpthat_over_genHT, !event.isRealData && genHT > 0 && event.jets->size() && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false: true);
-    event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
-
-    //cut values for decorrelation
-    bruteForce_Decorrelation_0p02->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p03->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p05->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p10->process(event,closest_puppijet1,closest_puppijet2);
-
-    bruteForce_Decorrelation_0p15->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p20->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p30->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p50->process(event,closest_puppijet1,closest_puppijet2);
+    event.set(b_spikekiller, (!event.isRealData && ((genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) ) || ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) || ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ) )? false : true);
+    
+    for(unsigned int i=0; i<bruteForce_Decorrelation_default_16.size(); i++){ bruteForce_Decorrelation_default_16[i]->process(event,closest_puppijet1,closest_puppijet2);}
+    for(unsigned int i=0; i<bruteForce_Decorrelation_smooth_16.size(); i++){ bruteForce_Decorrelation_smooth_16[i]->process(event,closest_puppijet1,closest_puppijet2);}
 
 
     //NLO weights                                                                                                                                                                                          
