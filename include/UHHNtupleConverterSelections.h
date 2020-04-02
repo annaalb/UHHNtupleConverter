@@ -90,7 +90,7 @@ private:
   class BruteForceDecorrelation: public uhh2::AnalysisModule{
 
   public:
-    explicit BruteForceDecorrelation(uhh2::Context & ctx,string percentage_);
+    explicit BruteForceDecorrelation(uhh2::Context & ctx,string percentage_, string folder);
     //virtual bool process(uhh2::Event & event) override; 
     virtual bool process(uhh2::Event & event) override {return false;};
     bool process(uhh2::Event & event, TopJet const* jet1_, TopJet const* jet2_);

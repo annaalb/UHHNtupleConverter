@@ -389,13 +389,11 @@ private:
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
-
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p15;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p20;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p30;
    std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p50;
- 
-
+   
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
     const int runnr_2016_Ae = 271658;
@@ -915,15 +913,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
     
     // //cut values for decorrelation
-    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05"));
-    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10"));
-    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03"));
-    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02"));
-
-    bruteForce_Decorrelation_0p15.reset(new BruteForceDecorrelation(ctx, "_0p15"));
-    bruteForce_Decorrelation_0p20.reset(new BruteForceDecorrelation(ctx, "_0p20"));
-    bruteForce_Decorrelation_0p30.reset(new BruteForceDecorrelation(ctx, "_0p30"));
-    bruteForce_Decorrelation_0p50.reset(new BruteForceDecorrelation(ctx, "_0p50"));
+    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05", "default_16"));
+    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10", "default_16"));
+    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03", "default_16"));
+    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02", "default_16"));
+    bruteForce_Decorrelation_0p15.reset(new BruteForceDecorrelation(ctx, "_0p15", "default_16"));
+    bruteForce_Decorrelation_0p20.reset(new BruteForceDecorrelation(ctx, "_0p20", "default_16"));
+    bruteForce_Decorrelation_0p30.reset(new BruteForceDecorrelation(ctx, "_0p30", "default_16"));
+    bruteForce_Decorrelation_0p50.reset(new BruteForceDecorrelation(ctx, "_0p50", "default_16"));
 
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
