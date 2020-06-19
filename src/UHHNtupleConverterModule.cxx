@@ -18,6 +18,8 @@
 #include "UHH2/UHHNtupleConverter/include/LumiWeight.h"
 #include "UHH2/UHHNtupleConverter/include/VBFModule.h"
 #include "UHH2/UHHNtupleConverter/include/NLOweightsModule.h"
+#include "UHH2/common/include/TopPtReweight.h"
+#include "boost/algorithm/string.hpp"
 
 using namespace std;
 using namespace uhh2;
@@ -108,12 +110,14 @@ private:
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
     std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel,dijet_sel_loose, vbf_sel;
+    std::unique_ptr<GenTopHadrEventSelection> genTopHadrEvent_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection, ref_triggers; 
     std::vector<TriggerSelection> metfilters;
     std::unique_ptr<NPVSelection> pvfilter;
-    
+    std::unique_ptr<TopPtReweight> top_pt_reweight;
+    uhh2::Event::Handle<float> top_pt_weight;
     
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
     std::unique_ptr<Hists> h_nocuts, h_njet, h_dijet, h_ele;
@@ -124,7 +128,9 @@ private:
     LumiWeight m_xSec;
     double xSec_;
     bool isMC;
+    bool isTTbar;
     bool isSignal;
+    bool hasBuggyPU2017;
     float totalEvents;
     float totalGenEvents;
     float totalGenEvents_LO;
@@ -152,6 +158,7 @@ private:
     uhh2::Event::Handle<float>  b_weightGen;
     uhh2::Event::Handle<float>  b_weightGen_LO;
     uhh2::Event::Handle<float>  b_weightPU;
+    uhh2::Event::Handle<float>  b_weightTop;
     uhh2::Event::Handle<float>  b_weightBTag;
     uhh2::Event::Handle<float>  b_nTrueInt;
     uhh2::Event::Handle<float>  b_rho;
@@ -183,7 +190,9 @@ private:
     uhh2::Event::Handle<bool>   jj_mergedZbbTruth_jet2;
     uhh2::Event::Handle<bool>   jj_mergedHTruth_jet1;
     uhh2::Event::Handle<bool>   jj_mergedHTruth_jet2;
-            
+    uhh2::Event::Handle<bool>   jj_mergedTopTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedTopTruth_jet2;
+                
     //reco puppi softdrop variables
     uhh2::Event::Handle<float>  m_o_pt_softdrop_jet1;
     uhh2::Event::Handle<float>  m_o_pt_softdrop_jet2;
@@ -226,47 +235,47 @@ private:
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_jet2; 
-    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet2; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2; 
+    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet2;
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet2; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet2; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probHbb_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probHbb_jet2; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probHbb_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probHbb_jet2; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet2; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probWqq_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probWqq_jet2;	  
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_proWcq_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_proWcq_jet2;		 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probWqq_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_probWqq_jet2;	  
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_proWcq_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_proWcq_jet2;		 
     uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet1; 
     uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet2; 
-    uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1; 
-    uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2;     
+    //uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1; 
+    //uhh2::Event::Handle<float>  m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2;     
     uhh2::Event::Handle<float>  m_o_DeepBoosted_WvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepBoosted_WvsQCD_jet2;  
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probWqq_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probWqq_jet2;  
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_proWcq_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_proWcq_jet2;  
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_ZbbvsQCD_jet1;
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_ZbbvsQCD_jet2;
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet2;  
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probWqq_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probWqq_jet2;  
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_proWcq_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_proWcq_jet2;  
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_ZbbvsQCD_jet1;
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_ZbbvsQCD_jet2;
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_HbbvsQCD_jet2;  
     uhh2::Event::Handle<float>  m_o_DeepBoosted_ZHbbvsQCD_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepBoosted_ZHbbvsQCD_jet2;
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet2;  
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probQCDbb_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepBoosted_probQCDbb_jet2;  
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probHbb_jet2;  
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probQCDbb_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepBoosted_probQCDbb_jet2;  
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probHbb_jet1; 
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probHbb_jet2;  
-    uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet1; 
-    uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet2; 
+    //uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet1; 
+    //uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet2; 
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_jet2;
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_softdrop_s1_jet1;
@@ -279,7 +288,7 @@ private:
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVM_jet2;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVT_jet1;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVT_jet2;    
-    uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_jet1;
+    /*uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_jet2;
     uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_softdrop_s1_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_softdrop_s2_jet1;
@@ -302,7 +311,7 @@ private:
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepJetM_jet1;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepJetM_jet2;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepJetT_jet1;
-    uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepJetT_jet2; 
+    uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepJetT_jet2;*/
                                                                      
     //reco puppi VBF jet variables                                                                                                                                                                                                                                             
     std::unique_ptr<AnalysisModule> VBFvariables;    
@@ -385,17 +394,15 @@ private:
     uhh2::Event::Handle<bool> b_spikekiller;
     
     // //cut values for decorrelation
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p02;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p03;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p05;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p10;
-
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p15;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p20;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p30;
-   std::unique_ptr<BruteForceDecorrelation> bruteForce_Decorrelation_0p50;
- 
-
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_16;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_17;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_18;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_1617;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_161718;
+   //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_16;
+   //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_17;
+   //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_1617;   
+   
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
     const int runnr_2016_Ae = 271658;
@@ -492,6 +499,13 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     std::cout << "----------------------------------------------------------------------------------------------------" << std::endl;
     cout << "Cross section set to " << xSec_ << " for sample " << ctx.get("sample_name") << endl;
     
+    hasBuggyPU2017 = false;
+    TString pudirectory = ctx.get("pileup_directory");
+    if(isMC && year == Year::is2017v2 && pudirectory.Contains("Pileup_QCD_PtBinned")){
+     hasBuggyPU2017 = true;
+     std::cout << "Sample " << sample << " has buggy PU: will use PU distribution " << pudirectory << std::endl;
+    }
+    
     MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose));
     EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
     
@@ -532,6 +546,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_weightGen = ctx.declare_event_output<float>("genWeight");
     b_weightGen_LO = ctx.declare_event_output<float>("genWeight_LO");
     b_weightPU = ctx.declare_event_output<float>("puWeight");
+    b_weightTop = ctx.declare_event_output<float>("TopPTWeight");
     b_weightBTag = ctx.declare_event_output<float>("btagWeight");
     b_nTrueInt = ctx.declare_event_output<float>("nTrueInt");
     b_rho = ctx.declare_event_output<float>("rho");
@@ -703,7 +718,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jj_mergedZbbTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedZbbTruth");
     jj_mergedHTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHTruth");
     jj_mergedHTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHTruth");
-              
+    jj_mergedTopTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedTopTruth");
+    jj_mergedTopTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedTopTruth");
+                  
     //reco puppi softdrop variables    
     m_o_pt_softdrop_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_pt");
     m_o_pt_softdrop_jet2 = ctx.declare_event_output<float>("jj_l2_softDrop_pt");
@@ -746,47 +763,47 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_ecfN3_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta1");
     m_o_ecfN3_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta2");
     m_o_ecfN3_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta1");
-    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta2");    
-    m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_bbvsLight"); 
-    m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_bbvsLight"); 
+    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta2");
+    //m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_bbvsLight"); 
+    //m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_bbvsLight"); 
     m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_ZHbbvsQCD"); 
     m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_ZHbbvsQCD"); 
     m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_HbbvsQCD"); 
     m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_HbbvsQCD"); 
-    m_o_MassDecorrelatedDeepBoosted_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probHbb"); 
-    m_o_MassDecorrelatedDeepBoosted_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probHbb"); 
-    m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probQCDbb"); 
-    m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probQCDbb"); 
+    //m_o_MassDecorrelatedDeepBoosted_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probHbb"); 
+    //m_o_MassDecorrelatedDeepBoosted_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probHbb"); 
+    //m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probQCDbb"); 
+    //m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probQCDbb"); 
     m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_WvsQCD"); 
     m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_WvsQCD"); 
-    m_o_MassDecorrelatedDeepBoosted_probWqq_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probWqq"); 
-    m_o_MassDecorrelatedDeepBoosted_probWqq_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probWqq");     
-    m_o_MassDecorrelatedDeepBoosted_proWcq_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_proWcq"); 
-    m_o_MassDecorrelatedDeepBoosted_proWcq_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_proWcq");             
+    //m_o_MassDecorrelatedDeepBoosted_probWqq_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_probWqq"); 
+    //m_o_MassDecorrelatedDeepBoosted_probWqq_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_probWqq");     
+    //m_o_MassDecorrelatedDeepBoosted_proWcq_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_proWcq"); 
+    //m_o_MassDecorrelatedDeepBoosted_proWcq_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_proWcq");             
     m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_MassIndependentDeepDoubleBvLJetprobHbb_"); 
     m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_MassIndependentDeepDoubleBvLJet_probHbb"); 
-    m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassIndependentDeepDoubleBvLJet_probQCD"); 
-    m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_MassIndependentDeepDoubleBvLJet_probQCD");     
+    //m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassIndependentDeepDoubleBvLJet_probQCD"); 
+    //m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_MassIndependentDeepDoubleBvLJet_probQCD");     
     m_o_DeepBoosted_WvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_WvsQCD");  
     m_o_DeepBoosted_WvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_WvsQCD"); 
-    m_o_DeepBoosted_probWqq_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probWqq");  
-    m_o_DeepBoosted_probWqq_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probWqq"); 
-    m_o_DeepBoosted_proWcq_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_proWcq");  
-    m_o_DeepBoosted_proWcq_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_proWcq"); 
-    m_o_DeepBoosted_ZbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_ZbbvsQCD"); 
-    m_o_DeepBoosted_ZbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_ZbbvsQCD");     
-    m_o_DeepBoosted_HbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_HbbvsQCD"); 
-    m_o_DeepBoosted_HbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_HbbvsQCD");  
+    //m_o_DeepBoosted_probWqq_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probWqq");  
+    //m_o_DeepBoosted_probWqq_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probWqq"); 
+    //m_o_DeepBoosted_proWcq_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_proWcq");  
+    //m_o_DeepBoosted_proWcq_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_proWcq"); 
+    //m_o_DeepBoosted_ZbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_ZbbvsQCD"); 
+    //m_o_DeepBoosted_ZbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_ZbbvsQCD");     
+    //m_o_DeepBoosted_HbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_HbbvsQCD"); 
+    //m_o_DeepBoosted_HbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_HbbvsQCD");  
     m_o_DeepBoosted_ZHbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_ZHbbvsQCD"); 
     m_o_DeepBoosted_ZHbbvsQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_ZHbbvsQCD");  
-    m_o_DeepBoosted_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probHbb"); 
-    m_o_DeepBoosted_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probHbb");  
-    m_o_DeepBoosted_probQCDbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probQCDbb"); 
-    m_o_DeepBoosted_probQCDbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probQCDbb");  
+    //m_o_DeepBoosted_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probHbb"); 
+    //m_o_DeepBoosted_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probHbb");  
+    //m_o_DeepBoosted_probQCDbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepBoosted_probQCDbb"); 
+    //m_o_DeepBoosted_probQCDbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepBoosted_probQCDbb");  
     m_o_DeepDoubleBvLJet_probHbb_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probHbb"); 
     m_o_DeepDoubleBvLJet_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probHbb");  
-    m_o_DeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probQCD"); 
-    m_o_DeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probQCD");
+    //m_o_DeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probQCD"); 
+    //m_o_DeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probQCD");
     m_o_btag_DeepCSV_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepCSV");
     m_o_btag_DeepCSV_jet2 = ctx.declare_event_output<float>("jj_l2_btag_DeepCSV");
     m_o_btag_DeepCSV_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s1_btag_DeepCSV");
@@ -799,7 +816,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_nSubJets_softdrop_btag_DeepCSVM_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepCSVM");
     m_o_nSubJets_softdrop_btag_DeepCSVT_jet1 = ctx.declare_event_output<int>("jj_l1_softDrop_nSubJets_btag_DeepCSVT");
     m_o_nSubJets_softdrop_btag_DeepCSVT_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepCSVT");    
-    m_o_btag_DeepFlavour_bb_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepFlavour_bb");
+    /*m_o_btag_DeepFlavour_bb_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepFlavour_bb");
     m_o_btag_DeepFlavour_bb_jet2 = ctx.declare_event_output<float>("jj_l2_btag_DeepFlavour_bb");
     m_o_btag_DeepFlavour_bb_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s1_btag_DeepFlavour_bb");
     m_o_btag_DeepFlavour_bb_softdrop_s2_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s2_btag_DeepFlavour_bb");
@@ -822,7 +839,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_nSubJets_softdrop_btag_DeepJetM_jet1 = ctx.declare_event_output<int>("jj_l1_softDrop_nSubJets_btag_DeepJetM");
     m_o_nSubJets_softdrop_btag_DeepJetM_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepJetM");
     m_o_nSubJets_softdrop_btag_DeepJetT_jet1 = ctx.declare_event_output<int>("jj_l1_softDrop_nSubJets_btag_DeepJetT");
-    m_o_nSubJets_softdrop_btag_DeepJetT_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepJetT");   
+    m_o_nSubJets_softdrop_btag_DeepJetT_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepJetT"); */  
                 
     //reco puppi VBF jet variables
     VBFvariables.reset(new VBFvariable(ctx,"jetsAk4Puppi"));
@@ -915,16 +932,18 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_spikekiller = ctx.declare_event_output<bool>("b_spikekiller");
     
     // //cut values for decorrelation
-    bruteForce_Decorrelation_0p05.reset(new BruteForceDecorrelation(ctx, "_0p05"));
-    bruteForce_Decorrelation_0p10.reset(new BruteForceDecorrelation(ctx, "_0p10"));
-    bruteForce_Decorrelation_0p03.reset(new BruteForceDecorrelation(ctx, "_0p03"));
-    bruteForce_Decorrelation_0p02.reset(new BruteForceDecorrelation(ctx, "_0p02"));
-
-    bruteForce_Decorrelation_0p15.reset(new BruteForceDecorrelation(ctx, "_0p15"));
-    bruteForce_Decorrelation_0p20.reset(new BruteForceDecorrelation(ctx, "_0p20"));
-    bruteForce_Decorrelation_0p30.reset(new BruteForceDecorrelation(ctx, "_0p30"));
-    bruteForce_Decorrelation_0p50.reset(new BruteForceDecorrelation(ctx, "_0p50"));
-
+    string percentage[8] = { "_0p02", "_0p03", "_0p05", "_0p10", "_0p15", "_0p20", "_0p30", "_0p50" };
+    for(int i=0; i<8; ++i){
+     bruteForce_Decorrelation_default_16.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_16"));
+     bruteForce_Decorrelation_default_17.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_17"));
+     bruteForce_Decorrelation_default_18.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_18"));
+     bruteForce_Decorrelation_default_1617.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_1617")); 
+     bruteForce_Decorrelation_default_161718.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_161718")); 
+     //bruteForce_Decorrelation_smooth_16.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_16"));
+     //bruteForce_Decorrelation_smooth_17.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_17"));
+     //bruteForce_Decorrelation_smooth_1617.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_1617"));
+    }    
+        
     // 2. set up selections
     muon_sel.reset(new MuonVeto(MuId,0.8)); // see UHHNtupleConverterSelections
     electron_sel.reset(new ElectronVeto(EleId,0.8)); // see UHHNtupleConverterSelections
@@ -934,9 +953,17 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
     genHbbEvent_sel.reset(new GenHbbEventSelection());
     genVqqEvent_sel.reset(new GenVqqEventSelection());
+    genTopHadrEvent_sel.reset(new GenTopHadrEventSelection());
     
     PrimaryVertexId pvid=StandardPrimaryVertexId();
     pvfilter.reset(new NPVSelection(1,-1,pvid) );
+    
+    isTTbar = isMC && boost::algorithm::contains(ctx.get("dataset_version", ""),"ttbar");
+    if( isTTbar ){
+     cout << "Running over ttbar sample -> calculate top pt weight" << endl;
+     top_pt_weight = ctx.get_handle<float>("weight_ttbar");
+     top_pt_reweight.reset(new TopPtReweight(ctx,0.0615,-0.0005,"","weight_ttbar",false,1.));
+    }
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new UHHNtupleConverterHists(ctx, "NoCuts"));
@@ -959,7 +986,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // this is controlled by the return value of this method: If it
     // returns true, the event is kept; if it returns false, the event
     // is thrown away.
-         
+               
     if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     if(printGenparticle)    Gen_printer->process(event);     
     
@@ -994,12 +1021,20 @@ bool UHHNtupleConverterModule::process(Event & event) {
     totalGenEvents+=genWeight;
     totalGenEvents_LO+=genWeight_LO;
     totalEvents+=1;
-            
+    
+    //PU filter for 2017 buggy samples
+    if( hasBuggyPU2017 && event.genInfo->pileup_TrueNumInteractions() < 10 && event.genInfo->pileup_TrueNumInteractions() > 75){
+     return false;
+    }
+    
     // 1. run all modules other modules.
     bool common_sel = common->process(event);
     if(!common_sel) return false;
     h_nocuts->fill(event);       
-    if(PRINT)   cout << " common modules done " << endl;  
+    if(PRINT)   cout << " common modules done " << endl; 
+    
+    //calculate top pt weight
+    if( isTTbar ) top_pt_reweight->process(event); 
 
     bool passedMETFilters = true;
     for(unsigned int i=0; i<metfilters.size(); ++i){
@@ -1139,7 +1174,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     }    
     
     if(passedTriggers) h_trig->fill(event,trigger_selection,trigNames);
-
+    
     //set event variables/triggers/weights  
     event.set(b_isData, !isMC); 
     event.set(b_lumi, event.luminosityBlock); 
@@ -1148,6 +1183,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_weightGen, genWeight);
     event.set(b_weightGen_LO, genWeight_LO);
     event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
+    event.set(b_weightTop, isTTbar ? event.get(top_pt_weight) : 1);
     event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
     event.set(b_pdf_x1, isMC ? event.genInfo->pdf_x1() : -9999);
@@ -1233,7 +1269,9 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(jj_mergedVTruth_jet2,isVqq2);
     event.set(jj_mergedZbbTruth_jet1,isZbb1);
     event.set(jj_mergedZbbTruth_jet2,isZbb2);
-        
+    event.set(jj_mergedTopTruth_jet1,isMC ? genTopHadrEvent_sel->passes(event,jet1) : 0);
+    event.set(jj_mergedTopTruth_jet2,isMC ? genTopHadrEvent_sel->passes(event,jet2) : 0);
+            
     if(PRINT)     cout << " reco chs variable  done" << endl;
 
     //reco puppi softdrop variables	  
@@ -1281,46 +1319,46 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_ecfN3_beta2_jet1,closest_puppijet1->ecfN3_beta2()); 
     event.set(m_o_ecfN3_beta1_jet2,closest_puppijet2->ecfN3_beta1()); 
     event.set(m_o_ecfN3_beta2_jet2,closest_puppijet2->ecfN3_beta2()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_bbvsLight());
-    event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_bbvsLight());
+    //event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_bbvsLight());
+    //event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_bbvsLight());
     event.set(m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_ZHbbvsQCD()); 
     event.set(m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_ZHbbvsQCD()); 
     event.set(m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_HbbvsQCD());  
     event.set(m_o_MassDecorrelatedDeepBoosted_HbbvsQCD_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_HbbvsQCD()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probHbb_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probHbb()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probHbb_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probHbb()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probQCDbb()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probQCDbb()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probHbb_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probHbb()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probHbb_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probHbb()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probQCDbb()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probQCDbb_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probQCDbb()); 
     event.set(m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_WvsQCD());  
     event.set(m_o_MassDecorrelatedDeepBoosted_WvsQCD_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_WvsQCD()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probWqq_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probWqq()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_probWqq_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probWqq());     
-    event.set(m_o_MassDecorrelatedDeepBoosted_proWcq_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_proWcq()); 
-    event.set(m_o_MassDecorrelatedDeepBoosted_proWcq_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_proWcq());	     
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probWqq_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_probWqq()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_probWqq_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_probWqq());     
+    //event.set(m_o_MassDecorrelatedDeepBoosted_proWcq_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_proWcq()); 
+    //event.set(m_o_MassDecorrelatedDeepBoosted_proWcq_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_proWcq());	     
     event.set(m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet1,closest_puppijet1->btag_MassIndependentDeepDoubleBvLJet_probHbb()); 
     event.set(m_o_MassIndependentDeepDoubleBvLJet_probHbb_jet2,closest_puppijet2->btag_MassIndependentDeepDoubleBvLJet_probHbb()); 
-    event.set(m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_MassIndependentDeepDoubleBvLJet_probQCD()); 
-    event.set(m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_MassIndependentDeepDoubleBvLJet_probQCD()); 
+    //event.set(m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_MassIndependentDeepDoubleBvLJet_probQCD()); 
+    //event.set(m_o_MassIndependentDeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_MassIndependentDeepDoubleBvLJet_probQCD()); 
     event.set(m_o_DeepBoosted_WvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_WvsQCD());  
     event.set(m_o_DeepBoosted_WvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_WvsQCD());    
-    event.set(m_o_DeepBoosted_probWqq_jet1,closest_puppijet1->btag_DeepBoosted_probWqq());  
-    event.set(m_o_DeepBoosted_probWqq_jet2,closest_puppijet2->btag_DeepBoosted_probWqq());  
-    event.set(m_o_DeepBoosted_proWcq_jet1,closest_puppijet1->btag_DeepBoosted_probWcq());  
-    event.set(m_o_DeepBoosted_proWcq_jet2,closest_puppijet2->btag_DeepBoosted_probWcq());
-    event.set(m_o_DeepBoosted_ZbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_ZbbvsQCD()); 
-    event.set(m_o_DeepBoosted_ZbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_ZbbvsQCD());	 
-    event.set(m_o_DeepBoosted_HbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_HbbvsQCD()); 
-    event.set(m_o_DeepBoosted_HbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_HbbvsQCD());   
+    //event.set(m_o_DeepBoosted_probWqq_jet1,closest_puppijet1->btag_DeepBoosted_probWqq());  
+    //event.set(m_o_DeepBoosted_probWqq_jet2,closest_puppijet2->btag_DeepBoosted_probWqq());  
+    //event.set(m_o_DeepBoosted_proWcq_jet1,closest_puppijet1->btag_DeepBoosted_probWcq());  
+    //event.set(m_o_DeepBoosted_proWcq_jet2,closest_puppijet2->btag_DeepBoosted_probWcq());
+    //event.set(m_o_DeepBoosted_ZbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_ZbbvsQCD()); 
+    //event.set(m_o_DeepBoosted_ZbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_ZbbvsQCD());	 
+    //event.set(m_o_DeepBoosted_HbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_HbbvsQCD()); 
+    //event.set(m_o_DeepBoosted_HbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_HbbvsQCD());   
     event.set(m_o_DeepBoosted_ZHbbvsQCD_jet1,closest_puppijet1->btag_DeepBoosted_ZHbbvsQCD()); 
     event.set(m_o_DeepBoosted_ZHbbvsQCD_jet2,closest_puppijet2->btag_DeepBoosted_ZHbbvsQCD());  
-    event.set(m_o_DeepBoosted_probHbb_jet1,closest_puppijet1->btag_DeepBoosted_probHbb()); 
-    event.set(m_o_DeepBoosted_probHbb_jet2,closest_puppijet2->btag_DeepBoosted_probHbb()); 
-    event.set(m_o_DeepBoosted_probQCDbb_jet1,closest_puppijet1->btag_DeepBoosted_probQCDbb());  
-    event.set(m_o_DeepBoosted_probQCDbb_jet2,closest_puppijet2->btag_DeepBoosted_probQCDbb());  
+    //event.set(m_o_DeepBoosted_probHbb_jet1,closest_puppijet1->btag_DeepBoosted_probHbb()); 
+    //event.set(m_o_DeepBoosted_probHbb_jet2,closest_puppijet2->btag_DeepBoosted_probHbb()); 
+    //event.set(m_o_DeepBoosted_probQCDbb_jet1,closest_puppijet1->btag_DeepBoosted_probQCDbb());  
+    //event.set(m_o_DeepBoosted_probQCDbb_jet2,closest_puppijet2->btag_DeepBoosted_probQCDbb());  
     event.set(m_o_DeepDoubleBvLJet_probHbb_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probHbb());  
     event.set(m_o_DeepDoubleBvLJet_probHbb_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probHbb()); 
-    event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
-    event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
+    //event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
+    //event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
     event.set(m_o_btag_DeepCSV_jet1,closest_puppijet1->btag_DeepCSV());
     event.set(m_o_btag_DeepCSV_jet2,closest_puppijet2->btag_DeepCSV());
     event.set(m_o_btag_DeepCSV_softdrop_s1_jet1,nsubjets1 > 0 ? closest_puppijet1->subjets()[0].btag_DeepCSV() : -9999);
@@ -1352,7 +1390,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_nSubJets_softdrop_btag_DeepCSVM_jet2,nsubjetsBTaggedMedium);
     event.set(m_o_nSubJets_softdrop_btag_DeepCSVT_jet2,nsubjetsBTaggedTight);
         
-    event.set(m_o_btag_DeepFlavour_bb_jet1,closest_puppijet1->btag_DeepFlavour_bb());
+    /*event.set(m_o_btag_DeepFlavour_bb_jet1,closest_puppijet1->btag_DeepFlavour_bb());
     event.set(m_o_btag_DeepFlavour_bb_jet2,closest_puppijet2->btag_DeepFlavour_bb());
     event.set(m_o_btag_DeepFlavour_bb_softdrop_s1_jet1,nsubjets1 > 0 ? closest_puppijet1->subjets()[0].btag_DeepFlavour_bb() : -9999);
     event.set(m_o_btag_DeepFlavour_bb_softdrop_s2_jet1,nsubjets1 > 1 ? closest_puppijet1->subjets()[1].btag_DeepFlavour_bb() : -9999);
@@ -1393,7 +1431,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     }
     event.set(m_o_nSubJets_softdrop_btag_DeepJetL_jet2,nsubjetsBTaggedLoose);
     event.set(m_o_nSubJets_softdrop_btag_DeepJetM_jet2,nsubjetsBTaggedMedium);
-    event.set(m_o_nSubJets_softdrop_btag_DeepJetT_jet2,nsubjetsBTaggedTight);
+    event.set(m_o_nSubJets_softdrop_btag_DeepJetT_jet2,nsubjetsBTaggedTight);*/
                     
     if(PRINT)     cout << " reco puppi SD variable  done" << endl;
     //reco puppi VBF jet variables 
@@ -1485,19 +1523,18 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_pt_over_genHT, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) ? false : true); 
     event.set(b_pt_over_qscale, !event.isRealData && event.jets->size() && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) ? false: true);
     event.set(b_PUpthat_over_genHT, !event.isRealData && genHT > 0 && event.jets->size() && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false: true);
-    event.set(b_spikekiller, !event.isRealData && genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) && ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) && ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ? false : true);
-
-    //cut values for decorrelation
-    bruteForce_Decorrelation_0p02->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p03->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p05->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p10->process(event,closest_puppijet1,closest_puppijet2);
-
-    bruteForce_Decorrelation_0p15->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p20->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p30->process(event,closest_puppijet1,closest_puppijet2);
-    bruteForce_Decorrelation_0p50->process(event,closest_puppijet1,closest_puppijet2);
-
+    event.set(b_spikekiller, (!event.isRealData && ((genHT > 0 && (event.jets->size() && ((event.jets->at(0).pt() / genHT) > 2)) ) || ((event.jets->at(0).pt() / event.genInfo->qScale()) > 2) || ((event.genInfo->PU_pT_hat_max() / genHT) > 1) ) )? false : true);
+    
+    for(unsigned int i=0; i<bruteForce_Decorrelation_default_16.size(); i++){
+     bruteForce_Decorrelation_default_16[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_default_17[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_default_18[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_default_1617[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_default_161718[i]->process(event,closest_puppijet1,closest_puppijet2);
+     //bruteForce_Decorrelation_smooth_16[i]->process(event,closest_puppijet1,closest_puppijet2);
+     //bruteForce_Decorrelation_smooth_17[i]->process(event,closest_puppijet1,closest_puppijet2);
+     //bruteForce_Decorrelation_smooth_1617[i]->process(event,closest_puppijet1,closest_puppijet2);
+    }
 
     //NLO weights                                                                                                                                                                                          
     if(isVjet)      NLOweights->process(event);
