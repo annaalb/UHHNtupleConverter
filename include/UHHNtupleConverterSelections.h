@@ -73,6 +73,15 @@ private:
 
 };
 
+class GenTopHadrEventSelection: public uhh2::Selection {
+public:
+    GenTopHadrEventSelection();
+    virtual bool passes(const uhh2::Event & event) override {return false;};
+    bool passes(const uhh2::Event & event, Jet & jet_);
+    
+private:    
+
+};
 
 
 class VBFjetSelection: public uhh2::Selection {

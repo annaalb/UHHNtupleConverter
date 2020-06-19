@@ -144,14 +144,76 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
       else break;
     }
   }
+
+  if (associatedQuarks == 2) return std::make_tuple(true,isZbb);
+  else return std::make_tuple(false,isZbb);
+  
+}   
+
+GenTopHadrEventSelection::GenTopHadrEventSelection(){}
+
+bool GenTopHadrEventSelection::passes(const Event & event, Jet & jet){
+  assert(event.genparticles); // if this fails, it probably means genparticles are not read in    
+  std::vector<GenParticle> genQuarks;
+  int associatedQuarks=0;
+  if(PRINT) cout << " GenTopHadrEventSelection" << endl;
+  for(auto genp:*event.genparticles){
+    //if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl;   
+    if(abs(genp.pdgId())==6){
+       if(PRINT) cout << "    I have a top quark!" << endl;
+       //vectorboson = true;
+       int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
+       if(PRINT) cout << "    I have one daughter" << endl;
+       int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
+       if(PRINT) cout << "    I have 2 daughters" << endl;
+       if(PRINT) cout << "      daughters: " << event.genparticles->at(genp.daughter1()).pdgId() << " and " << event.genparticles->at(genp.daughter2()).pdgId()  << endl;
+       
+       if( dau1 == 24 && dau2 == 5 ){
+        if(PRINT) cout << "CASE 1: dau1=" << dau1 << " - dau2=" << dau2;
+        genQuarks.push_back( event.genparticles->at(genp.daughter2()) ); //this is the b
+        int W_dau1 = abs(event.genparticles->at(event.genparticles->at(genp.daughter1()).daughter1()).pdgId());
+	int W_dau2 = abs(event.genparticles->at(event.genparticles->at(genp.daughter1()).daughter2()).pdgId());
+	if(PRINT) cout << " with W decay to " << W_dau1 << "," << W_dau2 << endl;
+	if( (W_dau1 >=1 && W_dau1 <=6) && (W_dau2 >=1 && W_dau2 <=6) ){
+	  if(PRINT) cout << "  --> FOUND HADRONIC W!" << endl;
+          genQuarks.push_back( event.genparticles->at(event.genparticles->at(genp.daughter1()).daughter1()) ); 
+          genQuarks.push_back( event.genparticles->at(event.genparticles->at(genp.daughter1()).daughter2()) );	
+	}
+       }//close case dau1=W, dau2=b
+       else if( dau1 == 5 && dau2 == 24){
+        if(PRINT) cout << "CASE 2: dau1=" << dau1 << " - dau2=" << dau2;
+        int W_dau1 = abs(event.genparticles->at(event.genparticles->at(genp.daughter2()).daughter1()).pdgId());
+	int W_dau2 = abs(event.genparticles->at(event.genparticles->at(genp.daughter2()).daughter2()).pdgId());    
+	if(PRINT) cout << " with W decay to " << W_dau1 << "," << W_dau2 << endl;
+	if( (W_dau1 >=1 && W_dau1 <=6) && (W_dau2 >=1 && W_dau2 <=6) ){
+	  if(PRINT) cout << "  --> FOUND HADRONIC W!" << endl;
+          genQuarks.push_back( event.genparticles->at(event.genparticles->at(genp.daughter2()).daughter1()) ); 
+          genQuarks.push_back( event.genparticles->at(event.genparticles->at(genp.daughter2()).daughter2()) );	
+	}           
+       }//close case dau1=b, dau2=W
+    }
+
+    if(genQuarks.size()>1)
+    {
+      associatedQuarks=0;
+      for(unsigned int i=0; i<genQuarks.size(); ++i){
+         if( deltaR(jet.v4(),genQuarks[i].v4()) < 0.8) associatedQuarks +=1;
+      } 
+      if(associatedQuarks != 3){
+         genQuarks.clear();
+         associatedQuarks=0;
+         continue;
+      }
+      else break;
+    }
+  }
   
   //if(vectorboson && genQuarks.size()>2) cout << "WARNING: found more than two daughters for Vector boson!" << endl;
   //if(vectorboson && genQuarks.size()<2) cout << "WARNING: found less than two daughters for Vector boson! Are you using an inclusive sample?" << endl;
 
-  if (associatedQuarks == 2) return std::make_tuple(true,isZbb);
-  else return std::make_tuple(false,isZbb);
-}   
-
+  if (associatedQuarks == 3) return true;
+  else return false;
+} 
 
 VBFjetSelection::VBFjetSelection(Context & ctx, string const & VBFjet_, float deta_min_, float mjj_min_ ):VBFjet(VBFjet_), deta_min(deta_min_), mjj_min(mjj_min_){
   h_VBFjet = ctx.get_handle<vector<Jet>>(VBFjet);
@@ -190,9 +252,10 @@ BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string pe
   std::string filename_w = "UHHNtupleConverter/data/DDTMap_WvsQCD/"+folder+"/myDeepBoostedMap"+percentage+".root"; 
   infile_ZHbbvsQCD.reset(TFile::Open(locate_file(filename_zh).c_str()));
   infile_WvsQCD.reset(TFile::Open(locate_file(filename_w).c_str()));
-
+ 
   map_ZHbbvsQCD = (TH2F*)infile_ZHbbvsQCD->Get("DeepBoosted_ZHbbvsQCD_v_rho_v_pT_yx");
   map_WvsQCD = (TH2F*)infile_WvsQCD->Get("DeepBoosted_WvsQCD_v_rho_v_pT_yx");
+  
 }
     
 bool BruteForceDecorrelation::process(Event & event, TopJet const* jet1_, TopJet const* jet2_){
