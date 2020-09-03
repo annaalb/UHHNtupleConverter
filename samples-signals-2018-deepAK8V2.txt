@@ -91,28 +91,49 @@ VBF_BulkGravToZZinclusive_narrow_M-7000_13TeV-madgraph-pythia8 new_deepAK8-V2_sa
 VBF_BulkGravToZZinclusive_narrow_M-7500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_BulkGZZ/VBF_BulkGravToZZinclusive_narrow_M-7500.xml
 VBF_BulkGravToZZinclusive_narrow_M-8000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_BulkGZZ/VBF_BulkGravToZZinclusive_narrow_M-8000.xml
 ###################################
-#ZprimeZH
+#WprimeWZ
 ###################################
-ZprimeToZhToZhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-600.xml
-ZprimeToZhToZhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-800.xml
-ZprimeToZhToZhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1000.xml
-ZprimeToZhToZhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1200.xml
-ZprimeToZhToZhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1400.xml
-ZprimeToZhToZhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1600.xml
-ZprimeToZhToZhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1800.xml
-ZprimeToZhToZhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-2000.xml
-ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-2500.xml
-ZprimeToZhToZhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-3000.xml
-ZprimeToZhToZhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-3500.xml
-ZprimeToZhToZhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-4000.xml
-ZprimeToZhToZhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-4500.xml
-ZprimeToZhToZhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-5000.xml
-ZprimeToZhToZhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-5500.xml
-ZprimeToZhToZhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-6000.xml
-ZprimeToZhToZhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-6500.xml
-ZprimeToZhToZhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-7000.xml
-ZprimeToZhToZhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-7500.xml
-ZprimeToZhToZhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-8000.xml
+WprimeToWZToWhadZhad_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1000.xml
+WprimeToWZToWhadZhad_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1200.xml
+WprimeToWZToWhadZhad_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1400.xml
+WprimeToWZToWhadZhad_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1600.xml
+WprimeToWZToWhadZhad_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1800.xml
+WprimeToWZToWhadZhad_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-2000.xml
+WprimeToWZToWhadZhad_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-2500.xml
+WprimeToWZToWhadZhad_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-3000.xml
+WprimeToWZToWhadZhad_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-3500.xml
+WprimeToWZToWhadZhad_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-4000.xml
+WprimeToWZToWhadZhad_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-4500.xml
+WprimeToWZToWhadZhad_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-5000.xml
+WprimeToWZToWhadZhad_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-5500.xml
+WprimeToWZToWhadZhad_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-6000.xml
+WprimeToWZToWhadZhad_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-6500.xml
+WprimeToWZToWhadZhad_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-7000.xml
+WprimeToWZToWhadZhad_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-7500.xml
+WprimeToWZToWhadZhad_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-8000.xml
+###################################
+#VBF WprimeWZ
+###################################
+VBF_WprimeToWZ_narrow_M-600_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-600.xml
+VBF_WprimeToWZ_narrow_M-800_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-800.xml
+VBF_WprimeToWZ_narrow_M-1000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-1000.xml
+VBF_WprimeToWZ_narrow_M-1200_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-1200.xml
+VBF_WprimeToWZ_narrow_M-1400_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-1400.xml
+VBF_WprimeToWZ_narrow_M-1600_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-1600.xml
+VBF_WprimeToWZ_narrow_M-1800_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-1800.xml
+VBF_WprimeToWZ_narrow_M-2000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-2000.xml
+VBF_WprimeToWZ_narrow_M-2500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-2500.xml
+VBF_WprimeToWZ_narrow_M-3000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-3000.xml
+VBF_WprimeToWZ_narrow_M-3500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-3500.xml
+VBF_WprimeToWZ_narrow_M-4000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-4000.xml
+VBF_WprimeToWZ_narrow_M-4500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-4500.xml
+VBF_WprimeToWZ_narrow_M-5000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-5000.xml
+VBF_WprimeToWZ_narrow_M-5500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-5500.xml
+VBF_WprimeToWZ_narrow_M-6000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-6000.xml
+VBF_WprimeToWZ_narrow_M-6500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-6500.xml
+VBF_WprimeToWZ_narrow_M-7000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-7000.xml
+VBF_WprimeToWZ_narrow_M-7500_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-7500.xml
+VBF_WprimeToWZ_narrow_M-8000_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_WprimeToWZ/VBF_WprimeToWZ_narrow_M-8000.xml
 ###################################
 #ZprimeWW
 ###################################
@@ -137,49 +158,74 @@ ZprimeToWW_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeWW
 ZprimeToWW_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeWW/ZprimeToWW_M-7500.xml
 ZprimeToWW_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeWW/ZprimeToWW_M-8000.xml
 ###################################
-#WprimeWZ
+#VBF ZprimeWW
 ###################################
-WprimeToWZToWhadZhad_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1000.xml
-WprimeToWZToWhadZhad_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1200.xml
-WprimeToWZToWhadZhad_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1400.xml
-WprimeToWZToWhadZhad_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1600.xml
-WprimeToWZToWhadZhad_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-1800.xml
-WprimeToWZToWhadZhad_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-2000.xml
-WprimeToWZToWhadZhad_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-2500.xml
-WprimeToWZToWhadZhad_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-3000.xml
-WprimeToWZToWhadZhad_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-3500.xml
-WprimeToWZToWhadZhad_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-4000.xml
-WprimeToWZToWhadZhad_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-4500.xml
-WprimeToWZToWhadZhad_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-5000.xml
-WprimeToWZToWhadZhad_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-5500.xml
-WprimeToWZToWhadZhad_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-6000.xml
-WprimeToWZToWhadZhad_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-6500.xml
-WprimeToWZToWhadZhad_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-7000.xml
-WprimeToWZToWhadZhad_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-7500.xml
-WprimeToWZToWhadZhad_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWhadZhad/WprimeToWZToWhadZhad_narrow_M-8000.xml
+VBF_ZprimeToWW_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-600.xml
+VBF_ZprimeToWW_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-800.xml
+VBF_ZprimeToWW_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-1000.xml
+VBF_ZprimeToWW_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-1200.xml
+VBF_ZprimeToWW_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-1400.xml
+VBF_ZprimeToWW_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-1600.xml
+VBF_ZprimeToWW_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-1800.xml
+VBF_ZprimeToWW_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-2000.xml
+VBF_ZprimeToWW_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-2500.xml
+VBF_ZprimeToWW_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-3000.xml
+VBF_ZprimeToWW_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-3500.xml
+VBF_ZprimeToWW_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-4000.xml
+VBF_ZprimeToWW_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-4500.xml
+VBF_ZprimeToWW_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-5000.xml
+VBF_ZprimeToWW_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-5500.xml
+VBF_ZprimeToWW_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-6000.xml
+VBF_ZprimeToWW_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-6500.xml
+VBF_ZprimeToWW_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-7000.xml
+VBF_ZprimeToWW_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-7500.xml
+VBF_ZprimeToWW_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeWW/VBF_ZprimeToWW_narrow_M-8000.xml
 ###################################
-#WprimeWH
+#RadionWW
 ###################################
-WprimeToWhToWhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-600.xml
-WprimeToWhToWhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-800.xml
-WprimeToWhToWhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1000.xml
-WprimeToWhToWhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1200.xml
-WprimeToWhToWhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1400.xml
-WprimeToWhToWhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1600.xml
-WprimeToWhToWhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1800.xml
-WprimeToWhToWhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-2000.xml
-WprimeToWhToWhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-2500.xml
-WprimeToWhToWhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-3000.xml
-WprimeToWhToWhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-3500.xml
-WprimeToWhToWhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-4000.xml
-WprimeToWhToWhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-4500.xml
-WprimeToWhToWhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-5000.xml
-WprimeToWhToWhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-5500.xml
-WprimeToWhToWhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-6000.xml
-WprimeToWhToWhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-6500.xml
-WprimeToWhToWhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-7000.xml
-WprimeToWhToWhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-7500.xml
-WprimeToWhToWhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-8000.xml
+RadionToWW_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-600.xml
+RadionToWW_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-800.xml
+RadionToWW_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-1000.xml
+RadionToWW_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-1200.xml
+RadionToWW_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-1400.xml
+RadionToWW_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-1600.xml
+RadionToWW_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-1800.xml
+RadionToWW_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-2000.xml
+RadionToWW_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-2500.xml
+RadionToWW_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-3000.xml
+RadionToWW_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-3500.xml
+RadionToWW_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-4000.xml
+RadionToWW_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-4500.xml
+RadionToWW_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-5000.xml
+RadionToWW_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-5500.xml
+RadionToWW_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-6000.xml
+RadionToWW_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-6500.xml
+RadionToWW_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-7000.xml
+RadionToWW_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-7500.xml
+RadionToWW_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/RadionWW/RadionToWW_M-8000.xml
+###################################
+#VBF RadionWW
+###################################
+VBF_RadionToWW_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-600.xml
+VBF_RadionToWW_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-800.xml
+VBF_RadionToWW_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-1000.xml
+VBF_RadionToWW_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-1200.xml
+VBF_RadionToWW_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-1400.xml
+VBF_RadionToWW_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-1600.xml
+VBF_RadionToWW_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-1800.xml
+VBF_RadionToWW_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-2000.xml
+VBF_RadionToWW_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-2500.xml
+VBF_RadionToWW_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-3000.xml
+VBF_RadionToWW_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-3500.xml
+VBF_RadionToWW_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-4000.xml
+VBF_RadionToWW_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-4500.xml
+VBF_RadionToWW_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-5000.xml
+VBF_RadionToWW_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-5500.xml
+VBF_RadionToWW_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-6000.xml
+VBF_RadionToWW_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-6500.xml
+VBF_RadionToWW_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-7000.xml
+VBF_RadionToWW_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-7500.xml
+VBF_RadionToWW_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionWW/VBF_RadionToWW_M-8000.xml
 ###################################
 #RadionZZ
 ###################################
@@ -226,3 +272,95 @@ VBF_RadionToZZ_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_
 VBF_RadionToZZ_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionToZZ/VBF_RadionToZZ_M-7000.xml
 VBF_RadionToZZ_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionToZZ/VBF_RadionToZZ_M-7500.xml
 VBF_RadionToZZ_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_RadionToZZ/VBF_RadionToZZ_M-8000.xml
+###################################
+#WprimeWH
+###################################
+WprimeToWhToWhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-600.xml
+WprimeToWhToWhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-800.xml
+WprimeToWhToWhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1000.xml
+WprimeToWhToWhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1200.xml
+WprimeToWhToWhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1400.xml
+WprimeToWhToWhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1600.xml
+WprimeToWhToWhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-1800.xml
+WprimeToWhToWhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-2000.xml
+WprimeToWhToWhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-2500.xml
+WprimeToWhToWhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-3000.xml
+WprimeToWhToWhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-3500.xml
+WprimeToWhToWhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-4000.xml
+WprimeToWhToWhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-4500.xml
+WprimeToWhToWhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-5000.xml
+WprimeToWhToWhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-5500.xml
+WprimeToWhToWhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-6000.xml
+WprimeToWhToWhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-6500.xml
+WprimeToWhToWhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-7000.xml
+WprimeToWhToWhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-7500.xml
+WprimeToWhToWhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-8000.xml
+###################################
+#VBF_WprimeWH
+###################################
+VBF_WprimeToWhToWhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-600.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-800.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-1000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-1200.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-1400.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-1600.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-1800.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-2000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-2500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-3000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-3500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-4000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-4500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-5000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-5500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-6000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-6500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-7000.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-7500.xml
+VBF_WprimeToWhToWhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-8000.xml
+###################################
+#ZprimeZH
+###################################
+ZprimeToZhToZhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-600.xml
+ZprimeToZhToZhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-800.xml
+ZprimeToZhToZhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1000.xml
+ZprimeToZhToZhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1200.xml
+ZprimeToZhToZhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1400.xml
+ZprimeToZhToZhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1600.xml
+ZprimeToZhToZhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-1800.xml
+ZprimeToZhToZhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-2000.xml
+ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-2500.xml
+ZprimeToZhToZhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-3000.xml
+ZprimeToZhToZhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-3500.xml
+ZprimeToZhToZhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-4000.xml
+ZprimeToZhToZhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-4500.xml
+ZprimeToZhToZhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-5000.xml
+ZprimeToZhToZhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-5500.xml
+ZprimeToZhToZhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-6000.xml
+ZprimeToZhToZhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-6500.xml
+ZprimeToZhToZhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-7000.xml
+ZprimeToZhToZhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-7500.xml
+ZprimeToZhToZhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-8000.xml
+###################################
+#VBF ZprimeZH
+###################################
+VBF_ZprimeToZhToZhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-600.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-800.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-1000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-1000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-1200_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-1200.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-1400_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-1400.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-1600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-1600.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-1800_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-1800.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-2000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-2000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-2500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-2500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-3000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-3000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-3500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-3500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-4000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-4000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-4500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-4500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-5000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-5000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-5500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-5500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-6000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-6000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-6500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-7000.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-7500.xml
+VBF_ZprimeToZhToZhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-8000.xml

@@ -10,7 +10,7 @@ JetHT_Run2017C_31Mar2018 new_deepAK8-V2_samples_xml/2017/DATA_JetHT_2017C.xml
 JetHT_Run2017D_31Mar2018 new_deepAK8-V2_samples_xml/2017/DATA_JetHT_2017D.xml
 JetHT_Run2017E_31Mar2018 new_deepAK8-V2_samples_xml/2017/DATA_JetHT_2017E.xml
 JetHT_Run2017F_31Mar2018 new_deepAK8-V2_samples_xml/2017/DATA_JetHT_2017F.xml
-JetHT_Run2018A_17Sep2018 ../common/datasets/RunII_102X_v1/2018/DATA_JetHT2018A.xml
-JetHT_Run2018B_17Sep2018 ../common/datasets/RunII_102X_v1/2018/DATA_JetHT2018B.xml
-JetHT_Run2018C_17Sep2018 ../common/datasets/RunII_102X_v1/2018/DATA_JetHT2018C.xml
-JetHT_Run2018D_17Sep2018 ../common/datasets/RunII_102X_v1/2018/DATA_JetHT2018D.xml
+JetHT_Run2018A_17Sep2018 new_deepAK8-V2_samples_xml/2018/JetHT2018A.xml
+JetHT_Run2018B_17Sep2018 new_deepAK8-V2_samples_xml/2018/JetHT2018B.xml
+JetHT_Run2018C_17Sep2018 new_deepAK8-V2_samples_xml/2018/JetHT2018C.xml
+JetHT_Run2018D_17Sep2018 new_deepAK8-V2_samples_xml/2018/JetHT2018D.xml
