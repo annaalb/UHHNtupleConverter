@@ -991,31 +991,60 @@ bool UHHNtupleConverterModule::process(Event & event) {
     if(printGenparticle)    Gen_printer->process(event);     
     
     float genWeight = 1;
-    float genWeight_LO = 1;
+    // the LO PDF generator weight is better initialized to an unphysical number to make more clear when the LO PDF reweighting does not work
+    float genWeight_LO = -99.;
     if( isMC ){
       genWeight = event.genInfo->weights().at(0);
-      // In 2017 and 2018 MG (LO) signal samples, reweight to LO PDF set since central NNLO PDF set (NNPDF31_nnlo_hessian_pdfas or NNPDF31_nnlo_as_0118_nf_4) is not positive definite
+      // In many 2017 and 2018 MG (LO) signal samples, reweight to LO PDF set since central NNLO PDF set (NNPDF31_nnlo_hessian_pdfas or NNPDF31_nnlo_as_0118_nf_4) is not positive definite
       if( isSignal && (year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1) ){
         if(event.genInfo->systweights().size()==0){
-            // Pure Phythia samples that don't need reweighting
+            // Pure Pythia samples that don't need reweighting (already LO PDF)
             genWeight_LO = genWeight;
         }
         else if(event.genInfo->systweights().size()==882){
-            // Scenario 1: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF30_lo_as_0130_nf_4
+            // Scenario 1: reweight central PDF NNPDF31_nnlo_as_0118_nf_4 (LHAPDF ID: 320900) to NNPDF30_lo_as_0130_nf_4 (LHAPDF ID: 263400) -- 4FS
+            // 9 scale variations incl. nominal, assuming central PDF 320900
+            // PDF set list ~close to https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_4f_2017.dat, but different first set 
             genWeight_LO = (event.genInfo->systweights()[777] / event.genInfo->systweights()[0]) * genWeight;
         }
+        else if(event.genInfo->systweights().size()==918){
+            // Scenario 2: central PDF already LO: NNPDF30_lo_as_0130_nf_4 (LHAPDF ID: 263400) -- 4FS
+            // 45 scale variations incl. nominal, assuming central PDF 263400
+            // PDF set list ~from https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_4f_2017.dat
+            genWeight_LO = genWeight;
+        }
         else if(event.genInfo->systweights().size()==919){
-            // Scenario 2: reweight central PDF NNPDF31_nnlo_as_0118_nf_4 to NNPDF30_lo_as_0130_nf_4
+            // Scenario 3: reweight central PDF NNPDF31_nnlo_as_0118_nf_4 (LHAPDF ID: 320900) to NNPDF30_lo_as_0130_nf_4 (LHAPDF ID: 263400) -- 4FS
+            // 45 scale variations incl. nominal, assuming central PDF 320900
+            // PDF set list ~from https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_4f_2017.dat
             genWeight_LO = (event.genInfo->systweights()[814] / event.genInfo->systweights()[0]) * genWeight;
         }
-        else if(event.genInfo->systweights().size()==1116){
-            // Scenario 3: reweight central PDF NNPDF31_nnlo_hessian_pdfas to NNPDF31_lo_as_0130
-            genWeight_LO = (event.genInfo->systweights()[1112] / event.genInfo->systweights()[0]) * genWeight;
+        else if(event.genInfo->systweights().size()==1019){
+            // Scenario 4: central PDF already LO: NNPDF30_lo_as_0130_nf_4 (LHAPDF ID: 263400) -- 4FS
+            // 45 scale variations incl. nominal, assuming central PDF 263400
+            // PDF set list ~from https://github.com/cms-sw/genproductions/blob/e32b6350765c614c155f2ab5c17547eedfdeab43/MetaData/pdflist_4f_2017.dat
+            genWeight_LO = genWeight;
         }
+        else if(event.genInfo->systweights().size()==1115){
+            // Scenario 5: central PDF already LO: NNPDF30_lo_as_0130 (LHAPDF ID: 263000) -- 5FS because of proton definition in MG proc card
+            // 45 scale variations incl. nominal, assuming central PDF 263000
+            // PDF set list ~from https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_5f_2017.dat
+            genWeight_LO = genWeight;
+        }
+        else if(event.genInfo->systweights().size()==1116){
+            // Scenario 6: reweight central PDF NNPDF31_nnlo_hessian_pdfas (LHAPDF ID: 306000) to NNPDF30_lo_as_0130 (LHAPDF ID: 263000) -- 5FS because of proton definition in MG proc card
+            // 45 scale variations incl. nominal, assuming central PDF 306000
+            // PDF set list ~from https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_5f_2017.dat
+            genWeight_LO = (event.genInfo->systweights()[1115] / event.genInfo->systweights()[0]) * genWeight;
+	    }
         else{
             cout << "WARNING: encountered unexpected LHE weight scenario, with number of weights: " << event.genInfo->systweights().size() << endl;
             cout << "         Please check which LHE weight to take to reweight to LO PDF" << endl;
         }
+      }
+      else{
+        // In 2016 signal samples (or background), no LO PDF reweighting should be done; set LO weights to default weights for simplicity
+        genWeight_LO = genWeight;
       }
     }
     totalGenEvents+=genWeight;
