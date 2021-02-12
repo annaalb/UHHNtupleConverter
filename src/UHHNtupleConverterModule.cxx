@@ -118,6 +118,8 @@ private:
     std::unique_ptr<NPVSelection> pvfilter;
     std::unique_ptr<TopPtReweight> top_pt_reweight;
     uhh2::Event::Handle<float> top_pt_weight;
+    uhh2::Event::Handle<float> pu_weight_up;
+    uhh2::Event::Handle<float> pu_weight_down;
     
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
     std::unique_ptr<Hists> h_nocuts, h_njet, h_dijet, h_ele;
@@ -160,6 +162,8 @@ private:
     uhh2::Event::Handle<float>  b_weightGen;
     uhh2::Event::Handle<float>  b_weightGen_LO;
     uhh2::Event::Handle<float>  b_weightPU;
+    uhh2::Event::Handle<float>  b_weightPU_up;
+    uhh2::Event::Handle<float>  b_weightPU_down;
     uhh2::Event::Handle<float>  b_weightTop;
     uhh2::Event::Handle<float>  b_L1prefiringWeight;
     uhh2::Event::Handle<float>  b_L1prefiringWeightUp;
@@ -417,7 +421,6 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     }
     
     MuId  = AndId<Muon>(MuonID(Muon::Highpt), PtEtaCut(30., 2.4), MuonID(Muon::PFIsoVeryTight));
-    //EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
     EleId = AndId<Electron>(PtEtaSCCut(35., 2.5), ElectronTagID(Electron::heepElectronID_HEEPV70));
     
 
@@ -459,6 +462,8 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_weightGen = ctx.declare_event_output<float>("genWeight");
     b_weightGen_LO = ctx.declare_event_output<float>("genWeight_LO");
     b_weightPU = ctx.declare_event_output<float>("puWeight");
+    b_weightPU_up = ctx.declare_event_output<float>("puWeightUp");
+    b_weightPU_down = ctx.declare_event_output<float>("puWeightDown");
     b_weightTop = ctx.declare_event_output<float>("TopPTWeight");
     b_L1prefiringWeight = ctx.declare_event_output<float>("L1prefWeight");
     b_L1prefiringWeightUp = ctx.declare_event_output<float>("L1prefWeightUp");
@@ -786,6 +791,11 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
      top_pt_reweight.reset(new TopPtReweight(ctx,0.0615,-0.0005,"","weight_ttbar",false,1.));
     }
 
+    if( isMC ){
+     pu_weight_up = ctx.get_handle<float>("weight_pu_up");
+     pu_weight_down = ctx.get_handle<float>("weight_pu_down");
+    }
+    
     // 3. Set up Hists classes:
     h_nocuts.reset(new UHHNtupleConverterHists(ctx, "NoCuts"));
     h_njet.reset(new UHHNtupleConverterHists(ctx, "Njet"));
@@ -1043,11 +1053,13 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_weightGen, genWeight);
     event.set(b_weightGen_LO, genWeight_LO);
     event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
+    event.set(b_weightPU_up, isMC ? event.get(pu_weight_up) : 1);
+    event.set(b_weightPU_down, isMC ? event.get(pu_weight_down) : 1);
     event.set(b_weightTop, isTTbar ? event.get(top_pt_weight) : 1);
     event.set(b_L1prefiringWeight, year != Year::is2018 ? event.prefiringWeight : 1);
     event.set(b_L1prefiringWeightUp, year != Year::is2018 ? event.prefiringWeightUp : 1);
     event.set(b_L1prefiringWeightDown, year != Year::is2018 ? event.prefiringWeightDown : 1);
-      
+          
     //event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
     event.set(b_pdf_x1, isMC ? event.genInfo->pdf_x1() : -9999);

@@ -23,6 +23,8 @@
             <Item Name="use_sframe_weight" Value="false" />            
             <Item Name="pileup_directory" Value="Pileup_QCD_PtBinned/MyMCPileupHistogram_QCD_Pt_1800to2400_2017v2.root" />
             <Item Name="pileup_directory_data" Value="../common/data/2017/MyDataPileupHistogram2017.root" />
+            <Item Name="pileup_directory_data_up" Value="../common/data/2017/MyDataPileupHistogram2017_72383.root" />
+            <Item Name="pileup_directory_data_down" Value="../common/data/2017/MyDataPileupHistogram2017_66017.root" />
 	    <Item Name="sample_name" Value="ZprimeToZhToZhadhbb_narrow_M-2000_13TeV-madgraph" />
 	    <Item Name="jet_sorting" Value="random" /> <!--options: btag,random !-->	    	    
             <Item Name="TestKey" Value="TestKeyValue" />
