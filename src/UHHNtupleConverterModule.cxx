@@ -532,19 +532,19 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
       jec_tag = "Summer16_07Aug2017";
       jec_ver = "11";
       JER_sf  = JERSmearing::SF_13TeV_Summer16_25nsV1;
-      ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
+      ResolutionFileName = "JRDatabase/textFiles/Summer16_25nsV1_MC/Summer16_25nsV1_MC_PtResolution_AK4PFPuppi.txt";
     }
     else if(year == Year::is2017v1 || year == Year::is2017v2){
       jec_tag = "Fall17_17Nov2017";
       jec_ver = "32";
       JER_sf  = JERSmearing::SF_13TeV_Fall17_V3;
-      ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
+      ResolutionFileName = "JRDatabase/textFiles/Fall17_V3_MC/Fall17_V3_MC_PtResolution_AK4PFPuppi.txt";
     }
     else if(year == Year::is2018 ){
       jec_tag = "Autumn18";
       jec_ver = "19";
       sfFilename = "common/data/2018/Autumn18_V7_MC_SF_AK4PFPuppi.txt";
-      ResolutionFileName = "2018/Autumn18_V7_MC_PtResolution_AK4PFPuppi.txt";
+      ResolutionFileName = "JRDatabase/textFiles/Autumn18_V7_MC/Autumn18_V7_MC_PtResolution_AK4PFPuppi.txt";
     }
     
     if(isMC){
