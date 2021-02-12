@@ -155,11 +155,16 @@ private:
     uhh2::Event::Handle<float>  b_pdf_x1;
     uhh2::Event::Handle<float>  b_pdf_x2;
     uhh2::Event::Handle<float>  b_pdf_scalePDF;
+    uhh2::Event::Handle<int>    b_pdf_id1;
+    uhh2::Event::Handle<int>    b_pdf_id2;    
     uhh2::Event::Handle<float>  b_weightGen;
     uhh2::Event::Handle<float>  b_weightGen_LO;
     uhh2::Event::Handle<float>  b_weightPU;
     uhh2::Event::Handle<float>  b_weightTop;
-    uhh2::Event::Handle<float>  b_weightBTag;
+    uhh2::Event::Handle<float>  b_L1prefiringWeight;
+    uhh2::Event::Handle<float>  b_L1prefiringWeightUp;
+    uhh2::Event::Handle<float>  b_L1prefiringWeightDown;
+    //uhh2::Event::Handle<float>  b_weightBTag;
     uhh2::Event::Handle<float>  b_nTrueInt;
     uhh2::Event::Handle<float>  b_rho;
     uhh2::Event::Handle<int>    b_nVert;
@@ -228,14 +233,14 @@ private:
     uhh2::Event::Handle<float>  m_o_tau3_jet2; 
     uhh2::Event::Handle<float>  m_o_tau4_jet1; 
     uhh2::Event::Handle<float>  m_o_tau4_jet2; 
-    uhh2::Event::Handle<float>  m_o_ecfN2_beta1_jet1; 
+    /*uhh2::Event::Handle<float>  m_o_ecfN2_beta1_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta2_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta1_jet2; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta2_jet2; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_jet2; 
-    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet2;
+    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_jet2;*/
     //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1; 
     //uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2; 
     uhh2::Event::Handle<float>  m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1; 
@@ -276,7 +281,7 @@ private:
     uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probHbb_jet2;  
     //uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet1; 
     //uhh2::Event::Handle<float>  m_o_DeepDoubleBvLJet_probQCD_jet2; 
-    uhh2::Event::Handle<float>  m_o_btag_DeepCSV_jet1;
+    /*uhh2::Event::Handle<float>  m_o_btag_DeepCSV_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_jet2;
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_softdrop_s1_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepCSV_softdrop_s2_jet1;
@@ -287,7 +292,7 @@ private:
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVM_jet1;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVM_jet2;
     uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVT_jet1;
-    uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVT_jet2;    
+    uhh2::Event::Handle<int>    m_o_nSubJets_softdrop_btag_DeepCSVT_jet2;*/  
     /*uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_jet1;
     uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_jet2;
     uhh2::Event::Handle<float>  m_o_btag_DeepFlavour_bb_softdrop_s1_jet1;
@@ -352,15 +357,15 @@ private:
     uhh2::Event::Handle<float>  m_o_tau3_gen_jet2; 
     uhh2::Event::Handle<float>  m_o_tau4_gen_jet1; 
     uhh2::Event::Handle<float>  m_o_tau4_gen_jet2;     
-    uhh2::Event::Handle<float>  m_o_ecfN2_beta1_gen_jet1; 
+    /*uhh2::Event::Handle<float>  m_o_ecfN2_beta1_gen_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta2_gen_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta1_gen_jet2; 
     uhh2::Event::Handle<float>  m_o_ecfN2_beta2_gen_jet2; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_gen_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta2_gen_jet1; 
     uhh2::Event::Handle<float>  m_o_ecfN3_beta1_gen_jet2; 
-    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_gen_jet2;     
-    uhh2::Event::Handle<float>  m_o_pt_gen_softdrop_s1_jet1;
+    uhh2::Event::Handle<float>  m_o_ecfN3_beta2_gen_jet2;*/    
+    /*uhh2::Event::Handle<float>  m_o_pt_gen_softdrop_s1_jet1;
     uhh2::Event::Handle<float>  m_o_eta_gen_softdrop_s1_jet1;
     uhh2::Event::Handle<float>  m_o_phi_gen_softdrop_s1_jet1;
     uhh2::Event::Handle<float>  m_o_mass_gen_softdrop_s1_jet1;
@@ -375,7 +380,7 @@ private:
     uhh2::Event::Handle<float>  m_o_pt_gen_softdrop_s2_jet2;
     uhh2::Event::Handle<float>  m_o_eta_gen_softdrop_s2_jet2;
     uhh2::Event::Handle<float>  m_o_phi_gen_softdrop_s2_jet2;
-    uhh2::Event::Handle<float>  m_o_mass_gen_softdrop_s2_jet2;
+    uhh2::Event::Handle<float>  m_o_mass_gen_softdrop_s2_jet2;*/
     
     //puppi met variables
     uhh2::Event::Handle<float> m_o_met_pt;
@@ -397,11 +402,14 @@ private:
    std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_16;
    std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_17;
    std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_18;
-   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_1617;
    std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_default_161718;
    //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_16;
    //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_17;
    //std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_smooth_1617;   
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_MD_default_16;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_MD_default_17;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_MD_default_18;
+   std::vector< std::unique_ptr<BruteForceDecorrelation> > bruteForce_Decorrelation_MD_default_161718;
    
     //run numbers to apply vorrect JEC
     const int runnr_2016_Ab = 271036;
@@ -506,8 +514,9 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
      std::cout << "Sample " << sample << " has buggy PU: will use PU distribution " << pudirectory << std::endl;
     }
     
-    MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose));
-    EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
+    MuId  = AndId<Muon>(MuonID(Muon::Highpt), PtEtaCut(30., 2.4), MuonID(Muon::PFIsoVeryTight));
+    //EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
+    EleId = AndId<Electron>(PtEtaSCCut(35., 2.5), ElectronTagID(Electron::heepElectronID_HEEPV70));
     
 
     // 1. setup other modules. CommonModules and the JetCleaner:
@@ -543,11 +552,16 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     b_pdf_x1 = ctx.declare_event_output<float>("pdf_x1");
     b_pdf_x2 = ctx.declare_event_output<float>("pdf_x2");
     b_pdf_scalePDF = ctx.declare_event_output<float>("pdf_scalePDF");
+    b_pdf_id1 = ctx.declare_event_output<int>("pdf_id1");
+    b_pdf_id2 = ctx.declare_event_output<int>("pdf_id2");
     b_weightGen = ctx.declare_event_output<float>("genWeight");
     b_weightGen_LO = ctx.declare_event_output<float>("genWeight_LO");
     b_weightPU = ctx.declare_event_output<float>("puWeight");
     b_weightTop = ctx.declare_event_output<float>("TopPTWeight");
-    b_weightBTag = ctx.declare_event_output<float>("btagWeight");
+    b_L1prefiringWeight = ctx.declare_event_output<float>("L1prefWeight");
+    b_L1prefiringWeightUp = ctx.declare_event_output<float>("L1prefWeightUp");
+    b_L1prefiringWeightDown = ctx.declare_event_output<float>("L1prefWeightDown");
+    //b_weightBTag = ctx.declare_event_output<float>("btagWeight");
     b_nTrueInt = ctx.declare_event_output<float>("nTrueInt");
     b_rho = ctx.declare_event_output<float>("rho");
     b_nVert = ctx.declare_event_output<int>("nVert");
@@ -756,14 +770,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_tau2_jet2 = ctx.declare_event_output<float>("jj_l2_tau2");
     m_o_tau3_jet2 = ctx.declare_event_output<float>("jj_l2_tau3");
     m_o_tau4_jet2 = ctx.declare_event_output<float>("jj_l2_tau4");
-    m_o_ecfN2_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta1");
+    /*m_o_ecfN2_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta1");
     m_o_ecfN2_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN2_beta2");
     m_o_ecfN2_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta1");
     m_o_ecfN2_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN2_beta2");
     m_o_ecfN3_beta1_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta1");
     m_o_ecfN3_beta2_jet1 = ctx.declare_event_output<float>("jj_l1_ecfN3_beta2");
     m_o_ecfN3_beta1_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta1");
-    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta2");
+    m_o_ecfN3_beta2_jet2 = ctx.declare_event_output<float>("jj_l2_ecfN3_beta2");*/
     //m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_bbvsLight"); 
     //m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2 = ctx.declare_event_output<float>("jj_l2_MassDecorrelatedDeepBoosted_bbvsLight"); 
     m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1 = ctx.declare_event_output<float>("jj_l1_MassDecorrelatedDeepBoosted_ZHbbvsQCD"); 
@@ -804,7 +818,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_DeepDoubleBvLJet_probHbb_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probHbb");  
     //m_o_DeepDoubleBvLJet_probQCD_jet1 = ctx.declare_event_output<float>("jj_l1_DeepDoubleBvLJet_probQCD"); 
     //m_o_DeepDoubleBvLJet_probQCD_jet2 = ctx.declare_event_output<float>("jj_l2_DeepDoubleBvLJet_probQCD");
-    m_o_btag_DeepCSV_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepCSV");
+    /*m_o_btag_DeepCSV_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepCSV");
     m_o_btag_DeepCSV_jet2 = ctx.declare_event_output<float>("jj_l2_btag_DeepCSV");
     m_o_btag_DeepCSV_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s1_btag_DeepCSV");
     m_o_btag_DeepCSV_softdrop_s2_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s2_btag_DeepCSV");
@@ -815,7 +829,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_nSubJets_softdrop_btag_DeepCSVM_jet1 = ctx.declare_event_output<int>("jj_l1_softDrop_nSubJets_btag_DeepCSVM");
     m_o_nSubJets_softdrop_btag_DeepCSVM_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepCSVM");
     m_o_nSubJets_softdrop_btag_DeepCSVT_jet1 = ctx.declare_event_output<int>("jj_l1_softDrop_nSubJets_btag_DeepCSVT");
-    m_o_nSubJets_softdrop_btag_DeepCSVT_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepCSVT");    
+    m_o_nSubJets_softdrop_btag_DeepCSVT_jet2 = ctx.declare_event_output<int>("jj_l2_softDrop_nSubJets_btag_DeepCSVT");*/ 
     /*m_o_btag_DeepFlavour_bb_jet1 = ctx.declare_event_output<float>("jj_l1_btag_DeepFlavour_bb");
     m_o_btag_DeepFlavour_bb_jet2 = ctx.declare_event_output<float>("jj_l2_btag_DeepFlavour_bb");
     m_o_btag_DeepFlavour_bb_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_softDrop_s1_btag_DeepFlavour_bb");
@@ -882,7 +896,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_mgensoftdrop_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_mass");
     m_o_nSubJets_gen_softdrop_jet1 = ctx.declare_event_output<int>("jj_l1_gen_softDrop_nSubJets");
     m_o_nSubJets_gen_softdrop_jet2 = ctx.declare_event_output<int>("jj_l2_gen_softDrop_nSubJets");
-    m_o_pt_gen_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_gen_softDrop_s1_pt");
+    /*m_o_pt_gen_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_gen_softDrop_s1_pt");
     m_o_eta_gen_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_gen_softDrop_s1_eta");
     m_o_phi_gen_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_gen_softDrop_s1_phi");
     m_o_mass_gen_softdrop_s1_jet1 = ctx.declare_event_output<float>("jj_l1_gen_softDrop_s1_mass");
@@ -897,7 +911,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_pt_gen_softdrop_s2_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_s2_pt");
     m_o_eta_gen_softdrop_s2_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_s2_eta");
     m_o_phi_gen_softdrop_s2_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_s2_phi");
-    m_o_mass_gen_softdrop_s2_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_s2_mass");      
+    m_o_mass_gen_softdrop_s2_jet2 = ctx.declare_event_output<float>("jj_l2_gen_softDrop_s2_mass");*/    
     m_o_tau1_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_tau1");
     m_o_tau2_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_tau2");
     m_o_tau3_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_tau3");
@@ -906,14 +920,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     m_o_tau2_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_tau2");
     m_o_tau3_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_tau3");
     m_o_tau4_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_tau4");
-    m_o_ecfN2_beta1_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_ecfN2_beta1");
+    /*m_o_ecfN2_beta1_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_ecfN2_beta1");
     m_o_ecfN2_beta2_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_ecfN2_beta2");
     m_o_ecfN2_beta1_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_ecfN2_beta1");
     m_o_ecfN2_beta2_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_ecfN2_beta2");
     m_o_ecfN3_beta1_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_ecfN2_beta1");
     m_o_ecfN3_beta2_gen_jet1 = ctx.declare_event_output<float>("jj_l1_gen_ecfN2_beta2");
     m_o_ecfN3_beta1_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_ecfN2_beta1");
-    m_o_ecfN3_beta2_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_ecfN2_beta2"); 
+    m_o_ecfN3_beta2_gen_jet2 = ctx.declare_event_output<float>("jj_l2_gen_ecfN2_beta2");*/
 
     //puppi met variables            
     m_o_met_pt = ctx.declare_event_output<float>("met_pt");
@@ -937,11 +951,14 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
      bruteForce_Decorrelation_default_16.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_16"));
      bruteForce_Decorrelation_default_17.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_17"));
      bruteForce_Decorrelation_default_18.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_18"));
-     bruteForce_Decorrelation_default_1617.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_1617")); 
      bruteForce_Decorrelation_default_161718.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "default_161718")); 
      //bruteForce_Decorrelation_smooth_16.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_16"));
      //bruteForce_Decorrelation_smooth_17.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_17"));
      //bruteForce_Decorrelation_smooth_1617.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "smooth_1617"));
+     bruteForce_Decorrelation_MD_default_16.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "MD_default_16"));
+     bruteForce_Decorrelation_MD_default_17.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "MD_default_17"));
+     bruteForce_Decorrelation_MD_default_18.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "MD_default_18"));
+     bruteForce_Decorrelation_MD_default_161718.emplace_back(new BruteForceDecorrelation(ctx, percentage[i], "MD_default_161718"));
     }    
         
     // 2. set up selections
@@ -1041,6 +1058,16 @@ bool UHHNtupleConverterModule::process(Event & event) {
             cout << "WARNING: encountered unexpected LHE weight scenario, with number of weights: " << event.genInfo->systweights().size() << endl;
             cout << "         Please check which LHE weight to take to reweight to LO PDF" << endl;
         }
+      }
+      else if( isTTbar && (year == Year::is2018 || year == Year::is2017v2 || year == Year::is2017v1) ){
+        if(event.genInfo->systweights().size()==1080){
+            // Scenario 7: reweight central PDF NNPDF31_nnlo_hessian_pdfas (LHAPDF ID: 306000) to NNPDF31_nlo_hessian_pdfas (LHAPDF ID: 305800) -- 5FS
+            // 9 scale variations incl. nominal, assuming central PDF 306000
+            // PDF set list is https://github.com/cms-sw/genproductions/blob/18702a67988278c7f34cecdbd398f83684076bb0/MetaData/pdflist_5f_2017.dat 
+            // Note: this is actuall NLO PDF, but we can use the LO branch for convenience
+            genWeight_LO = (event.genInfo->systweights()[120] / event.genInfo->systweights()[0]) * genWeight;
+        }
+
       }
       else{
         // In 2016 signal samples (or background), no LO PDF reweighting should be done; set LO weights to default weights for simplicity
@@ -1213,11 +1240,17 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(b_weightGen_LO, genWeight_LO);
     event.set(b_weightPU, isMC ? event.weight/event.genInfo->weights().at(0) : 1);
     event.set(b_weightTop, isTTbar ? event.get(top_pt_weight) : 1);
-    event.set(b_weightBTag,1);
+    event.set(b_L1prefiringWeight, year != Year::is2018 ? event.prefiringWeight : 1);
+    event.set(b_L1prefiringWeightUp, year != Year::is2018 ? event.prefiringWeightUp : 1);
+    event.set(b_L1prefiringWeightDown, year != Year::is2018 ? event.prefiringWeightDown : 1);
+      
+    //event.set(b_weightBTag,1);
     event.set(b_xSec, isMC ? xSec_ : 1);
     event.set(b_pdf_x1, isMC ? event.genInfo->pdf_x1() : -9999);
     event.set(b_pdf_x2, isMC ? event.genInfo->pdf_x2() : -9999);
     event.set(b_pdf_scalePDF, isMC ? event.genInfo->pdf_scalePDF() : -9999);
+    event.set(b_pdf_id1, isMC ? event.genInfo->pdf_id1() : -9999);
+    event.set(b_pdf_id2, isMC ? event.genInfo->pdf_id2() : -9999); 
     event.set(b_nTrueInt,isMC ? event.genInfo->pileup_TrueNumInteractions() : 1);
     event.set(b_rho,event.rho);
     event.set(b_nVert,event.pvs->size());
@@ -1340,14 +1373,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_tau2_jet2,closest_puppijet2->tau2()); 		    
     event.set(m_o_tau3_jet2,closest_puppijet2->tau3()); 		    
     event.set(m_o_tau4_jet2,closest_puppijet2->tau4()); 
-    event.set(m_o_ecfN2_beta1_jet1,closest_puppijet1->ecfN2_beta1()); 
+    /*event.set(m_o_ecfN2_beta1_jet1,closest_puppijet1->ecfN2_beta1()); 
     event.set(m_o_ecfN2_beta2_jet1,closest_puppijet1->ecfN2_beta2()); 
     event.set(m_o_ecfN2_beta1_jet2,closest_puppijet2->ecfN2_beta1()); 
     event.set(m_o_ecfN2_beta2_jet2,closest_puppijet2->ecfN2_beta2()); 
     event.set(m_o_ecfN3_beta1_jet1,closest_puppijet1->ecfN3_beta1()); 
     event.set(m_o_ecfN3_beta2_jet1,closest_puppijet1->ecfN3_beta2()); 
     event.set(m_o_ecfN3_beta1_jet2,closest_puppijet2->ecfN3_beta1()); 
-    event.set(m_o_ecfN3_beta2_jet2,closest_puppijet2->ecfN3_beta2()); 
+    event.set(m_o_ecfN3_beta2_jet2,closest_puppijet2->ecfN3_beta2());*/
     //event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_bbvsLight());
     //event.set(m_o_MassDecorrelatedDeepBoosted_bbvsLight_jet2,closest_puppijet2->btag_MassDecorrelatedDeepBoosted_bbvsLight());
     event.set(m_o_MassDecorrelatedDeepBoosted_ZHbbvsQCD_jet1,closest_puppijet1->btag_MassDecorrelatedDeepBoosted_ZHbbvsQCD()); 
@@ -1388,14 +1421,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_DeepDoubleBvLJet_probHbb_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probHbb()); 
     //event.set(m_o_DeepDoubleBvLJet_probQCD_jet1,closest_puppijet1->btag_DeepDoubleBvLJet_probQCD()); 
     //event.set(m_o_DeepDoubleBvLJet_probQCD_jet2,closest_puppijet2->btag_DeepDoubleBvLJet_probQCD());  
-    event.set(m_o_btag_DeepCSV_jet1,closest_puppijet1->btag_DeepCSV());
+    /*event.set(m_o_btag_DeepCSV_jet1,closest_puppijet1->btag_DeepCSV());
     event.set(m_o_btag_DeepCSV_jet2,closest_puppijet2->btag_DeepCSV());
     event.set(m_o_btag_DeepCSV_softdrop_s1_jet1,nsubjets1 > 0 ? closest_puppijet1->subjets()[0].btag_DeepCSV() : -9999);
     event.set(m_o_btag_DeepCSV_softdrop_s2_jet1,nsubjets1 > 1 ? closest_puppijet1->subjets()[1].btag_DeepCSV() : -9999);
     event.set(m_o_btag_DeepCSV_softdrop_s1_jet2,nsubjets2 > 0 ? closest_puppijet2->subjets()[0].btag_DeepCSV() : -9999);
-    event.set(m_o_btag_DeepCSV_softdrop_s2_jet2,nsubjets2 > 1 ? closest_puppijet2->subjets()[1].btag_DeepCSV() : -9999);
+    event.set(m_o_btag_DeepCSV_softdrop_s2_jet2,nsubjets2 > 1 ? closest_puppijet2->subjets()[1].btag_DeepCSV() : -9999);*/
     
-    int nsubjetsBTaggedLoose = 0;
+    /*int nsubjetsBTaggedLoose = 0;
     int nsubjetsBTaggedMedium = 0;
     int nsubjetsBTaggedTight = 0;
     for(int s=0; s<nsubjets1; ++s){
@@ -1417,7 +1450,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     }
     event.set(m_o_nSubJets_softdrop_btag_DeepCSVL_jet2,nsubjetsBTaggedLoose);
     event.set(m_o_nSubJets_softdrop_btag_DeepCSVM_jet2,nsubjetsBTaggedMedium);
-    event.set(m_o_nSubJets_softdrop_btag_DeepCSVT_jet2,nsubjetsBTaggedTight);
+    event.set(m_o_nSubJets_softdrop_btag_DeepCSVT_jet2,nsubjetsBTaggedTight);*/
         
     /*event.set(m_o_btag_DeepFlavour_bb_jet1,closest_puppijet1->btag_DeepFlavour_bb());
     event.set(m_o_btag_DeepFlavour_bb_jet2,closest_puppijet2->btag_DeepFlavour_bb());
@@ -1493,7 +1526,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     nsubjets2 = closest_softdrop_genjet2 ? closest_softdrop_genjet2->subjets().size() : 0;
     event.set(m_o_nSubJets_gen_softdrop_jet1,nsubjets1);
     event.set(m_o_nSubJets_gen_softdrop_jet2,nsubjets2);      
-    event.set(m_o_pt_gen_softdrop_s1_jet1,nsubjets1 > 0 ? closest_softdrop_genjet1->subjets()[0].pt() : -9999);
+    /*event.set(m_o_pt_gen_softdrop_s1_jet1,nsubjets1 > 0 ? closest_softdrop_genjet1->subjets()[0].pt() : -9999);
     event.set(m_o_eta_gen_softdrop_s1_jet1,nsubjets1 > 0 ? closest_softdrop_genjet1->subjets()[0].eta() : -9999); 
     event.set(m_o_phi_gen_softdrop_s1_jet1,nsubjets1 > 0 ? closest_softdrop_genjet1->subjets()[0].phi() : -9999); 
     event.set(m_o_mass_gen_softdrop_s1_jet1,nsubjets1 > 0 ? closest_softdrop_genjet1->subjets()[0].v4().M() : -9999);
@@ -1508,7 +1541,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_pt_gen_softdrop_s2_jet2,nsubjets2 > 1 ? closest_softdrop_genjet2->subjets()[1].pt() : -9999);
     event.set(m_o_eta_gen_softdrop_s2_jet2,nsubjets2 > 1 ? closest_softdrop_genjet2->subjets()[1].eta() : -9999); 
     event.set(m_o_phi_gen_softdrop_s2_jet2,nsubjets2 > 1 ? closest_softdrop_genjet2->subjets()[1].phi() : -9999); 
-    event.set(m_o_mass_gen_softdrop_s2_jet2,nsubjets2 > 1 ? closest_softdrop_genjet2->subjets()[1].v4().M() : -9999);	     
+    event.set(m_o_mass_gen_softdrop_s2_jet2,nsubjets2 > 1 ? closest_softdrop_genjet2->subjets()[1].v4().M() : -9999);*/	     
     event.set(m_o_tau1_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->tau1() : -9999);		       
     event.set(m_o_tau2_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->tau2() : -9999);		       
     event.set(m_o_tau3_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->tau3() : -9999);		       
@@ -1517,14 +1550,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
     event.set(m_o_tau2_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->tau2() : -9999);		       
     event.set(m_o_tau3_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->tau3() : -9999);		       
     event.set(m_o_tau4_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->tau4() : -9999); 
-    event.set(m_o_ecfN2_beta1_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN2_beta1() : -9999); 
+    /*event.set(m_o_ecfN2_beta1_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN2_beta1() : -9999); 
     event.set(m_o_ecfN2_beta2_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN2_beta2() : -9999); 
     event.set(m_o_ecfN2_beta1_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN2_beta1() : -9999); 
     event.set(m_o_ecfN2_beta2_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN2_beta2() : -9999); 
     event.set(m_o_ecfN3_beta1_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN3_beta1() : -9999); 
     event.set(m_o_ecfN3_beta2_gen_jet1,closest_softdrop_genjet1 ? closest_softdrop_genjet1->ecfN3_beta2() : -9999); 
     event.set(m_o_ecfN3_beta1_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN3_beta1() : -9999); 
-    event.set(m_o_ecfN3_beta2_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN3_beta2() : -9999); 
+    event.set(m_o_ecfN3_beta2_gen_jet2,closest_softdrop_genjet2 ? closest_softdrop_genjet2->ecfN3_beta2() : -9999);*/
    if(PRINT)     cout << " gen puppi variable  done" << endl;
     //puppi met variables	
     event.set(m_o_met_pt,event.met->pt());
@@ -1558,11 +1591,14 @@ bool UHHNtupleConverterModule::process(Event & event) {
      bruteForce_Decorrelation_default_16[i]->process(event,closest_puppijet1,closest_puppijet2);
      bruteForce_Decorrelation_default_17[i]->process(event,closest_puppijet1,closest_puppijet2);
      bruteForce_Decorrelation_default_18[i]->process(event,closest_puppijet1,closest_puppijet2);
-     bruteForce_Decorrelation_default_1617[i]->process(event,closest_puppijet1,closest_puppijet2);
      bruteForce_Decorrelation_default_161718[i]->process(event,closest_puppijet1,closest_puppijet2);
      //bruteForce_Decorrelation_smooth_16[i]->process(event,closest_puppijet1,closest_puppijet2);
      //bruteForce_Decorrelation_smooth_17[i]->process(event,closest_puppijet1,closest_puppijet2);
      //bruteForce_Decorrelation_smooth_1617[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_MD_default_16[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_MD_default_17[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_MD_default_18[i]->process(event,closest_puppijet1,closest_puppijet2);
+     bruteForce_Decorrelation_MD_default_161718[i]->process(event,closest_puppijet1,closest_puppijet2);
     }
 
     //NLO weights                                                                                                                                                                                          

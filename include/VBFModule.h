@@ -9,6 +9,8 @@
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
 #include "UHH2/common/include/ObjectIdUtils.h"
+#include "UHH2/common/include/Utils.h"
+
 
 using namespace std;
 
@@ -23,17 +25,18 @@ class Ak4RemovalModule: public uhh2::AnalysisModule {
   float mindeta;
   uhh2::Event::Handle<std::vector<Jet>> hndlvbf;
  };
-
-
+ 
 /// saving variables for VBF jets to the output tree
 class VBFvariable: public uhh2::AnalysisModule {
  public:
 
   explicit VBFvariable(uhh2::Context & ctx, string const & VBFjets = "jetsAk4Puppi");
   virtual bool process(uhh2::Event & event) override;
+  bool passes_jetid(Jet & jet, int which);
 
  private:
   uhh2::Event::Handle<std::vector<Jet>> hndlvbf;
+  Year year;
   //reco puppi VBF jet variables                                                                                                                                                                                                                                                
   uhh2::Event::Handle<float>  m_o_vbf_mjj;
   uhh2::Event::Handle<float>  m_o_vbf_ptjj;
@@ -47,5 +50,48 @@ class VBFvariable: public uhh2::AnalysisModule {
   uhh2::Event::Handle<float>  m_o_vbf_phi_jet2;
   uhh2::Event::Handle<float>  m_o_vbf_mass_jet1;
   uhh2::Event::Handle<float>  m_o_vbf_mass_jet2;
-
+  uhh2::Event::Handle<float>  m_o_vbf_Nconst_jet1; //m_numberOfDaughters
+  uhh2::Event::Handle<float>  m_o_vbf_Nconst_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_nef_jet1; //m_neutralEmEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_nef_jet2;  
+  uhh2::Event::Handle<float>  m_o_vbf_nhf_jet1; //m_neutralHadronEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_nhf_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_cef_jet1; //m_chargedEmEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_cef_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_chf_jet1; //m_chargedHadronEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_chf_jet2;  
+  uhh2::Event::Handle<float>  m_o_vbf_mf_jet1; //m_muonEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_mf_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_phf_jet1; //m_photonEnergyFraction
+  uhh2::Event::Handle<float>  m_o_vbf_phf_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_cmult_jet1; //m_chargedMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_cmult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_nmult_jet1; //m_neutralMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_nmult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_mumult_jet1; //m_muonMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_mumult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_elmult_jet1; //m_electronMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_elmult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_phmult_jet1; //m_photonMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_phmult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_puppimult_jet1; //m_puppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_puppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_npuppimult_jet1; //m_neutralPuppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_npuppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_nhpuppimult_jet1; //m_neutralHadronPuppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_nhpuppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_phpuppimult_jet1; //m_photonPuppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_phpuppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_HFhpuppimult_jet1; //m_HFHadronPuppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_HFhpuppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_HFempuppimult_jet1; //m_HFEMPuppiMultiplicity
+  uhh2::Event::Handle<float>  m_o_vbf_HFempuppimult_jet2;
+  uhh2::Event::Handle<float>  m_o_vbf_puid_jet1; //m_pileupID
+  uhh2::Event::Handle<float>  m_o_vbf_puid_jet2;
+  uhh2::Event::Handle<bool>   m_o_vbf_tightjetid_jet1;
+  uhh2::Event::Handle<bool>   m_o_vbf_tightjetid_jet2;
+  uhh2::Event::Handle<bool>   m_o_vbf_loosejetid_jet1;
+  uhh2::Event::Handle<bool>   m_o_vbf_loosejetid_jet2;
+  uhh2::Event::Handle<bool>   m_o_vbf_tightlepvetojetid_jet1;
+  uhh2::Event::Handle<bool>   m_o_vbf_tightlepvetojetid_jet2;
 };

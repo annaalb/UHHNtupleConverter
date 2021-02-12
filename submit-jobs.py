@@ -1,5 +1,5 @@
 #python submit-jobs.py --sample ZprimeToZhToZhadhbb_narrow_M-3500_13TeV-madgraph --nfiles_per_job 2 --outdir /eos/cms/store/cmst3/group/exovv/VVtuple/FullRun2VVVHNtuple/2016_byBTag/
-import sys, os, commands, optparse
+import sys, os, commands, optparse, subprocess
 import xml.etree.ElementTree as ET
 import ROOT
 from ROOT import *
@@ -56,6 +56,20 @@ def getFileList(filelist_xml):
    continue
   list_.append(l.split('"')[1])
  return list_,nevs_
+
+def modify(indir):
+
+ f = open(indir+"/job.sh",'r')
+ fout = open(indir+"/jobout.sh",'w')
+ os.system('cp {indir}/job.sh {indir}/job_backup.sh'.format(indir=indir))
+ for l in f.readlines():
+  fout.write(l)
+  if 'voms-proxy-info -all -file $1' in l: fout.write("export XRD_NETWORKSTACK=IPv4\n")
+
+ f.close()
+ fout.close()
+ os.system('mv {indir}/jobout.sh {indir}/job.sh'.format(indir=indir))
+ os.system("chmod 755 {indir}/job.sh".format(indir=indir))
  
 parser = optparse.OptionParser()
 parser.add_option("--sample","--sample",dest="sample",default='',help="samples to be processed from the file samples.txt")
@@ -75,17 +89,20 @@ if options.check_jobs:
  resubmit_jobs = []
  for d in os.listdir('./'):
   if not 'VBF' in options.sample and 'VBF' in d: continue 
+  if not 'ext' in options.sample and 'ext' in d: continue
   if options.sample in d:
    print d
    ndirs+=1
    for f in os.listdir(d):
     if '.out' in f:
-     for l in open(d+'/'+f,'r').readlines():
+     nlines = open(d+'/'+f,'r').readlines()
+     for nl,l in enumerate(nlines):
       if l.find('ERROR') != -1 or l.find('FATAL') != -1 or l.find('exception') != -1:
-       print d,l
+       print l
        answer = raw_input('Would you like to resubmit the job? (YES or NO) ')
        if answer == 'YES':
         resubmit_jobs.append(d.split('-')[-1])
+	#modify(d)
         os.chdir(d)
 	os.system('rm *.out *.err *.log')
         os.system('condor_submit submit.sub')
@@ -94,16 +111,18 @@ if options.check_jobs:
        break 
        
  nfiles = 0
- for d in os.listdir(options.outdir):
+ for d in os.listdir(options.outdir): #outdir
   if not options.sample in d: continue
   if not 'VBF' in options.sample and 'VBF' in d: continue 
-  for f in os.listdir(options.outdir+"/"+d):
+  if not 'ext' in options.sample and 'ext' in d: continue
+  if '.pck' in d or '.root' in d: continue
+  for f in os.listdir(options.outdir+"/"+d): #options.outdir+"/"+d
    if '.root' in f: nfiles+=1
  print "Found",ndirs,"directories and",nfiles,"files!" 
  if nfiles != ndirs:
   for i in range(ndirs):
    found = False
-   for f in os.listdir(options.outdir+'/'+options.sample):
+   for f in os.listdir(options.outdir+'/'+options.sample): #options.outdir+'/'+options.sample
     if f.find('.root') == -1: continue
     if f.find("-%i.root"%(i+1)) != -1:
      found = True
@@ -138,6 +157,7 @@ for l in f_samples.readlines():
  sample_name = l.split(' ')[0]
  if sample_name.find(options.sample) == -1 or '#' in sample_name: continue
  if not 'VBF' in options.sample and 'VBF' in sample_name: continue
+ if not 'ext' in options.sample and 'ext' in sample_name: continue
  
  folder = l.split(' ')[1].replace('\n','')
  if not sample_name in samples.keys():
@@ -207,6 +227,7 @@ for s,files in samples.iteritems():
   files_per_job = files[i*nfiles_per_job:(i+1)*nfiles_per_job]
   if len(files_per_job) == 0: continue
   
+  #if i+1 < 12: continue
   config_file = s+'-'+str(i+1)
   jobdir = s+'-'+str(i+1)  
   if os.path.exists(jobdir):
@@ -227,6 +248,7 @@ for s,files in samples.iteritems():
     filename = f
    else:
     filename = 'root://dcache-cms-xrootd.desy.de:1094'+f
+   if '/eos/' in f: filename=f
    element = data.makeelement('In', {'FileName':filename,'Lumi':'1.0'})
    data.append(element)
    if options.count:
@@ -269,6 +291,7 @@ for s,files in samples.iteritems():
        fout.write("echo $X509_USER_PROXY\n")
        fout.write("voms-proxy-info -all\n")
        fout.write("voms-proxy-info -all -file $1\n")
+      fout.write("export XRD_NETWORKSTACK=IPv4\n")
       fout.write("sframe_main %s/%s.xml\n"%(jobdir,config_file))
       fout.write("echo 'STOP---------------'\n")
       fout.write("echo\n")
@@ -277,7 +300,8 @@ for s,files in samples.iteritems():
     
   ###### sends bjobs ######
   makeSubmitFileCondor("job.sh","job",options.queue,options.localinput,options.cmst3)
-  os.system("condor_submit submit.sub")
+  result = os.system("condor_submit submit.sub")
+  while result != 0: result = os.system("condor_submit submit.sub")
   print "job nr " + str(i+1) + " submitted"
    
   os.chdir("../")

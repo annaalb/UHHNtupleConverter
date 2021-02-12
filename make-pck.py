@@ -92,25 +92,6 @@ for d in os.listdir('./'):
 
 print totalEvents,totalGenEvents
 
-'''
-hadd_cmd = 'hadd -f %s '%(options.outdir+"/"+options.outfile)
-
-nfiles = len(os.listdir(options.indir))
-for i,f in enumerate(os.listdir(options.indir)):
- #jobid = int(f.split('-')[-1].replace('.root',''))
- #if jobid <= 42: continue
- #print f
- if i%50 == 0: print "File",i+1,"of",nfiles
- tf = ROOT.TFile.Open(options.indir+"/"+f)
- tree = tf.AnalysisTree
- if tree.GetEntries() != 0:
-  hadd_cmd += options.indir+"/"+f+" "
- else: print "Found 0 entries for file",f
- tf.Close()
-
-os.system(hadd_cmd)
-'''
-
 nfiles = len(os.listdir(options.indir))
 ch = ROOT.TChain("AnalysisTree")
 for i,f in enumerate(os.listdir(options.indir)):
@@ -159,7 +140,6 @@ output.close()
 infile.Close()
 
 answer = raw_input('Do you want to remove the jobs folders? (YES or NO) (ps, if you are running nominal 17 do not do YES!!) ')
-#answer='YES'
 if answer == 'YES':
  os.system('rm -rf %s'%options.indir)
  os.system('rm -rf %s*'%sample)

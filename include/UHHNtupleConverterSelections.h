@@ -6,6 +6,7 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/core/include/AnalysisModule.h"
+#include "UHH2/common/include/Utils.h"
 
 #include "TFile.h"
 
@@ -83,7 +84,6 @@ private:
 
 };
 
-
 class VBFjetSelection: public uhh2::Selection {
 public:
     VBFjetSelection(uhh2::Context & ctx, const string & VBFjet = "jetsAk4Puppi", float deta_min = 4.5f, float mjj_min = 800.0f);
@@ -94,9 +94,7 @@ private:
     Event::Handle<vector<Jet>> h_VBFjet;
   };
 
-
-
-  class BruteForceDecorrelation: public uhh2::AnalysisModule{
+class BruteForceDecorrelation: public uhh2::AnalysisModule{
 
   public:
     explicit BruteForceDecorrelation(uhh2::Context & ctx,string percentage_, string folder);

@@ -32,7 +32,7 @@ bool MuonVeto::passes(const Event & event){
   assert(event.muons); // if this fails, it probably means jets are not read in                                                                                                                                                                                               
  
   for(const auto & muon : *event.muons) {
-    if(muid(muon,event)) {
+    if(muid(muon,event) && muon.relIso() < 0.05) {
       for(const auto & jet : *event.jets){
 	if(deltaR(jet,muon)  < deltaR_min ) return false;
       }

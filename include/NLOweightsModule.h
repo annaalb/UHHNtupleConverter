@@ -11,6 +11,7 @@
 
 #include "TFile.h"
 #include "TH1F.h"
+#include "TF1.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ class NLOweight: public uhh2::AnalysisModule {
   uhh2::Event::Handle<bool> jj_l1_mergedVTruth;
   uhh2::Event::Handle<float> jj_l1_gen_pt,jj_l2_gen_pt;
   std::unique_ptr<TFile> NLOWeightsFile;
+  TString NLOWeightsFileName_;
+  TF1* func_;
   std::unique_ptr<TH1F> h_kfactor;
   std::unique_ptr<TH1F> h_ewcorr; //nominal weight
   uhh2::Event::Handle<float>  m_o_kfactor;
