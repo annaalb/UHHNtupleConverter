@@ -10,6 +10,7 @@ using namespace std;
 Ak4RemovalModule::Ak4RemovalModule(Context & ctx, float mindeta_, string const & VBFjets): mindeta(mindeta_)
 {
   hndlvbf = ctx.get_handle<vector<Jet>>(VBFjets);
+  year = extract_year(ctx);
 }
 
 bool Ak4RemovalModule::process(Event & event){
@@ -33,6 +34,7 @@ bool Ak4RemovalModule::process(Event & event){
       bool bdeltaR=true;
       double deltar_0 = deltaR(ak4,j_0);
       double deltar_1 = deltaR(ak4,j_1);
+      if( !passes_jetid(ak4) ) continue;
       if((deltar_0 < mindeta) || (deltar_1 < mindeta)) bdeltaR=false;
       if(bdeltaR) AK4Jets->push_back(ak4);
     }
@@ -48,11 +50,32 @@ bool Ak4RemovalModule::process(Event & event){
   return true;
 }
 
+bool Ak4RemovalModule::passes_jetid(const Jet & jet){
+
+ if( year==Year::is2017v2 || year == Year::is2016v2 || year == Year::is2016v3 ){
+
+  if( abs(jet.eta())<=2.4 && jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1 && jet.chargedHadronEnergyFraction()>0 && jet.chargedMultiplicity()>0 ) return true;
+  else if( abs(jet.eta())>2.4 && abs(jet.eta())<=2.7 && jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1 ) return true;
+  else if( abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 & jet.neutralHadronEnergyFraction()<0.9999 ) return true;
+  else if( abs(jet.eta())>3.0 && jet.neutralEmEnergyFraction()<0.90 && jet.neutralHadronEnergyFraction()>0.02 ) return true;
+  
+ }
+ else if( year == Year::is2018 ){
+  
+  if( abs(jet.eta())<=2.6 && jet.neutralHadronEnergyFraction()<0.9 && jet.neutralEmEnergyFraction()<0.9 && jet.numberOfDaughters()>1 && jet.chargedHadronEnergyFraction()>0 && jet.chargedMultiplicity()>0 ) return true;
+  else if( abs(jet.eta())>2.6 && abs(jet.eta())<=2.7 && jet.neutralHadronEnergyFraction()<0.9 && jet.neutralEmEnergyFraction()<0.99  ) return true;
+  else if( abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 && jet.neutralHadronEnergyFraction()<0.9999 ) return true;
+  else if( abs(jet.eta()) > 3.0 && jet.neutralHadronEnergyFraction()>0.02 && jet.neutralEmEnergyFraction()<0.90 ) return true; 
+  
+ }
+ 
+ return false;
+
+}
 
 VBFvariable::VBFvariable(Context & ctx, string const & VBFjets)
 {
   hndlvbf = ctx.get_handle<vector<Jet>>(VBFjets);
-  year = extract_year(ctx);
   
   //reco puppi VBF jet variables                                                                                                                                                                                                                                                
   m_o_vbf_mjj = ctx.declare_event_output<float>("vbf_jj_LV_mass");
@@ -104,14 +127,6 @@ VBFvariable::VBFvariable(Context & ctx, string const & VBFjets)
   m_o_vbf_HFhpuppimult_jet2   = ctx.declare_event_output<float>("vbf_jj_l2_HFhpuppimult"); 
   m_o_vbf_HFempuppimult_jet1  = ctx.declare_event_output<float>("vbf_jj_l1_HFempuppimult");
   m_o_vbf_HFempuppimult_jet2  = ctx.declare_event_output<float>("vbf_jj_l2_HFempuppimult");
-  m_o_vbf_puid_jet1 = ctx.declare_event_output<float>("vbf_jj_l1_pu_id");
-  m_o_vbf_puid_jet2 = ctx.declare_event_output<float>("vbf_jj_l2_pu_id");
-  m_o_vbf_tightjetid_jet1 = ctx.declare_event_output<bool>("vbf_jj_l1_tight_id");
-  m_o_vbf_tightjetid_jet2 = ctx.declare_event_output<bool>("vbf_jj_l2_tight_id");
-  m_o_vbf_loosejetid_jet1 = ctx.declare_event_output<bool>("vbf_jj_l1_loose_id");
-  m_o_vbf_loosejetid_jet2 = ctx.declare_event_output<bool>("vbf_jj_l2_loose_id");
-  m_o_vbf_tightlepvetojetid_jet1 = ctx.declare_event_output<bool>("vbf_jj_l1_tightlepveto_id");
-  m_o_vbf_tightlepvetojetid_jet2 = ctx.declare_event_output<bool>("vbf_jj_l2_tightlepveto_id");
   
 }
 bool VBFvariable::process(Event & event){
@@ -172,75 +187,6 @@ bool VBFvariable::process(Event & event){
   event.set(m_o_vbf_HFhpuppimult_jet2,VBFsize > 1 ? vbfjets.at(1).HFHadronPuppiMultiplicity() : -9999);
   event.set(m_o_vbf_HFempuppimult_jet1,VBFsize > 0 ? vbfjets.at(0).HFEMPuppiMultiplicity() : -9999);
   event.set(m_o_vbf_HFempuppimult_jet2,VBFsize > 1 ? vbfjets.at(1).HFEMPuppiMultiplicity() : -9999);
-  event.set(m_o_vbf_puid_jet1,VBFsize > 0 ? vbfjets.at(0).pileupID() : -9999);
-  event.set(m_o_vbf_puid_jet2,VBFsize > 1 ? vbfjets.at(1).pileupID() : -9999);
-  
-  if(year == Year::is2016v2 || year == Year::is2016v3){
-   event.set(m_o_vbf_loosejetid_jet1,VBFsize > 0 ? passes_jetid(vbfjets.at(0),0) : false);
-   event.set(m_o_vbf_tightjetid_jet1,VBFsize > 0 ? passes_jetid(vbfjets.at(0),1) : false);
-   event.set(m_o_vbf_tightlepvetojetid_jet1,VBFsize > 0 ? passes_jetid(vbfjets.at(0),2) : false);
-   event.set(m_o_vbf_loosejetid_jet2,VBFsize > 1 ? passes_jetid(vbfjets.at(1),0) : false);
-   event.set(m_o_vbf_tightjetid_jet2,VBFsize > 1 ? passes_jetid(vbfjets.at(1),1) : false);
-   event.set(m_o_vbf_tightlepvetojetid_jet2,VBFsize > 1 ? passes_jetid(vbfjets.at(1),2) : false);
-  }
-  else{
-   bool jetid1 = VBFsize > 0 ? passes_jetid(vbfjets.at(0),0) : false;
-   bool jetid2 = VBFsize > 1 ? passes_jetid(vbfjets.at(1),0) : false;
-   event.set(m_o_vbf_loosejetid_jet1,jetid1);
-   event.set(m_o_vbf_tightjetid_jet1,jetid1);
-   event.set(m_o_vbf_tightlepvetojetid_jet1,jetid1);
-   event.set(m_o_vbf_loosejetid_jet2,jetid2);
-   event.set(m_o_vbf_tightjetid_jet2,jetid2);
-   event.set(m_o_vbf_tightlepvetojetid_jet2,jetid2);
-  }
       
-
   return true;
-}
-
-bool VBFvariable::passes_jetid(Jet & jet, int which){
-
- if( (year == Year::is2016v2 || year == Year::is2016v3) && which == 0 ){ //Loose ID from https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
- 
-  if( (jet.neutralHadronEnergyFraction()<0.99 && jet.neutralEmEnergyFraction()<0.99 && jet.numberOfDaughters()>1) && ((abs(jet.eta())<=2.4 && jet.chargedHadronEnergyFraction()>0 &&
-  jet.chargedMultiplicity()>0 && jet.chargedEmEnergyFraction()<0.99) || abs(jet.eta())>2.4) && abs(jet.eta())<=2.7 ) return true;
-  else if( jet.neutralHadronEnergyFraction()<0.98 && jet.neutralEmEnergyFraction()>0.01 && jet.neutralMultiplicity()>2 && abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 ) return true;
-  else if( jet.neutralEmEnergyFraction()<0.90 && jet.neutralMultiplicity()>10 && abs(jet.eta())>3.0 ) return true; 
-
- }
- else if( (year == Year::is2016v2 || year == Year::is2016v3) && which == 1 ){ //Tight ID from https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
- 
-  if( (jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1) && ((abs(jet.eta())<=2.4 && jet.chargedHadronEnergyFraction()>0
-  && jet.chargedMultiplicity()>0 && jet.chargedEmEnergyFraction()<0.99) || abs(jet.eta())>2.4) && abs(jet.eta())<=2.7 ) return true;
-  else if( jet.neutralHadronEnergyFraction()<0.98 && jet.neutralEmEnergyFraction()>0.01 && jet.neutralMultiplicity()>2 && abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 ) return true;
-  else if( jet.neutralEmEnergyFraction()<0.90 && jet.neutralMultiplicity()>10 && abs(jet.eta())>3.0 ) return true;
-  
- }
- else if( (year == Year::is2016v2 || year == Year::is2016v3) && which == 2 ){ //TightLepVeto ID from https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
- 
-  if( (jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1 && jet.muonEnergyFraction()<0.8) && ((abs(jet.eta())<=2.4 &&
-  jet.chargedHadronEnergyFraction()>0 && jet.chargedMultiplicity()>0 && jet.chargedEmEnergyFraction()<0.90) || abs(jet.eta())>2.4) && abs(jet.eta())<=2.7 ) return true;
-  
- }
- else if( year==Year::is2017v2 ){ //Tight ID from https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017
-
-  if( (jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1) && ((abs(jet.eta())<=2.4 && jet.chargedHadronEnergyFraction()>0
-  && jet.chargedMultiplicity()>0) || abs(jet.eta())>2.4) && abs(jet.eta())<=2.7 ) return true;
-  else if( jet.neutralHadronEnergyFraction()<0.99 && abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 ) return true;
-  else if( jet.neutralEmEnergyFraction()<0.90 && jet.neutralHadronEnergyFraction()>0.02 && jet.neutralMultiplicity()>2 && jet.neutralMultiplicity()<15 && abs(jet.eta())>3.0 ) return true;
-  
- }
- else if( year == Year::is2018 ){ //from https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2018
-  
-  if( abs(jet.eta())<=2.6 && jet.chargedEmEnergyFraction()<0.8 && jet.chargedMultiplicity()>0 && jet.chargedHadronEnergyFraction()>0 && jet.numberOfDaughters()>1 &&
-  jet.neutralEmEnergyFraction()<0.9 && jet.muonEnergyFraction()<0.8 && jet.neutralHadronEnergyFraction()<0.9  ) return true;
-  else if( abs(jet.eta())>2.6 && abs(jet.eta())<=2.7 && jet.chargedEmEnergyFraction()<0.8 && jet.neutralEmEnergyFraction()<0.99 && jet.muonEnergyFraction()<0.8 &&
-  jet.neutralHadronEnergyFraction()<0.9 ) return true;
-  else if( abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 && jet.neutralHadronEnergyFraction()<0.99 ) return true;
-  else if( abs(jet.eta()) > 3.0 && jet.neutralEmEnergyFraction()<0.90 && jet.neutralHadronEnergyFraction()>0.02 && jet.neutralMultiplicity()>2 && jet.neutralMultiplicity()<15 )
-  return true; 
- }
- 
- return false;
-
 }

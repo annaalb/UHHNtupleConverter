@@ -20,10 +20,13 @@ class Ak4RemovalModule: public uhh2::AnalysisModule {
     
   explicit Ak4RemovalModule(uhh2::Context & ctx, float mindeta_ = 1.2, string const & VBFjets = "jetsAk4Puppi");
   virtual bool process(uhh2::Event & event) override;
+  bool passes_jetid(const Jet & jet);
     
  private:
   float mindeta;
   uhh2::Event::Handle<std::vector<Jet>> hndlvbf;
+  Year year;
+
  };
  
 /// saving variables for VBF jets to the output tree
@@ -32,11 +35,9 @@ class VBFvariable: public uhh2::AnalysisModule {
 
   explicit VBFvariable(uhh2::Context & ctx, string const & VBFjets = "jetsAk4Puppi");
   virtual bool process(uhh2::Event & event) override;
-  bool passes_jetid(Jet & jet, int which);
 
  private:
   uhh2::Event::Handle<std::vector<Jet>> hndlvbf;
-  Year year;
   //reco puppi VBF jet variables                                                                                                                                                                                                                                                
   uhh2::Event::Handle<float>  m_o_vbf_mjj;
   uhh2::Event::Handle<float>  m_o_vbf_ptjj;
@@ -86,12 +87,4 @@ class VBFvariable: public uhh2::AnalysisModule {
   uhh2::Event::Handle<float>  m_o_vbf_HFhpuppimult_jet2;
   uhh2::Event::Handle<float>  m_o_vbf_HFempuppimult_jet1; //m_HFEMPuppiMultiplicity
   uhh2::Event::Handle<float>  m_o_vbf_HFempuppimult_jet2;
-  uhh2::Event::Handle<float>  m_o_vbf_puid_jet1; //m_pileupID
-  uhh2::Event::Handle<float>  m_o_vbf_puid_jet2;
-  uhh2::Event::Handle<bool>   m_o_vbf_tightjetid_jet1;
-  uhh2::Event::Handle<bool>   m_o_vbf_tightjetid_jet2;
-  uhh2::Event::Handle<bool>   m_o_vbf_loosejetid_jet1;
-  uhh2::Event::Handle<bool>   m_o_vbf_loosejetid_jet2;
-  uhh2::Event::Handle<bool>   m_o_vbf_tightlepvetojetid_jet1;
-  uhh2::Event::Handle<bool>   m_o_vbf_tightlepvetojetid_jet2;
 };
