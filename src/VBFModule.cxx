@@ -56,7 +56,7 @@ bool Ak4RemovalModule::passes_jetid(const Jet & jet){
 
   if( abs(jet.eta())<=2.4 && jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1 && jet.chargedHadronEnergyFraction()>0 && jet.chargedMultiplicity()>0 ) return true;
   else if( abs(jet.eta())>2.4 && abs(jet.eta())<=2.7 && jet.neutralHadronEnergyFraction()<0.90 && jet.neutralEmEnergyFraction()<0.90 && jet.numberOfDaughters()>1 ) return true;
-  else if( abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 & jet.neutralHadronEnergyFraction()<0.9999 ) return true;
+  else if( abs(jet.eta())>2.7 && abs(jet.eta())<=3.0 && jet.neutralHadronEnergyFraction()<0.9999 ) return true;
   else if( abs(jet.eta())>3.0 && jet.neutralEmEnergyFraction()<0.90 && jet.neutralHadronEnergyFraction()>0.02 ) return true;
   
  }

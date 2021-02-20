@@ -52,13 +52,21 @@ private:
 };
 
 
+class GenHVVEventSelection: public uhh2::Selection {
+public:
+    GenHVVEventSelection();
+    virtual bool passes(const uhh2::Event & event) override {return false;};
+    std::tuple<bool, bool> passes(const uhh2::Event & event, Jet & jet_);
+    
+private:    
 
+};
 
 class GenHbbEventSelection: public uhh2::Selection {
 public:
     GenHbbEventSelection();
     virtual bool passes(const uhh2::Event & event) override {return false;};
-    bool passes(const uhh2::Event & event, Jet & jet_);
+    std::tuple<bool, bool, bool> passes(const uhh2::Event & event, Jet & jet_);
     
 private:    
 

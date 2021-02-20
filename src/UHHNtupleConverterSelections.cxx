@@ -12,6 +12,7 @@ using namespace uhh2;
 using namespace std;
 bool PRINT = false;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DijetSelection::DijetSelection(float deta_max_, float mjj_min_): deta_max(deta_max_), mjj_min(mjj_min_){}
     
 bool DijetSelection::passes(const Event & event){
@@ -25,6 +26,7 @@ bool DijetSelection::passes(const Event & event){
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MuonVeto::MuonVeto(const MuonId & muid_, float deltaR_min_): deltaR_min(deltaR_min_), muid(muid_){}
 
 bool MuonVeto::passes(const Event & event){
@@ -43,6 +45,7 @@ bool MuonVeto::passes(const Event & event){
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ElectronVeto::ElectronVeto(const ElectronId & eleid_, float deltaR_min_): deltaR_min(deltaR_min_), eleid(eleid_){}
 
 bool ElectronVeto::passes(const Event & event){
@@ -60,23 +63,64 @@ bool ElectronVeto::passes(const Event & event){
   
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+GenHVVEventSelection::GenHVVEventSelection(){}
 
-
-GenHbbEventSelection::GenHbbEventSelection(){}
-
-bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
+std::tuple<bool, bool> GenHVVEventSelection::passes(const Event & event, Jet & jet){
   std::vector<GenParticle> genQuarks;
   int associatedQuarks=0;
-  //bool Higgsboson = false;
+  bool isSemiLept=false;
+  if(PRINT) cout << " GenHVVEventSelection" << endl;
+  for(auto genp:*event.genparticles){
+    if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl; 
+    if( abs(genp.pdgId())==24 || abs(genp.pdgId())==23 ){
+      if(PRINT) cout << "    I have a V boson!" << endl;
+      if( event.genparticles->at(genp.mother1()).pdgId()==25 ){
+        genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
+        genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
+	int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
+	int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
+	if( (dau1 >=11 && dau1 <=18) && (dau2 >=11 && dau2 <=18) ) isSemiLept=true;
+	if(PRINT) std::cout << "FOUND H->VV " << genp.pdgId() << " mother " << event.genparticles->at(genp.mother1()).pdgId() << " daughter1 " << dau1 << " daughter2 " << dau2 << " isSemiLept " << isSemiLept << " N Higgs daughters " << genQuarks.size() << std::endl;        
+      }
+    }
+  }
+    
+  if(genQuarks.size()>1)
+  {
+    associatedQuarks=0;
+    for(unsigned int i=0; i<genQuarks.size(); ++i){
+       if( deltaR(jet.v4(),genQuarks[i].v4()) < 0.8) associatedQuarks +=1;
+    } 
+
+  }
+
+  if (associatedQuarks == 4 && isSemiLept==false) return std::make_tuple(true,isSemiLept);
+  else if (associatedQuarks == 4 && isSemiLept==true) return std::make_tuple(false,isSemiLept);
+  else return std::make_tuple(false,false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+GenHbbEventSelection::GenHbbEventSelection(){}
+
+std::tuple<bool, bool, bool>  GenHbbEventSelection::passes(const Event & event, Jet & jet){
+  std::vector<GenParticle> genQuarks;
+  int associatedQuarks=0;
+  bool isHbb = false;
+  bool isHcc = false;
+  bool isHgg = false;
   if(PRINT) cout << " GenHbbEventSelection" << endl;
   for(auto genp:*event.genparticles){
     if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl; 
     if(abs(genp.pdgId())==25){
       if(PRINT) cout << "    I have a Higgs boson!" << endl;
-      //Higgsboson = true;
-      if(abs(event.genparticles->at(genp.daughter1()).pdgId())==5 && abs(event.genparticles->at(genp.daughter2()).pdgId())==5){
+      if(abs(event.genparticles->at(genp.daughter1()).pdgId())==5 && abs(event.genparticles->at(genp.daughter2()).pdgId())==5){ isHbb = true; }
+      else if(abs(event.genparticles->at(genp.daughter1()).pdgId())==4 && abs(event.genparticles->at(genp.daughter2()).pdgId())==4){ isHcc = true; }
+      else if(abs(event.genparticles->at(genp.daughter1()).pdgId())==21 && abs(event.genparticles->at(genp.daughter2()).pdgId())==21){ isHgg = true; }
+      if( isHbb || isHcc || isHgg ){
        genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
-       genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
+       genQuarks.push_back( event.genparticles->at(genp.daughter2()) );      
+       if(PRINT) std::cout << "isHbb " << isHbb << " isHcc " << isHcc << " isHgg " << isHgg << std::endl; 
       }
     }
     
@@ -89,20 +133,20 @@ bool GenHbbEventSelection::passes(const Event & event, Jet & jet){
       if(associatedQuarks != 2){
          genQuarks.clear();
          associatedQuarks=0;
+         isHbb = false;
+         isHcc = false;
+         isHgg = false;
          continue;
       }
       else break;
     }
   }
   
-  //if(Higgsboson && genQuarks.size()>2) cout << "WARNING: found more than two daughters for Higgs boson!" << endl;
-  //if(Higgsboson && genQuarks.size()<2) cout << "WARNING: found less than two daughters for Higgs boson!" << endl;
-  
-  if (associatedQuarks == 2) return true;
-  else return false;
+  if (associatedQuarks == 2) return std::make_tuple(isHbb,isHcc,isHgg);
+  else return std::make_tuple(false,false,false);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 GenVqqEventSelection::GenVqqEventSelection(){}
 
 std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & jet){
@@ -150,6 +194,7 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
   
 }   
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 GenTopHadrEventSelection::GenTopHadrEventSelection(){}
 
 bool GenTopHadrEventSelection::passes(const Event & event, Jet & jet){
@@ -215,6 +260,7 @@ bool GenTopHadrEventSelection::passes(const Event & event, Jet & jet){
   else return false;
 } 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VBFjetSelection::VBFjetSelection(Context & ctx, string const & VBFjet_, float deta_min_, float mjj_min_ ):VBFjet(VBFjet_), deta_min(deta_min_), mjj_min(mjj_min_){
   h_VBFjet = ctx.get_handle<vector<Jet>>(VBFjet);
 }
@@ -236,6 +282,7 @@ bool VBFjetSelection::passes(const Event & event){
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///Brute Force Decorrelation
 BruteForceDecorrelation::BruteForceDecorrelation( uhh2::Context & ctx, string percentage_, string folder){
 

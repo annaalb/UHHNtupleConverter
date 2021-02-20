@@ -112,6 +112,7 @@ private:
     std::unique_ptr<Selection> muon_sel, electron_sel, njet_sel, dijet_sel,dijet_sel_loose, vbf_sel;
     std::unique_ptr<GenTopHadrEventSelection> genTopHadrEvent_sel;
     std::unique_ptr<GenHbbEventSelection> genHbbEvent_sel;
+    std::unique_ptr<GenHVVEventSelection> genHVVEvent_sel;
     std::unique_ptr<GenVqqEventSelection> genVqqEvent_sel;
     std::vector<TriggerSelection> trigger_selection, ref_triggers; 
     std::vector<TriggerSelection> metfilters;
@@ -196,8 +197,16 @@ private:
     uhh2::Event::Handle<bool>   jj_mergedVTruth_jet2;
     uhh2::Event::Handle<bool>   jj_mergedZbbTruth_jet1;
     uhh2::Event::Handle<bool>   jj_mergedZbbTruth_jet2;
-    uhh2::Event::Handle<bool>   jj_mergedHTruth_jet1;
-    uhh2::Event::Handle<bool>   jj_mergedHTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedHbbTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHbbTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedHccTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHccTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedHggTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHggTruth_jet2;    
+    uhh2::Event::Handle<bool>   jj_mergedHVV4qTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHVV4qTruth_jet2;
+    uhh2::Event::Handle<bool>   jj_mergedHVVSemiLeptTruth_jet1;
+    uhh2::Event::Handle<bool>   jj_mergedHVVSemiLeptTruth_jet2;
     uhh2::Event::Handle<bool>   jj_mergedTopTruth_jet1;
     uhh2::Event::Handle<bool>   jj_mergedTopTruth_jet2;
                 
@@ -636,8 +645,16 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     jj_mergedVTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedVTruth");
     jj_mergedZbbTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedZbbTruth");
     jj_mergedZbbTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedZbbTruth");
-    jj_mergedHTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHTruth");
-    jj_mergedHTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHTruth");
+    jj_mergedHbbTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHbbTruth");
+    jj_mergedHbbTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHbbTruth");
+    jj_mergedHccTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHccTruth");
+    jj_mergedHccTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHccTruth");
+    jj_mergedHggTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHggTruth");
+    jj_mergedHggTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHggTruth");    
+    jj_mergedHVV4qTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHVVTruth_4q");
+    jj_mergedHVV4qTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHVVTruth_4q"); 
+    jj_mergedHVVSemiLeptTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedHVVTruth_lept");
+    jj_mergedHVVSemiLeptTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedHVVTruth_lept"); 
     jj_mergedTopTruth_jet1 = ctx.declare_event_output<bool>("jj_l1_mergedTopTruth");
     jj_mergedTopTruth_jet2 = ctx.declare_event_output<bool>("jj_l2_mergedTopTruth");
                   
@@ -778,6 +795,7 @@ UHHNtupleConverterModule::UHHNtupleConverterModule(Context & ctx){
     dijet_sel_loose.reset(new DijetSelection(1.3,0.0)); // see UHHNtupleConverterSelections
     vbf_sel.reset(new VBFjetSelection(ctx,"jetsAk4Puppi",4.5f,800.0f)); // see UHHNtupleConverterSelections
     genHbbEvent_sel.reset(new GenHbbEventSelection());
+    genHVVEvent_sel.reset(new GenHVVEventSelection());
     genVqqEvent_sel.reset(new GenVqqEventSelection());
     genTopHadrEvent_sel.reset(new GenTopHadrEventSelection());
     
@@ -1141,8 +1159,20 @@ bool UHHNtupleConverterModule::process(Event & event) {
     
     auto [ isVqq1, isZbb1 ] =  isMC ? genVqqEvent_sel->passes(event,jet1) : std::make_tuple(false,false);
     auto [ isVqq2, isZbb2 ] =  isMC ? genVqqEvent_sel->passes(event,jet2) : std::make_tuple(false,false);
-    event.set(jj_mergedHTruth_jet1,isMC ? genHbbEvent_sel->passes(event,jet1) : 0);
-    event.set(jj_mergedHTruth_jet2,isMC ? genHbbEvent_sel->passes(event,jet2) : 0);
+    auto [ isHbb1,isHcc1,isHgg1 ] =  isMC ? genHbbEvent_sel->passes(event,jet1) : std::make_tuple(false,false,false);
+    auto [ isHbb2,isHcc2,isHgg2 ] =  isMC ? genHbbEvent_sel->passes(event,jet2) : std::make_tuple(false,false,false);
+    auto [ isHVV4q1,isHVVLept1 ] =  isMC ? genHVVEvent_sel->passes(event,jet1) : std::make_tuple(false,false);
+    auto [ isHVV4q2,isHVVLept2 ] =  isMC ? genHVVEvent_sel->passes(event,jet2) : std::make_tuple(false,false);
+    event.set(jj_mergedHbbTruth_jet1,isHbb1);
+    event.set(jj_mergedHbbTruth_jet2,isHbb2);
+    event.set(jj_mergedHccTruth_jet1,isHcc1);
+    event.set(jj_mergedHccTruth_jet2,isHcc2);
+    event.set(jj_mergedHggTruth_jet1,isHgg1);
+    event.set(jj_mergedHggTruth_jet2,isHgg2); 
+    event.set(jj_mergedHVV4qTruth_jet1,isHVV4q1);
+    event.set(jj_mergedHVV4qTruth_jet2,isHVV4q2);
+    event.set(jj_mergedHVVSemiLeptTruth_jet1,isHVVLept1);
+    event.set(jj_mergedHVVSemiLeptTruth_jet2,isHVVLept2); 
     event.set(jj_mergedVTruth_jet1,isVqq1);
     event.set(jj_mergedVTruth_jet2,isVqq2);
     event.set(jj_mergedZbbTruth_jet1,isZbb1);
