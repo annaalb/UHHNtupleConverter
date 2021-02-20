@@ -3,6 +3,7 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Particle.h"
 #include "UHH2/common/include/Utils.h"
+#include <typeinfo>
 
 #include <stdexcept>
 #include <iostream>
@@ -74,8 +75,10 @@ std::tuple<bool, bool> GenHVVEventSelection::passes(const Event & event, Jet & j
   for(auto genp:*event.genparticles){
     if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl; 
     if( abs(genp.pdgId())==24 || abs(genp.pdgId())==23 ){
+      if( unsigned(genp.mother1()) > event.genparticles->size() ) continue;
       if(PRINT) cout << "    I have a V boson!" << endl;
       if( event.genparticles->at(genp.mother1()).pdgId()==25 ){
+        if( unsigned(genp.daughter1()) > event.genparticles->size() || unsigned(genp.daughter2()) > event.genparticles->size() ) continue;
         genQuarks.push_back( event.genparticles->at(genp.daughter1()) ); 
         genQuarks.push_back( event.genparticles->at(genp.daughter2()) );
 	int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
@@ -113,6 +116,7 @@ std::tuple<bool, bool, bool>  GenHbbEventSelection::passes(const Event & event, 
   for(auto genp:*event.genparticles){
     if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl; 
     if(abs(genp.pdgId())==25){
+      if( unsigned(genp.daughter1()) > event.genparticles->size() || unsigned(genp.daughter2()) > event.genparticles->size() ) continue;
       if(PRINT) cout << "    I have a Higgs boson!" << endl;
       if(abs(event.genparticles->at(genp.daughter1()).pdgId())==5 && abs(event.genparticles->at(genp.daughter2()).pdgId())==5){ isHbb = true; }
       else if(abs(event.genparticles->at(genp.daughter1()).pdgId())==4 && abs(event.genparticles->at(genp.daughter2()).pdgId())==4){ isHcc = true; }
@@ -154,13 +158,12 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
   std::vector<GenParticle> genQuarks;
   bool isZbb = false;
   int associatedQuarks=0;
-  //bool vectorboson = false;
   if(PRINT) cout << " GenVqqEventSelection" << endl;
   for(auto genp:*event.genparticles){
     if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl;   
     if(abs(genp.pdgId())==24 || abs(genp.pdgId())==23){
+       if( unsigned(genp.daughter1()) > event.genparticles->size() || unsigned(genp.daughter2()) > event.genparticles->size() ) continue;
        if(PRINT) cout << "    I have a vector boson!" << endl;
-       //vectorboson = true;
        int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
        if(PRINT) cout << "    I have one daughter" << endl;
        int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
@@ -203,10 +206,11 @@ bool GenTopHadrEventSelection::passes(const Event & event, Jet & jet){
   int associatedQuarks=0;
   if(PRINT) cout << " GenTopHadrEventSelection" << endl;
   for(auto genp:*event.genparticles){
-    //if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl;   
+    if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl;   
     if(abs(genp.pdgId())==6){
+    
+      if( unsigned(genp.daughter1()) > event.genparticles->size() || unsigned(genp.daughter2()) > event.genparticles->size() ) continue;
        if(PRINT) cout << "    I have a top quark!" << endl;
-       //vectorboson = true;
        int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
        if(PRINT) cout << "    I have one daughter" << endl;
        int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());

@@ -835,7 +835,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     // this is controlled by the return value of this method: If it
     // returns true, the event is kept; if it returns false, the event
     // is thrown away.
-               
+
     if(PRINT) cout << "UHHNtupleConverterModule: Starting to process event (runid, eventid) = (" << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     if(printGenparticle)    Gen_printer->process(event);     
     
