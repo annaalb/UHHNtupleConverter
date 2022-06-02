@@ -14,7 +14,7 @@ make
 To run one test:
 
 ```
-sframe_main sframe_main config/test.xml
+sframe_main config/test.xml
 ```
 
 To submit condor jobs from lxplus for one single sample you must first add its name and folder to a txt file (see for example [samples-signals-2017-private.txt](https://github.com/jngadiub/UHHNtupleConverter/blob/slim-ntuple/samples-signals-2017-private.txt)).
