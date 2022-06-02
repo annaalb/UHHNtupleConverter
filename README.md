@@ -4,7 +4,7 @@ Convert UHH ntuple to 3D fit ntuple. It is based on UHH framework. To install it
 
 ```
 cd CMSSW_10_2_17/src/UHH2/
-git clone -b slim-ntuple https://github.com/jngadiub/UHHNtupleConverter.git
+git clone -b slim-ntuple https://github.com/Diboson3D/UHHNtupleConverter.git
 cd UHHNtupleConverter
 cmsenv
 source ../../../../SFrame/setup.sh
