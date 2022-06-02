@@ -296,6 +296,29 @@ WprimeToWhToWhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018
 WprimeToWhToWhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-7500.xml
 WprimeToWhToWhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/WprimeWH/WprimeToWhToWhadhbb_M-8000.xml
 ###################################
+#WprimeWHinc
+###################################
+WprimeToWhToWhadhinc_narrow_M-600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-600_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-800_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-1000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-1200_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-1200_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-1400_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-1600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-1600_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-1800_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-2000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-2500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-2500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-3000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-3000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-3500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-3500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-4000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-4000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-4500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-5000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-5000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-5500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-5500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-6000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-6000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-6500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-6500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-7000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-7000_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-7500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-7500_TuneCP5.xml
+WprimeToWhToWhadhinc_narrow_M-8000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/WprimeToWhToWhadhinc/WprimeToWhToWhadhinc_narrow_M-8000_TuneCP5.xml
+###################################
 #VBF_WprimeWH
 ###################################
 VBF_WprimeToWhToWhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-600.xml
@@ -318,6 +341,29 @@ VBF_WprimeToWhToWhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/
 VBF_WprimeToWhToWhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-7000.xml
 VBF_WprimeToWhToWhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-7500.xml
 VBF_WprimeToWhToWhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_WprimeWH/VBF_WprimeToWhToWhadhbb_narrow_M-8000.xml
+###################################
+#VBF_WprimeWHinc
+###################################
+VBF_WprimeToWhToWhadhinc_narrow_M-600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-600_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-800_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-1000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-1200_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-1200_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-1400_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-1600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-1600_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-1800_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-2000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-2500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-2500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-3000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-3000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-3500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-3500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-4000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-4000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-4500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-5000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-5000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-5500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-5500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-6000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-6000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-6500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-6500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-7000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-7000_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-7500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-7500_TuneCP5_PSWeights.xml
+VBF_WprimeToWhToWhadhinc_narrow_M-8000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/VBF_WprimeToWhToWhadhinc/VBF_WprimeToWhToWhadhinc_narrow_M-8000_TuneCP5_PSWeights.xml
 ###################################
 #ZprimeZH
 ###################################
@@ -342,6 +388,29 @@ ZprimeToZhToZhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018
 ZprimeToZhToZhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-7500.xml
 ZprimeToZhToZhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/ZprimeZH/ZprimeToZhToZhadhbb_narrow_M-8000.xml
 ###################################
+#ZprimeZHinc
+###################################
+ZprimeToZhToZhadhinc_narrow_M-600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-600_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-800_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-1000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-1200_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-1200_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-1400_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-1600_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-1600_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-1800_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-2000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-2500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-2500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-3000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-3000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-3500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-3500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-4000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-4000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-4500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-5000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-5000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-5500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-5500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-6000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-6000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-6500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-6500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-7000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-7000_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-7500_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-7500_TuneCP5.xml
+ZprimeToZhToZhadhinc_narrow_M-8000_TuneCP5_13TeV-madgraph-pythia8 ../common/UHH2-datasets/RunII_102X_v2/2018/ZprimeToZhToZhadhinc/ZprimeToZhToZhadhinc_narrow_M-8000_TuneCP5.xml
+###################################
 #VBF ZprimeZH
 ###################################
 VBF_ZprimeToZhToZhadhbb_narrow_M-600_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-600.xml
@@ -364,3 +433,26 @@ VBF_ZprimeToZhToZhadhbb_narrow_M-6500_13TeV-madgraph new_deepAK8-V2_samples_xml/
 VBF_ZprimeToZhToZhadhbb_narrow_M-7000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-7000.xml
 VBF_ZprimeToZhToZhadhbb_narrow_M-7500_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-7500.xml
 VBF_ZprimeToZhToZhadhbb_narrow_M-8000_13TeV-madgraph new_deepAK8-V2_samples_xml/2018/VBF_ZprimeZH/VBF_ZprimeToZhToZhadhbb_narrow_M-8000.xml
+###################################
+#VBF_ZprimeZHinc
+###################################
+VBF_ZprimeToZhToZhadhinc_narrow_M-600_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-600.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-800_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-800.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-1000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-1000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-1200_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-1200.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-1400_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-1400.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-1600_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-1600.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-1800_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-1800.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-2000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-2000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-2500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-2500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-3000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-3000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-3500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-3500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-4000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-4000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-4500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-4500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-5000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-5000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-5500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-5500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-6000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-6000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-6500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-6500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-7000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-7000.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-7500_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-7500.xml
+VBF_ZprimeToZhToZhadhinc_narrow_M-8000_TuneCP5_13TeV-madgraph-pythia8 new_deepAK8-V2_samples_xml/2018/VBF_ZprimeToZhToZhadhinc/VBF_ZprimeToZhToZhadhinc_narrow_M-8000.xml

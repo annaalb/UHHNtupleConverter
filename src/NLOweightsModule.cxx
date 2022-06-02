@@ -22,19 +22,28 @@ NLOweight::NLOweight(Context & ctx,
   //h_kfactor.reset((TH1F*) NLOWeightsFile->Get("kfactor"));
   h_ewcorr.reset((TH1F*) NLOWeightsFile->Get("kfactor_monojet_ewk"));
 
-  func_ = new TF1("func","[0]*exp([1]*x)+[2]",0,1600);
+  funcQCD_ = new TF1("funcQCD","[0]*exp([1]*x)+[2]",0,3600);
+  funcEW_ = new TF1("funcEW","[0]*exp([1]*x)+[2]",0,3600);
   if( NLOWeightsFileName_.Contains("WJets") ){
-   func_->SetParameter(0,1.053);
-   func_->SetParameter(1,-3.163/1000.);
-   func_->SetParameter(2,0.746);
+   funcQCD_->SetParameter(0,1.053);
+   funcQCD_->SetParameter(1,-3.163/1000.);
+   funcQCD_->SetParameter(2,0.746);
+   funcEW_->SetParameter(0,0.523418);
+   funcEW_->SetParameter(1,-0.00073779);
+   funcEW_->SetParameter(2,0.501753);
   }
   else{
-   func_->SetParameter(0,1.434);
-   func_->SetParameter(1,-2.210/1000.);
-   func_->SetParameter(2,0.443);
+   funcQCD_->SetParameter(0,1.434);
+   funcQCD_->SetParameter(1,-2.210/1000.);
+   funcQCD_->SetParameter(2,0.443);
+   funcEW_->SetParameter(0,0.371264);
+   funcEW_->SetParameter(1,-0.000859976);
+   funcEW_->SetParameter(2,0.648457);
   }
   
   m_o_kfactor = ctx.declare_event_output<float>("kfactor");
+  m_o_kfactor_ew = ctx.declare_event_output<float>("kfactor_ew");
+  m_o_kfactor_qcd = ctx.declare_event_output<float>("kfactor_qcd");
   
 }
 
@@ -68,6 +77,8 @@ bool NLOweight::process(Event & event){
   if(print) cout << "kfactor " << kfactor << " = w " << w << " * w_ew " << w_ew << endl; 
   
   event.set(m_o_kfactor, kfactor);
+  event.set(m_o_kfactor_ew, w_ew);
+  event.set(m_o_kfactor_qcd, w);
 
   return true;
 }
@@ -90,15 +101,17 @@ float NLOweight::getWeight(float gen_pt){
 
   //return reweight;
   
-  if(print) cout << "gen pt = " << gen_pt << " QCD NLO SF = " << func_->Eval(gen_pt) << endl;
+  if(print) cout << "gen pt = " << gen_pt << " QCD NLO SF = " << funcQCD_->Eval(gen_pt) << endl;
   
-  return func_->Eval(gen_pt);
+  return funcQCD_->Eval(gen_pt);
 
 }
 
 float NLOweight::getEWCorr(float gen_pt){
   if(print) cout << "getEWCorr " << endl;
-  if(print) cout << "gen pt = " << gen_pt << endl;
+  
+  /*if(print) cout << "gen pt = " << gen_pt << endl;
+  
   if( gen_pt > 1250 ) gen_pt = 1205;
   if( gen_pt < 150 ) gen_pt = 160;
   if(print) cout << "gen pt = " << gen_pt << endl;
@@ -109,5 +122,10 @@ float NLOweight::getEWCorr(float gen_pt){
   float reweight= h_ewcorr->GetBinContent(binw);
   if(print) cout << "reweight = " << reweight << endl;
 
-  return reweight;
+  return reweight;*/
+
+  if(print) cout << "gen pt = " << gen_pt << " EW NLO SF = " << funcEW_->Eval(gen_pt) << endl;
+  
+  return funcEW_->Eval(gen_pt);
+  
 }

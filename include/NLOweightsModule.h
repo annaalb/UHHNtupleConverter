@@ -34,8 +34,12 @@ class NLOweight: public uhh2::AnalysisModule {
   uhh2::Event::Handle<float> jj_l1_gen_pt,jj_l2_gen_pt;
   std::unique_ptr<TFile> NLOWeightsFile;
   TString NLOWeightsFileName_;
-  TF1* func_;
+  TF1* funcEW_;
+  TF1* funcQCD_;
   std::unique_ptr<TH1F> h_kfactor;
   std::unique_ptr<TH1F> h_ewcorr; //nominal weight
   uhh2::Event::Handle<float>  m_o_kfactor;
+  uhh2::Event::Handle<float>  m_o_kfactor_ew;
+  uhh2::Event::Handle<float>  m_o_kfactor_qcd;
+
 };

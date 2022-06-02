@@ -1111,7 +1111,7 @@ bool UHHNtupleConverterModule::process(Event & event) {
     //need to sort the jets  first  
     Jet jet1 = event.jets->at(0);
     Jet jet2 = event.jets->at(1);
-    
+
     auto closest_puppijet1 = closestParticle(jet1, *(event.topjets));
     auto closest_puppijet2 = closestParticle(jet2, *(event.topjets)); 
     if( !closest_puppijet1 || !closest_puppijet2 ) return false;  

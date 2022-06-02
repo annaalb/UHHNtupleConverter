@@ -163,7 +163,8 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
     if(PRINT) cout << "  genparticle pdg id = " << genp.pdgId() << endl;   
     if(abs(genp.pdgId())==24 || abs(genp.pdgId())==23){
        if( unsigned(genp.daughter1()) > event.genparticles->size() || unsigned(genp.daughter2()) > event.genparticles->size() ) continue;
-       if(PRINT) cout << "    I have a vector boson!" << endl;
+       if( event.genparticles->at(genp.mother1()).pdgId()==25 ) continue;
+       if(PRINT) cout << "    I have a vector boson! Mother is:" << event.genparticles->at(genp.mother1()).pdgId() << endl;
        int dau1 = abs(event.genparticles->at(genp.daughter1()).pdgId());
        if(PRINT) cout << "    I have one daughter" << endl;
        int dau2 = abs(event.genparticles->at(genp.daughter2()).pdgId());
@@ -181,7 +182,7 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
       associatedQuarks=0;
       for(unsigned int i=0; i<genQuarks.size(); ++i){
          if( deltaR(jet.v4(),genQuarks[i].v4()) < 0.8) associatedQuarks +=1;
-      } 
+      }
       if(associatedQuarks != 2){
          genQuarks.clear();
          associatedQuarks=0;
@@ -191,7 +192,7 @@ std::tuple<bool, bool> GenVqqEventSelection::passes(const Event & event, Jet & j
       else break;
     }
   }
-
+    
   if (associatedQuarks == 2) return std::make_tuple(true,isZbb);
   else return std::make_tuple(false,isZbb);
   

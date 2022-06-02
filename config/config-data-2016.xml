@@ -25,7 +25,7 @@
             <Item Name="pileup_directory_data" Value="../common/data/2016/MyDataPileupHistogram.root" />
 	    <Item Name="sample_name" Value="JetHT_Run2016B_03Feb2017_v2" />
 	    <Item Name="jet_sorting" Value="random" /> <!--options: btag,random !-->
-	    <Item Name="lumi_file" Value="../common/data/2016/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.root" />	    	    
+	    <Item Name="lumi_file" Value="./Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.root" />	    	    
             <Item Name="TestKey" Value="TestKeyValue" />
         </UserConfig>
     </Cycle>

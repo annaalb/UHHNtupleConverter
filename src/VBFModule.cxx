@@ -20,7 +20,7 @@ bool Ak4RemovalModule::process(Event & event){
     assert(false);
   }
   vector<Jet> & vbfjet_collection = event.get(hndlvbf);
-
+    
   //Cleaning(removing) AK4 if overlapping with AK8
   std::vector<Jet>* AK4Jets(new std::vector<Jet> (vbfjet_collection));
   const Jet & j_0 = event.jets->at(0);
@@ -28,7 +28,7 @@ bool Ak4RemovalModule::process(Event & event){
 
   AK4Jets->clear();
   AK4Jets->reserve(vbfjet_collection.size());
-
+    
   for(const Jet ak4:vbfjet_collection)
     {
       bool bdeltaR=true;
