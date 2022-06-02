@@ -4,7 +4,7 @@ Convert UHH ntuple to 3D fit ntuple. It is based on UHH framework. To install it
 
 ```
 cd CMSSW_10_2_17/src/UHH2/
-git clone https://github.com/Diboson3D/UHHNtupleConverter.git
+git clone -b slim-ntuple https://github.com/jngadiub/UHHNtupleConverter.git
 cd UHHNtupleConverter
 cmsenv
 source ../../../../SFrame/setup.sh
@@ -17,7 +17,14 @@ To run one test:
 sframe_main sframe_main config/test.xml
 ```
 
-For large scale processing follow the instructions below which use the 2016 year as an example (change for the other years).
+To submit condor jobs from lxplus for one single sample you must first add its name and folder to a txt file (see for example [samples-signals-2017-private.txt](https://github.com/jngadiub/UHHNtupleConverter/blob/slim-ntuple/samples-signals-2017-private.txt)).
+Then you can submit jobs for one sample at the time as in this example:
+
+```
+python submit-jobs.py --sample test_ALPS_signal --nfiles_per_job 2 --outdir ./ --list samples-signals-2017-private.txt --xml config/config-2017.xml --queue longlunch
+```
+
+For large scale processing of a long list of samples follow the instructions below which use the 2016 year as an example (replace for the other years).
 
 To submit condor jobs from lxplus:
 
