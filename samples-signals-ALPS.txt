@@ -1,0 +1,2 @@
+
+ALPS_ZZ_2018 /eos/user/a/aalbrech/workspace/diboson/test_ALPS_signal/ALPS_ZZ_2018.xml

@@ -6,20 +6,22 @@ from ROOT import *
 
 def makeSubmitFileCondor(exe,jobname,jobflavour,localinput,cmst3):
     print "make options file for condor job submission "
-    submitfile = open("submit.sub","w")        
+    submitfile = open("submit.sub","w")
     submitfile.write("should_transfer_files = YES\n")
     submitfile.write("when_to_transfer_output = ON_EXIT\n")
     submitfile.write('transfer_output_files = ""\n')
     submitfile.write("executable  = "+exe+"\n")
-    
+
     if localinput:
       submitfile.write("arguments             = $(ClusterID) $(ProcId)\n")
     else:
-     submitfile.write("Proxy_filename = x509up_%s\n"%os.getenv("USER"))
-     submitfile.write("Proxy_path = %s/$(Proxy_filename)\n"%os.getenv("HOME"))
+     submitfile.write("Proxy_filename = myproxy\n")
+     submitfile.write("Proxy_path = /afs/cern.ch/user/a/aalbrech/private/proxy/$(Proxy_filename)\n")
+     #submitfile.write("Proxy_filename = x509up_%s\n"%os.getenv("USER"))
+     #submitfile.write("Proxy_path = %s/$(Proxy_filename)\n"%os.getenv("HOME"))
      submitfile.write("transfer_input_files = $(Proxy_path)\n")
-     submitfile.write("arguments             = $(Proxy_path) $(ClusterID) $(ProcId)\n")  
-    
+     submitfile.write("arguments             = $(Proxy_path) $(ClusterID) $(ProcId)\n")
+
     submitfile.write("output                = "+jobname+".$(ClusterId).$(ProcId).out\n")
     submitfile.write("error                 = "+jobname+".$(ClusterId).$(ProcId).err\n")
     submitfile.write("log                   = "+jobname+".$(ClusterId).log\n")
@@ -27,8 +29,8 @@ def makeSubmitFileCondor(exe,jobname,jobflavour,localinput,cmst3):
     if cmst3:
      submitfile.write("+AccountingGroup = group_u_CMST3.all\n")
     submitfile.write("queue")
-    submitfile.close()  
-    
+    submitfile.close()
+
 def indent(elem, level=0):
     i = "\n" + level*"  "
     j = "\n" + (level-1)*"  "
@@ -70,7 +72,7 @@ def modify(indir):
  fout.close()
  os.system('mv {indir}/jobout.sh {indir}/job.sh'.format(indir=indir))
  os.system("chmod 755 {indir}/job.sh".format(indir=indir))
- 
+
 parser = optparse.OptionParser()
 parser.add_option("--sample","--sample",dest="sample",default='',help="samples to be processed from the file samples.txt")
 parser.add_option("--localinput","--localinput",dest="localinput", action="store_true",help="input ntuple is local, no protocol needed",default=False)
@@ -88,7 +90,7 @@ if options.check_jobs:
  ndirs = 0
  resubmit_jobs = []
  for d in os.listdir('./'):
-  if not 'VBF' in options.sample and 'VBF' in d: continue 
+  if not 'VBF' in options.sample and 'VBF' in d: continue
   if not 'ext' in options.sample and 'ext' in d: continue
   if options.sample in d:
    print d
@@ -108,17 +110,17 @@ if options.check_jobs:
         os.system('condor_submit submit.sub')
         print "Job submitted!"
 	os.chdir('../')
-       break 
-       
+       break
+
  nfiles = 0
  for d in os.listdir(options.outdir): #outdir
   if not options.sample in d: continue
-  if not 'VBF' in options.sample and 'VBF' in d: continue 
+  if not 'VBF' in options.sample and 'VBF' in d: continue
   if not 'ext' in options.sample and 'ext' in d: continue
   if '.pck' in d or '.root' in d: continue
   for f in os.listdir(options.outdir+"/"+d): #options.outdir+"/"+d
    if '.root' in f: nfiles+=1
- print "Found",ndirs,"directories and",nfiles,"files!" 
+ print "Found",ndirs,"directories and",nfiles,"files!"
  if nfiles != ndirs:
   for i in range(ndirs):
    found = False
@@ -137,14 +139,14 @@ if options.check_jobs:
      os.system('condor_submit submit.sub')
      print "Job submitted!"
      os.chdir('../')
- print resubmit_jobs   
+ print resubmit_jobs
  sys.exit()
-        
+
 sframe_dir = os.getenv("SFRAME_DIR")
 if sframe_dir == None:
  print "Setup SFrame first!"
  sys.exit()
-    
+
 workdir = os.getcwd()
 nfiles_per_job = options.nfiles_per_job
 print
@@ -158,7 +160,7 @@ for l in f_samples.readlines():
  if sample_name.find(options.sample) == -1 or '#' in sample_name: continue
  if not 'VBF' in options.sample and 'VBF' in sample_name: continue
  if not 'ext' in options.sample and 'ext' in sample_name: continue
- 
+
  folder = l.split(' ')[1].replace('\n','')
  if not sample_name in samples.keys():
   print
@@ -168,7 +170,7 @@ for l in f_samples.readlines():
  else:
   print "Sample",sample_name,"already exist, add new folder",folder
   samples[sample_name].append(folder)
-  
+
 f_samples.close()
 
 print "--------------------------------------------------------"
@@ -200,7 +202,7 @@ else:
    files,nevs = getFileList(d)
   samples[s] = files
   nevents[s] = nevs
-   
+
 print "--------------------------------------------------------"
 for s,files in samples.iteritems():
 
@@ -218,21 +220,21 @@ for s,files in samples.iteritems():
   print "Output directory",outdir,"already exists."
   answer = raw_input('Do you want to remove it first? (YES or NO) ')
   if answer == "YES":
-   os.system('rm -rf %s'%outdir) 
+   os.system('rm -rf %s'%outdir)
    os.mkdir(outdir)
- else: os.mkdir(outdir)  
-  
+ else: os.mkdir(outdir)
+
  for i in range(njobs):
-    
+
   files_per_job = files[i*nfiles_per_job:(i+1)*nfiles_per_job]
   if len(files_per_job) == 0: continue
-  
+
   #if i+1 < 12: continue
   config_file = s+'-'+str(i+1)
-  jobdir = s+'-'+str(i+1)  
+  jobdir = s+'-'+str(i+1)
   if os.path.exists(jobdir):
    print "Job directory",jobdir,"already exists. Removing it ..."
-   os.system('rm -rf %s'%jobdir)  
+   os.system('rm -rf %s'%jobdir)
   os.mkdir(jobdir)
   os.system('cp config/JobConfig.dtd %s'%jobdir)
 
@@ -242,7 +244,7 @@ for s,files in samples.iteritems():
   cycle.set('OutputDirectory',outdir+"/")
   cycle.set('PostFix','-%i'%(i+1))
   data = cycle.find('InputData')
-     
+
   for test_i,f in enumerate(files_per_job):
    if options.localinput:
     filename = f
@@ -257,14 +259,14 @@ for s,files in samples.iteritems():
     nevents[s]+=tr_test.GetEntries()
     tf_test.Close()
     #print "Job",i,"file",test_i+1,"nevents",nevents
-       
+
   config = cycle.find('UserConfig')
   for child in config.getchildren():
    if child.attrib['Name'] == 'sample_name':
     child.set('Value',s)
     break
-  
-  indent(root) 
+
+  indent(root)
   tree.write('%s/%s.xml'%(jobdir,config_file))
   fin = open('%s/%s.xml'%(jobdir,config_file),'r')
   fout = open('%s/dummy.xml'%jobdir,'w')
@@ -272,7 +274,7 @@ for s,files in samples.iteritems():
   fout.write('<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd">\n')
   for l in fin.readlines(): fout.write(l)
   fin.close()
-  fout.close() 
+  fout.close()
   os.system('mv %s/dummy.xml %s/%s.xml'%(jobdir,jobdir,config_file))
 
   os.chdir(jobdir)
@@ -287,23 +289,26 @@ for s,files in samples.iteritems():
       fout.write("cmsenv\n")
       fout.write("source "+str(sframe_dir)+"/setup.sh\n")
       if not options.localinput:
-       fout.write("export X509_USER_PROXY=$1\n")
+       #fout.write("export X509_USER_PROXY=$1\n")
+       #fout.write("use_x509userproxy = true\n")
+       fout.write("export X509_USER_PROXY=/afs/cern.ch/user/a/aalbrech/private/proxy/myproxy\n")
        fout.write("echo $X509_USER_PROXY\n")
        fout.write("voms-proxy-info -all\n")
-       fout.write("voms-proxy-info -all -file $1\n")
+       fout.write("voms-proxy-info -all -file /afs/cern.ch/user/a/aalbrech/private/proxy/myproxy\n")
+       #fout.write("voms-proxy-info -all -file $1\n")
       fout.write("export XRD_NETWORKSTACK=IPv4\n")
       fout.write("sframe_main %s/%s.xml\n"%(jobdir,config_file))
       fout.write("echo 'STOP---------------'\n")
       fout.write("echo\n")
       fout.write("echo\n")
-  os.system("chmod 755 job.sh")    
-    
+  os.system("chmod 755 job.sh")
+
   ###### sends bjobs ######
   makeSubmitFileCondor("job.sh","job",options.queue,options.localinput,options.cmst3)
   result = os.system("condor_submit submit.sub")
   while result != 0: result = os.system("condor_submit submit.sub")
   print "job nr " + str(i+1) + " submitted"
-   
+
   os.chdir("../")
 
  print "**************************************************"
